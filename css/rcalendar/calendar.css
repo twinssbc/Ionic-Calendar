@@ -1,0 +1,200 @@
+.nav-left {
+    text-align: left;
+}
+
+.nav-right {
+    text-align: right;
+}
+
+.scrollable {
+    width: 100%;
+    overflow-x: hidden;
+    overflow-y: auto;
+}
+
+.calendar-container {
+    height: 100%;
+}
+
+.table-fixed {
+    table-layout: fixed;
+}
+
+.no-event-label {
+    font-weight: bold;
+    color: darkgrey;
+    text-align: center;
+}
+
+.weekview-normal-event-table, dayview-normal-event-table, .event-detail-table {
+    margin-bottom: 0px;
+}
+.event-detail-container {
+    border-top: 2px darkgrey solid;
+    margin-top: 256px;
+}
+
+.event-detail {
+    cursor: pointer;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+
+.calendar-header {
+    text-align: center;
+    padding-top: 5px;
+}
+
+.calendar-hour-column, .calendar-week-column {
+    width: 50px;
+    white-space: nowrap;
+}
+
+.calendar-navbar {
+    margin-bottom: 5px;
+}
+
+.calendar-event-wrap {
+    position: relative;
+    width: 100%;
+    height: 100%;
+}
+
+.calendar-event {
+    position: absolute;
+    padding: 2px;
+    cursor: pointer;
+}
+
+.calendar-event-inner {
+    overflow: hidden;
+    background-color: #3a87ad;
+    color: white;
+    height: 100%;
+    width: 100%;
+    padding: 2px;
+    line-height: 15px;
+}
+
+.calendar-cell {
+    padding: 0px !important;
+    height: 37px;
+}
+
+.monthview-primary-with-event {
+    background-color: #3a87ad;
+    color: white;
+}
+
+.monthview-selected {
+    background-color: #009900;
+    color: white;
+}
+
+.monthview-current {
+    background-color: lightgrey;
+}
+
+.monthview-eventdetail-timecolumn {
+    width: 110px;
+    overflow: hidden;
+}
+
+.monthview-datetable th {
+    text-align:center;
+}
+
+.monthview-datetable td{
+    cursor: pointer;
+    text-align: center;
+}
+
+.monthview-secondary-with-event {
+    background-color: #d9edf7;
+}
+
+.weekview-allday-label, .dayview-allday-label {
+    float: left;
+    height: 100%;
+    line-height: 50px;
+    text-align: center;
+    width: 50px;
+    border-width: 1px 0px 1px 1px;
+    border-color: #ddd;
+    border-style: solid;
+}
+
+.weekview-allday-content-wrapper, .dayview-allday-content-wrapper {
+    margin-left: 50px;
+    overflow: hidden;
+    height: 100%;
+}
+
+.weekview-allday-content-table, .dayview-allday-content-table {
+    height: 50px;
+    margin-bottom: 0px;
+}
+
+.weekview-header, .monthview-datetable {
+    margin-bottom: 0px;
+}
+
+.monthview-slide {
+    height: 306px;
+}
+
+.weekview-slide, .weekview, .dayview-slide, .dayview {
+    height: 100%;
+}
+
+.weekview-header th {
+    overflow: hidden;
+    white-space: nowrap;
+}
+
+.weekview-allday-table, .dayview-allday-table {
+    height: 50px;
+}
+
+.weekview-normal-event-container {
+    margin-top: 87px;
+}
+
+.dayview-normal-event-container {
+    margin-top: 47px;
+}
+
+@media (max-width: 750px) {
+    .weekview-allday-label, .dayview-allday-label, .calendar-hour-column, .calendar-week-column {
+        width: 28px;
+        font-size: 14px;
+    }
+
+    .weekview-normal-event-container {
+        margin-top: 82px;
+    }
+
+    .table>tbody>tr>td.calendar-hour-column {
+        padding-left: 0px;
+        padding-right: 0px;
+        font-size: 12px;
+    }
+
+    .table>thead>tr>th.weekview-header {
+        padding-left: 0px;
+        padding-right: 0px;
+        font-size: 12px;
+    }
+
+    .weekview-allday-label, .dayview-allday-label {
+        line-height: inherit;
+    }
+
+    .weekview-allday-content-wrapper, .dayview-allday-content-wrapper {
+        margin-left: 28px;
+    }
+
+    .calendar-event-inner {
+        font-size: 12px;
+    }
+}

@@ -1,0 +1,61 @@
+<div class="dayview">
+    <ion-slide-box class="dayview-slide" on-slide-changed="slideChanged($index)" does-continue="true"
+                   show-pager="false">
+        <ion-slide ng-repeat="view in views track by $index">
+            <div class="dayview-allday-table">
+                <div class="dayview-allday-label">
+                    all day
+                </div>
+                <ion-scroll zooming="true" direction="y" class="dayview-allday-content-wrapper" has-bouncing="false">
+                    <table class="table table-bordered weekview-allday-content-table">
+                        <tbody>
+                        <tr>
+                            <td class="calendar-cell" ng-class="{'calendar-event-wrap':allDayEvents}"
+                                ng-if="$index===currentViewIndex">
+                                <div ng-repeat="displayEvent in view.allDayEvents" class="calendar-event"
+                                     ng-click="eventSelected({event:displayEvent.event})"
+                                     ng-style="{top: 25*$index+'px',width: '100%',height:'25px'}">
+                                    <div class="calendar-event-inner">{{displayEvent.event.title}}</div>
+                                </div>
+                            </td>
+                            <td class="calendar-cell" ng-if="$index!==currentViewIndex">
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </ion-scroll>
+            </div>
+            <ion-content class="dayview-normal-event-container" has-bouncing="false">
+                <table class="table table-bordered table-fixed dayview-normal-event-table" ng-if="$index===currentViewIndex">
+                    <tbody>
+                    <tr ng-repeat="tm in view.rows track by $index">
+                        <td class="calendar-hour-column text-center">
+                            {{$index<12?($index === 0?12:$index)+'am':($index === 12?$index:$index-12)+'pm'}}
+                        </td>
+                        <td class="calendar-cell">
+                            <div ng-class="{'calendar-event-wrap': tm.events}" ng-if="tm.events">
+                                <div ng-repeat="displayEvent in tm.events" class="calendar-event"
+                                     ng-click="eventSelected({event:displayEvent.event})"
+                                     ng-style="{left: 100/displayEvent.overlapNumber*displayEvent.position+'%', width: 100/displayEvent.overlapNumber+'%', height: 37*(displayEvent.endIndex-displayEvent.startIndex)+'px'}">
+                                    <div class="calendar-event-inner">{{displayEvent.event.title}}</div>
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+                <table class="table table-bordered table-fixed dayview-normal-event-table" ng-if="$index!==currentViewIndex">
+                    <tbody>
+                    <tr ng-repeat="tm in view.rows track by $index">
+                        <td class="calendar-hour-column text-center">
+                            {{$index<12?($index === 0?12:$index)+'am':($index === 12?$index:$index-12)+'pm'}}
+                        </td>
+                        <td class="calendar-cell">
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </ion-content>
+        </ion-slide>
+    </ion-slide-box>
+</div>

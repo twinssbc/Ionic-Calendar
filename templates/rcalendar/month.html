@@ -1,0 +1,273 @@
+<div>
+    <ion-slide-box class="monthview-slide" on-slide-changed="slideChanged($index)" does-continue="true"
+                   show-pager="false">
+        <ion-slide ng-repeat="view in views track by $index">
+            <table ng-if="$index===currentViewIndex" class="table table-bordered monthview-datetable">
+                <thead>
+                <tr>
+                    <th>
+                        <small>Sun</small>
+                    </th>
+                    <th>
+                        <small>Mon</small>
+                    </th>
+                    <th>
+                        <small>Tue</small>
+                    </th>
+                    <th>
+                        <small>Wed</small>
+                    </th>
+                    <th>
+                        <small>Thu</small>
+                    </th>
+                    <th>
+                        <small>Fri</small>
+                    </th>
+                    <th>
+                        <small>Sat</small>
+                    </th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <td ng-click="select(view.dates[0].date)"
+                        ng-class="getHighlightClass(view.dates[0])">{{::view.dates[0].label}}
+                    </td>
+                    <td ng-click="select(view.dates[1].date)"
+                        ng-class="getHighlightClass(view.dates[1])">{{::view.dates[1].label}}
+                    </td>
+                    <td ng-click="select(view.dates[2].date)"
+                        ng-class="getHighlightClass(view.dates[2])">{{::view.dates[2].label}}
+                    </td>
+                    <td ng-click="select(view.dates[3].date)"
+                        ng-class="getHighlightClass(view.dates[3])">{{::view.dates[3].label}}
+                    </td>
+                    <td ng-click="select(view.dates[4].date)"
+                        ng-class="getHighlightClass(view.dates[4])">{{::view.dates[4].label}}
+                    </td>
+                    <td ng-click="select(view.dates[5].date)"
+                        ng-class="getHighlightClass(view.dates[5])">{{::view.dates[5].label}}
+                    </td>
+                    <td ng-click="select(view.dates[6].date)"
+                        ng-class="getHighlightClass(view.dates[6])">{{::view.dates[6].label}}
+                    </td>
+                </tr>
+                <tr>
+                    <td ng-click="select(view.dates[7].date)"
+                        ng-class="getHighlightClass(view.dates[7])">{{::view.dates[7].label}}
+                    </td>
+                    <td ng-click="select(view.dates[8].date)"
+                        ng-class="getHighlightClass(view.dates[8])">{{::view.dates[8].label}}
+                    </td>
+                    <td ng-click="select(view.dates[9].date)"
+                        ng-class="getHighlightClass(view.dates[9])">{{::view.dates[9].label}}
+                    </td>
+                    <td ng-click="select(view.dates[10].date)"
+                        ng-class="getHighlightClass(view.dates[10])">{{::view.dates[10].label}}
+                    </td>
+                    <td ng-click="select(view.dates[11].date)"
+                        ng-class="getHighlightClass(view.dates[11])">{{::view.dates[11].label}}
+                    </td>
+                    <td ng-click="select(view.dates[12].date)"
+                        ng-class="getHighlightClass(view.dates[12])">{{::view.dates[12].label}}
+                    </td>
+                    <td ng-click="select(view.dates[13].date)"
+                        ng-class="getHighlightClass(view.dates[13])">{{::view.dates[13].label}}
+                    </td>
+                </tr>
+                <tr>
+                    <td ng-click="select(view.dates[14].date)"
+                        ng-class="getHighlightClass(view.dates[14])">{{::view.dates[14].label}}
+                    </td>
+                    <td ng-click="select(view.dates[15].date)"
+                        ng-class="getHighlightClass(view.dates[15])">{{::view.dates[15].label}}
+                    </td>
+                    <td ng-click="select(view.dates[16].date)"
+                        ng-class="getHighlightClass(view.dates[16])">{{::view.dates[16].label}}
+                    </td>
+                    <td ng-click="select(view.dates[17].date)"
+                        ng-class="getHighlightClass(view.dates[17])">{{::view.dates[17].label}}
+                    </td>
+                    <td ng-click="select(view.dates[18].date)"
+                        ng-class="getHighlightClass(view.dates[18])">{{::view.dates[18].label}}
+                    </td>
+                    <td ng-click="select(view.dates[19].date)"
+                        ng-class="getHighlightClass(view.dates[19])">{{::view.dates[19].label}}
+                    </td>
+                    <td ng-click="select(view.dates[20].date)"
+                        ng-class="getHighlightClass(view.dates[20])">{{::view.dates[20].label}}
+                    </td>
+                </tr>
+                <tr>
+                    <td ng-click="select(view.dates[21].date)"
+                        ng-class="getHighlightClass(view.dates[21])">{{::view.dates[21].label}}
+                    </td>
+                    <td ng-click="select(view.dates[22].date)"
+                        ng-class="getHighlightClass(view.dates[22])">{{::view.dates[22].label}}
+                    </td>
+                    <td ng-click="select(view.dates[23].date)"
+                        ng-class="getHighlightClass(view.dates[23])">{{::view.dates[23].label}}
+                    </td>
+                    <td ng-click="select(view.dates[24].date)"
+                        ng-class="getHighlightClass(view.dates[24])">{{::view.dates[24].label}}
+                    </td>
+                    <td ng-click="select(view.dates[25].date)"
+                        ng-class="getHighlightClass(view.dates[25])">{{::view.dates[25].label}}
+                    </td>
+                    <td ng-click="select(view.dates[26].date)"
+                        ng-class="getHighlightClass(view.dates[26])">{{::view.dates[26].label}}
+                    </td>
+                    <td ng-click="select(view.dates[27].date)"
+                        ng-class="getHighlightClass(view.dates[27])">{{::view.dates[27].label}}
+                    </td>
+                </tr>
+                <tr>
+                    <td ng-click="select(view.dates[28].date)"
+                        ng-class="getHighlightClass(view.dates[28])">{{::view.dates[28].label}}
+                    </td>
+                    <td ng-click="select(view.dates[29].date)"
+                        ng-class="getHighlightClass(view.dates[29])">{{::view.dates[29].label}}
+                    </td>
+                    <td ng-click="select(view.dates[30].date)"
+                        ng-class="getHighlightClass(view.dates[30])">{{::view.dates[30].label}}
+                    </td>
+                    <td ng-click="select(view.dates[31].date)"
+                        ng-class="getHighlightClass(view.dates[31])">{{::view.dates[31].label}}
+                    </td>
+                    <td ng-click="select(view.dates[32].date)"
+                        ng-class="getHighlightClass(view.dates[32])">{{::view.dates[32].label}}
+                    </td>
+                    <td ng-click="select(view.dates[33].date)"
+                        ng-class="getHighlightClass(view.dates[33])">{{::view.dates[33].label}}
+                    </td>
+                    <td ng-click="select(view.dates[34].date)"
+                        ng-class="getHighlightClass(view.dates[34])">{{::view.dates[34].label}}
+                    </td>
+                </tr>
+                <tr>
+                    <td ng-click="select(view.dates[35].date)"
+                        ng-class="getHighlightClass(view.dates[35])">{{::view.dates[35].label}}
+                    </td>
+                    <td ng-click="select(view.dates[36].date)"
+                        ng-class="getHighlightClass(view.dates[36])">{{::view.dates[36].label}}
+                    </td>
+                    <td ng-click="select(view.dates[37].date)"
+                        ng-class="getHighlightClass(view.dates[37])">{{::view.dates[37].label}}
+                    </td>
+                    <td ng-click="select(view.dates[38].date)"
+                        ng-class="getHighlightClass(view.dates[38])">{{::view.dates[38].label}}
+                    </td>
+                    <td ng-click="select(view.dates[39].date)"
+                        ng-class="getHighlightClass(view.dates[39])">{{::view.dates[39].label}}
+                    </td>
+                    <td ng-click="select(view.dates[40].date)"
+                        ng-class="getHighlightClass(view.dates[40])">{{::view.dates[40].label}}
+                    </td>
+                    <td ng-click="select(view.dates[41].date)"
+                        ng-class="getHighlightClass(view.dates[41])">{{::view.dates[41].label}}
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+            <table ng-if="$index!==currentViewIndex" class="table table-bordered monthview-datetable">
+                <thead>
+                <tr class="text-center">
+                    <th>
+                        <small>Sun</small>
+                    </th>
+                    <th>
+                        <small>Mon</small>
+                    </th>
+                    <th>
+                        <small>Tue</small>
+                    </th>
+                    <th>
+                        <small>Wed</small>
+                    </th>
+                    <th>
+                        <small>Thu</small>
+                    </th>
+                    <th>
+                        <small>Fri</small>
+                    </th>
+                    <th>
+                        <small>Sat</small>
+                    </th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <td>{{::view.dates[0].label}}</td>
+                    <td>{{::view.dates[1].label}}</td>
+                    <td>{{::view.dates[2].label}}</td>
+                    <td>{{::view.dates[3].label}}</td>
+                    <td>{{::view.dates[4].label}}</td>
+                    <td>{{::view.dates[5].label}}</td>
+                    <td>{{::view.dates[6].label}}</td>
+                </tr>
+                <tr>
+                    <td>{{::view.dates[7].label}}</td>
+                    <td>{{::view.dates[8].label}}</td>
+                    <td>{{::view.dates[9].label}}</td>
+                    <td>{{::view.dates[10].label}}</td>
+                    <td>{{::view.dates[11].label}}</td>
+                    <td>{{::view.dates[12].label}}</td>
+                    <td>{{::view.dates[13].label}}</td>
+                </tr>
+                <tr>
+                    <td>{{::view.dates[14].label}}</td>
+                    <td>{{::view.dates[15].label}}</td>
+                    <td>{{::view.dates[16].label}}</td>
+                    <td>{{::view.dates[17].label}}</td>
+                    <td>{{::view.dates[18].label}}</td>
+                    <td>{{::view.dates[19].label}}</td>
+                    <td>{{::view.dates[20].label}}</td>
+                </tr>
+                <tr>
+                    <td>{{::view.dates[21].label}}</td>
+                    <td>{{::view.dates[22].label}}</td>
+                    <td>{{::view.dates[23].label}}</td>
+                    <td>{{::view.dates[24].label}}</td>
+                    <td>{{::view.dates[25].label}}</td>
+                    <td>{{::view.dates[26].label}}</td>
+                    <td>{{::view.dates[27].label}}</td>
+                </tr>
+                <tr>
+                    <td>{{::view.dates[28].label}}</td>
+                    <td>{{::view.dates[29].label}}</td>
+                    <td>{{::view.dates[30].label}}</td>
+                    <td>{{::view.dates[31].label}}</td>
+                    <td>{{::view.dates[32].label}}</td>
+                    <td>{{::view.dates[33].label}}</td>
+                    <td>{{::view.dates[34].label}}</td>
+                </tr>
+                <tr>
+                    <td>{{::view.dates[35].label}}</td>
+                    <td>{{::view.dates[36].label}}</td>
+                    <td>{{::view.dates[37].label}}</td>
+                    <td>{{::view.dates[38].label}}</td>
+                    <td>{{::view.dates[39].label}}</td>
+                    <td>{{::view.dates[40].label}}</td>
+                    <td>{{::view.dates[41].label}}</td>
+                </tr>
+                </tbody>
+            </table>
+        </ion-slide>
+    </ion-slide-box>
+    <ion-content class="event-detail-container" has-bouncing="false">
+        <table class="table table-bordered table-striped table-fixed event-detail-table">
+            <tr ng-repeat="event in selectedDate.events" ng-click="eventSelected({event:event})">
+                <td ng-if="!event.allDay" class="monthview-eventdetail-timecolumn">{{::event.startTime|date: 'HH:mm'}}
+                    -
+                    {{::event.endTime|date: 'HH:mm'}}
+                </td>
+                <td ng-if="event.allDay" class="monthview-eventdetail-timecolumn">All day</td>
+                <td class="event-detail">{{::event.title}}</td>
+            </tr>
+            <tr ng-if="!selectedDate.events">
+                <td class="no-event-label">No Events</td>
+            </tr>
+        </table>
+    </ion-content>
+</div>
+

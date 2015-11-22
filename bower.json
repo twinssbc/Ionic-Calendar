@@ -1,0 +1,32 @@
+{
+    "name": "ionic-calendar",
+    "version": "0.1.0",
+    "homepage": "https://github.com/twinssbc/Ionic-Calendar",
+    "authors": [
+        "twinssbc <bocong@hotmail.com>"
+    ],
+    "description": "A calendar directive for Ionic framework",
+    "main": [
+        "dist/css/calendar/calendar.css",
+        "dist/js/calendar-tpls.js"
+    ],
+    "keywords": [
+        "ionic",
+        "calendar"
+    ],
+    "dependencies": {
+        "angular": "~1.2",
+        "ionic": "~1.1.1"
+        "bootstrap": "~3.0.3"
+    },
+    "license": "MIT",
+    "ignore": [
+        "lib/",
+        "css/",
+        "src/",
+        "template/",
+        ".jshintrc",
+        "gruntfile.js",
+        "package.json"
+    ]
+}
