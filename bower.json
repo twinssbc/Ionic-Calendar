@@ -7,7 +7,7 @@
     ],
     "description": "A calendar directive for Ionic framework",
     "main": [
-        "dist/css/calendar/calendar.css",
+        "dist/css/calendar.css",
         "dist/js/calendar-tpls.js"
     ],
     "keywords": [
@@ -16,7 +16,7 @@
     ],
     "dependencies": {
         "angular": "~1.2",
-        "ionic": "~1.1.1"
+        "ionic": "~1.1.1",
         "bootstrap": "~3.0.3"
     },
     "license": "MIT",
