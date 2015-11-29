@@ -15,7 +15,6 @@
         "calendar"
     ],
     "dependencies": {
-        "angular": "~1.2",
         "ionic": "~1.1.1"
     },
     "license": "MIT",
