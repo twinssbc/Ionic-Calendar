@@ -50,8 +50,11 @@ Default value: false
 * showEventDetail    
 If set to true, when selecting the date in the month view, the events happened on that day will be shown below.    
 Default value: true
-* startingDay    
+* startingDayMonth    
 Control month view starting from which day.    
+Default value: 0
+* startingDayWeek    
+Control week view starting from which day.    
 Default value: 0
 * eventSource    
 The data source of the calendar, when the eventSource is set, the view will be updated accordingly.    
