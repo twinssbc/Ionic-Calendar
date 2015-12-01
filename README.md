@@ -11,10 +11,9 @@ Bower Install: `bower install ionic-calendar`
 
 Load the necessary dependent files:
 
-    <link rel="stylesheet" href="../lib/bootstrap/dist/css/bootstrap.css"/>
-    <link rel="stylesheet" href="http://code.ionicframework.com/1.1.1/css/ionic.css"/>
+    <link rel="stylesheet" href="http://code.ionicframework.com/1.1.1/css/ionic.min.css"/>
     <link rel="stylesheet" href="<bower lib installation path>/ionic-calendar/dist/css/calendar.min.css"/>
-    <script src="http://code.ionicframework.com/1.1.1/js/ionic.bundle.js"></script>
+    <script src="http://code.ionicframework.com/1.1.1/js/ionic.bundle.min.js"></script>
     <script src="<bower lib installation path>/ionic-calendar/dist/js/calendar-tpls.min.js"></script>
 
 Add the calendar module as a dependency to your application module:

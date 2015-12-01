@@ -16,8 +16,56 @@
     height: 100%;
 }
 
+.text-muted {
+    color: #999;
+}
+
 .table-fixed {
     table-layout: fixed;
+}
+
+.table {
+    width: 100%;
+    max-width: 100%;
+    background-color: transparent;
+}
+
+.table > thead > tr > th, .table > tbody > tr > th, .table > tfoot > tr > th, .table > thead > tr > td,
+.table > tbody > tr > td, .table > tfoot > tr > td {
+    padding: 8px;
+    line-height: 1.428571429;
+    vertical-align: top;
+    border-top: 1px solid #ddd;
+}
+
+.table > thead > tr > th {
+    vertical-align: bottom;
+    border-bottom: 2px solid #ddd;
+}
+
+.table > thead:first-child > tr:first-child > th, .table > thead:first-child > tr:first-child > td {
+    border-top: 0
+}
+
+.table > tbody + tbody {
+    border-top: 2px solid #ddd;
+}
+
+.table-bordered {
+    border: 1px solid #ddd;
+}
+
+.table-bordered > thead > tr > th, .table-bordered > tbody > tr > th, .table-bordered > tfoot > tr > th,
+.table-bordered > thead > tr > td, .table-bordered > tbody > tr > td, .table-bordered > tfoot > tr > td {
+    border: 1px solid #ddd;
+}
+
+.table-bordered > thead > tr > th, .table-bordered > thead > tr > td {
+    border-bottom-width: 2px;
+}
+
+.table-striped > tbody > tr:nth-child(odd) > td, .table-striped > tbody > tr:nth-child(odd) > th {
+    background-color: #f9f9f9
 }
 
 .no-event-label {
@@ -26,12 +74,9 @@
     text-align: center;
 }
 
-.weekview-normal-event-table, dayview-normal-event-table, .event-detail-table {
-    margin-bottom: 0px;
-}
 .event-detail-container {
     border-top: 2px darkgrey solid;
-    margin-top: 256px;
+    margin-top: 262px;
 }
 
 .event-detail {
@@ -101,10 +146,10 @@
 }
 
 .monthview-datetable th {
-    text-align:center;
+    text-align: center;
 }
 
-.monthview-datetable td{
+.monthview-datetable td {
     cursor: pointer;
     text-align: center;
 }
@@ -132,11 +177,6 @@
 
 .weekview-allday-content-table, .dayview-allday-content-table {
     height: 50px;
-    margin-bottom: 0px;
-}
-
-.weekview-header, .monthview-datetable {
-    margin-bottom: 0px;
 }
 
 .monthview-slide {
@@ -166,7 +206,7 @@
 
 @media (max-width: 750px) {
     .weekview-allday-label, .dayview-allday-label, .calendar-hour-column, .calendar-week-column {
-        width: 28px;
+        width: 30px;
         font-size: 14px;
     }
 
@@ -174,13 +214,13 @@
         margin-top: 82px;
     }
 
-    .table>tbody>tr>td.calendar-hour-column {
+    .table > tbody > tr > td.calendar-hour-column {
         padding-left: 0px;
         padding-right: 0px;
         font-size: 12px;
     }
 
-    .table>thead>tr>th.weekview-header {
+    .table > thead > tr > th.weekview-header {
         padding-left: 0px;
         padding-right: 0px;
         font-size: 12px;

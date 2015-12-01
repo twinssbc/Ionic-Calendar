@@ -12,7 +12,7 @@ angular.module('ui.rCalendar', ['ui.rCalendar.tpls'])
         eventSource: null,
         queryMode: 'local'
     })
-    .controller('ui.rCalendar.CalendarController', ['$scope', '$attrs', '$parse', '$interpolate', '$log', 'dateFilter', 'calendarConfig', '$animate', function ($scope, $attrs, $parse, $interpolate, $log, dateFilter, calendarConfig, $animate) {
+    .controller('ui.rCalendar.CalendarController', ['$scope', '$attrs', '$parse', '$interpolate', '$log', 'dateFilter', 'calendarConfig', '$timeout', function ($scope, $attrs, $parse, $interpolate, $log, dateFilter, calendarConfig, $timeout) {
         'use strict';
         var self = this,
             ngModelCtrl = {$setViewValue: angular.noop}; // nullModelCtrl;
@@ -38,107 +38,8 @@ angular.module('ui.rCalendar', ['ui.rCalendar.tpls'])
             }
         }
 
-        self.init = function (ngModelCtrl_) {
-            ngModelCtrl = ngModelCtrl_;
-
-            ngModelCtrl.$render = function () {
-                self.render();
-            };
-        };
-
-        self.render = function () {
-            if (ngModelCtrl.$modelValue) {
-                var date = new Date(ngModelCtrl.$modelValue),
-                    isValid = !isNaN(date);
-
-                if (isValid) {
-                    this.currentCalendarDate = date;
-                } else {
-                    $log.error('"ng-model" value must be a Date object, a number of milliseconds since 01.01.1970 or a string representing an RFC2822 or ISO 8601 date.');
-                }
-                ngModelCtrl.$setValidity('date', isValid);
-            }
-            this.refreshView();
-        };
-
-        self.refreshView = function () {
-            if (this.mode) {
-                this.range = this._getRange(this.currentCalendarDate);
-                if ($scope.titleChanged) {
-                    $scope.titleChanged({title: self._getTitle()});
-                }
-                this._refreshView();
-                this.rangeChanged();
-            }
-        };
-
-        // Split array into smaller arrays
-        self.split = function (arr, size) {
-            var arrays = [];
-            while (arr.length > 0) {
-                arrays.push(arr.splice(0, size));
-            }
-            return arrays;
-        };
-
-        self.onEventSourceChanged = function (value) {
-            self.eventSource = value;
-            if (self._onDataLoaded) {
-                self._onDataLoaded();
-            }
-        };
-
-        var getAdjacentCalendarDate = function (currentCalendarDate, direction) {
-            var step = self.mode.step,
-                calculateCalendarDate = new Date(currentCalendarDate),
-                year = calculateCalendarDate.getFullYear() + direction * (step.years || 0),
-                month = calculateCalendarDate.getMonth() + direction * (step.months || 0),
-                date = calculateCalendarDate.getDate() + direction * (step.days || 0),
-                firstDayInNextMonth;
-
-            calculateCalendarDate.setFullYear(year, month, date);
-            if ($scope.calendarMode === 'month') {
-                firstDayInNextMonth = new Date(year, month + 1, 1);
-                if (firstDayInNextMonth.getTime() <= calculateCalendarDate.getTime()) {
-                    calculateCalendarDate = new Date(firstDayInNextMonth - 24 * 60 * 60 * 1000);
-                }
-            }
-            return calculateCalendarDate;
-        };
-
-        self.getAdjacentViewStartTime = function (direction) {
-            var adjacentCalendarDate = getAdjacentCalendarDate(self.currentCalendarDate, direction);
-            return self._getRange(adjacentCalendarDate).startTime;
-        };
-
-        self.move = function (direction) {
-            this.direction = direction;
-            self.currentCalendarDate = getAdjacentCalendarDate(self.currentCalendarDate, direction);
-            ngModelCtrl.$setViewValue(self.currentCalendarDate);
-            self.refreshView();
-            this.direction = 0;
-        };
-
-        self.rangeChanged = function () {
-            if (self.queryMode === 'local') {
-                if (self.eventSource && self._onDataLoaded) {
-                    self._onDataLoaded();
-                }
-            } else if (self.queryMode === 'remote') {
-                if ($scope.rangeChanged) {
-                    $scope.rangeChanged({
-                        startTime: this.range.startTime,
-                        endTime: this.range.endTime
-                    });
-                }
-            }
-        };
-
         function overlap(event1, event2) {
-            if (event1.endIndex <= event2.startIndex || event2.endIndex <= event1.startIndex) {
-                return false;
-            }
-            return true;
+            return !(event1.endIndex <= event2.startIndex || event2.endIndex <= event1.startIndex);
         }
 
         function calculatePosition(events) {
@@ -232,6 +133,148 @@ angular.module('ui.rCalendar', ['ui.rCalendar.tpls'])
             }
         }
 
+        function getAdjacentCalendarDate(currentCalendarDate, direction) {
+            var step = self.mode.step,
+                calculateCalendarDate = new Date(currentCalendarDate),
+                year = calculateCalendarDate.getFullYear() + direction * (step.years || 0),
+                month = calculateCalendarDate.getMonth() + direction * (step.months || 0),
+                date = calculateCalendarDate.getDate() + direction * (step.days || 0),
+                firstDayInNextMonth;
+
+            calculateCalendarDate.setFullYear(year, month, date);
+            if ($scope.calendarMode === 'month') {
+                firstDayInNextMonth = new Date(year, month + 1, 1);
+                if (firstDayInNextMonth.getTime() <= calculateCalendarDate.getTime()) {
+                    calculateCalendarDate = new Date(firstDayInNextMonth - 24 * 60 * 60 * 1000);
+                }
+            }
+            return calculateCalendarDate;
+        }
+
+        self.init = function (ngModelCtrl_) {
+            ngModelCtrl = ngModelCtrl_;
+
+            ngModelCtrl.$render = function () {
+                self.render();
+            };
+        };
+
+        self.render = function () {
+            if (ngModelCtrl.$modelValue) {
+                var date = new Date(ngModelCtrl.$modelValue),
+                    isValid = !isNaN(date);
+
+                if (isValid) {
+                    this.currentCalendarDate = date;
+                } else {
+                    $log.error('"ng-model" value must be a Date object, a number of milliseconds since 01.01.1970 or a string representing an RFC2822 or ISO 8601 date.');
+                }
+                ngModelCtrl.$setValidity('date', isValid);
+            }
+            this.refreshView();
+        };
+
+        self.refreshView = function () {
+            if (this.mode) {
+                this.range = this._getRange(this.currentCalendarDate);
+                if ($scope.titleChanged) {
+                    $scope.titleChanged({title: self._getTitle()});
+                }
+                this._refreshView();
+                this.rangeChanged();
+            }
+        };
+
+        // Split array into smaller arrays
+        self.split = function (arr, size) {
+            var arrays = [];
+            while (arr.length > 0) {
+                arrays.push(arr.splice(0, size));
+            }
+            return arrays;
+        };
+
+        self.onEventSourceChanged = function (value) {
+            self.eventSource = value;
+            if (self._onDataLoaded) {
+                self._onDataLoaded();
+            }
+        };
+
+        self.getAdjacentViewStartTime = function (direction) {
+            var adjacentCalendarDate = getAdjacentCalendarDate(self.currentCalendarDate, direction);
+            return self._getRange(adjacentCalendarDate).startTime;
+        };
+
+        self.move = function (direction) {
+            this.direction = direction;
+            self.currentCalendarDate = getAdjacentCalendarDate(self.currentCalendarDate, direction);
+            ngModelCtrl.$setViewValue(self.currentCalendarDate);
+            self.refreshView();
+            this.direction = 0;
+        };
+
+        self.rangeChanged = function () {
+            if (self.queryMode === 'local') {
+                if (self.eventSource && self._onDataLoaded) {
+                    self._onDataLoaded();
+                }
+            } else if (self.queryMode === 'remote') {
+                if ($scope.rangeChanged) {
+                    $scope.rangeChanged({
+                        startTime: this.range.startTime,
+                        endTime: this.range.endTime
+                    });
+                }
+            }
+        };
+
+        self.registerSlideChanged = function (scope) {
+            scope.currentViewIndex = 0;
+            scope.slideChanged = function ($index) {
+                $timeout(function () {
+                    var currentViewIndex = scope.currentViewIndex,
+                        direction = 0;
+                    if ($index - currentViewIndex === 1 || ($index === 0 && currentViewIndex === 2)) {
+                        direction = 1;
+                    } else if (currentViewIndex - $index === 1 || ($index === 2 && currentViewIndex === 0)) {
+                        direction = -1;
+                    }
+                    currentViewIndex = $index;
+                    scope.currentViewIndex = currentViewIndex;
+                    self.move(direction);
+                    scope.$digest();
+                }, 200);
+            };
+        };
+
+        self.populateAdjacentViews = function(scope) {
+            var currentViewStartDate,
+                currentViewData,
+                toUpdateViewIndex,
+                currentViewIndex = scope.currentViewIndex,
+                getViewData = this._getViewData;
+
+            if (self.direction === 1) {
+                currentViewStartDate = self.getAdjacentViewStartTime(1);
+                toUpdateViewIndex = (currentViewIndex + 1) % 3;
+                angular.copy(getViewData(currentViewStartDate), scope.views[toUpdateViewIndex]);
+            } else if (self.direction === -1) {
+                currentViewStartDate = self.getAdjacentViewStartTime(-1);
+                toUpdateViewIndex = (currentViewIndex + 2) % 3;
+                angular.copy(getViewData(currentViewStartDate), scope.views[toUpdateViewIndex]);
+            } else {
+                currentViewData = [];
+                currentViewStartDate = self.range.startTime;
+                currentViewData.push(getViewData(currentViewStartDate));
+                currentViewStartDate = self.getAdjacentViewStartTime(1);
+                currentViewData.push(getViewData(currentViewStartDate));
+                currentViewStartDate = self.getAdjacentViewStartTime(-1);
+                currentViewData.push(getViewData(currentViewStartDate));
+                scope.views = currentViewData;
+            }
+        };
+
         self.placeEvents = function (orderedEvents) {
             calculatePosition(orderedEvents);
             calculateWidth(orderedEvents);
@@ -269,7 +312,7 @@ angular.module('ui.rCalendar', ['ui.rCalendar.tpls'])
             }
         };
     })
-    .directive('monthview', ['dateFilter', '$ionicSlideBoxDelegate', '$timeout', function (dateFilter, $ionicSlideBoxDelegate, $timeout) {
+    .directive('monthview', ['dateFilter', '$ionicSlideBoxDelegate', function (dateFilter, $ionicSlideBoxDelegate) {
         'use strict';
         return {
             restrict: 'EA',
@@ -295,12 +338,55 @@ angular.module('ui.rCalendar', ['ui.rCalendar.tpls'])
                     return dates;
                 }
 
+                function createDateObject(date, format) {
+                    return {
+                        date: date,
+                        label: dateFilter(date, format)
+                    };
+                }
+
+                function updateCurrentView(currentViewStartDate, view) {
+                    var currentCalendarDate = ctrl.currentCalendarDate,
+                        today = new Date(),
+                        oneDay = 86400000,
+                        r,
+                        selectedDayDifference = Math.floor((currentCalendarDate.getTime() - currentViewStartDate.getTime()) / oneDay),
+                        currentDayDifference = Math.floor((today.getTime() - currentViewStartDate.getTime()) / oneDay);
+
+                    for (r = 0; r < 42; r += 1) {
+                        view.dates[r].selected = false;
+                    }
+
+                    if (selectedDayDifference >= 0 && selectedDayDifference < 42) {
+                        view.dates[selectedDayDifference].selected = true;
+                        scope.selectedDate = view.dates[selectedDayDifference];
+                    } else {
+                        scope.selectedDate = {
+                            events: []
+                        };
+                    }
+
+                    if (currentDayDifference >= 0 && currentDayDifference < 42) {
+                        view.dates[currentDayDifference].current = true;
+                    }
+                }
+
+                function compareEvent(event1, event2) {
+                    if (event1.allDay) {
+                        return 1;
+                    } else if (event2.allDay) {
+                        return -1;
+                    } else {
+                        return (event1.startTime.getTime() - event2.startTime.getTime());
+                    }
+                }
+
                 scope.select = function (selectedDate) {
                     var views = scope.views,
                         dates,
                         r;
                     if (views) {
-                        dates = views[currentViewIndex].dates;
+                        dates = views[scope.currentViewIndex].dates;
                         var currentCalendarDate = ctrl.currentCalendarDate;
                         var currentMonth = currentCalendarDate.getMonth();
                         var currentYear = currentCalendarDate.getFullYear();
@@ -345,75 +431,6 @@ angular.module('ui.rCalendar', ['ui.rCalendar.tpls'])
                     }
                 };
 
-                var currentViewIndex = 0;
-                scope.currentViewIndex = currentViewIndex;
-                scope.slideChanged = function ($index) {
-                    $timeout(function () {
-                        var direction = 0;
-                        if ($index - currentViewIndex === 1 || ($index === 0 && currentViewIndex === 2)) {
-                            direction = 1;
-                        } else if (currentViewIndex - $index === 1 || ($index === 2 && currentViewIndex === 0)) {
-                            direction = -1;
-                        }
-                        currentViewIndex = $index;
-                        scope.currentViewIndex = currentViewIndex;
-                        ctrl.move(direction);
-                        scope.$digest();
-                    }, 200);
-                };
-
-                function getViewData(startTime) {
-                    var startDate = startTime,
-                        date = startDate.getDate(),
-                        month = (startDate.getMonth() + (date !== 1 ? 1 : 0)) % 12;
-
-                    var days = getDates(startDate, 42);
-                    for (var i = 0; i < 42; i++) {
-                        days[i] = angular.extend(createDateObject(days[i], ctrl.formatDay), {
-                            secondary: days[i].getMonth() !== month
-                        });
-                    }
-
-                    return {
-                        dates: days
-                    };
-                }
-
-                ctrl._getTitle = function () {
-                    var currentViewStartDate = ctrl.range.startTime,
-                        date = currentViewStartDate.getDate(),
-                        month = (currentViewStartDate.getMonth() + (date !== 1 ? 1 : 0)) % 12,
-                        year = currentViewStartDate.getFullYear() + (date !== 1 && month === 0 ? 1 : 0),
-                        headerDate = new Date(year, month, 1);
-                    return dateFilter(headerDate, ctrl.formatMonthTitle);
-                };
-
-                function updateCurrentView(currentViewStartDate, view) {
-                    var currentCalendarDate = ctrl.currentCalendarDate,
-                        today = new Date(),
-                        oneDay = 86400000,
-                        r,
-                        selectedDayDifference = Math.floor((currentCalendarDate.getTime() - currentViewStartDate.getTime()) / oneDay),
-                        currentDayDifference = Math.floor((today.getTime() - currentViewStartDate.getTime()) / oneDay);
-
-                    for (r = 0; r < 42; r += 1) {
-                        view.dates[r].selected = false;
-                    }
-
-                    if (selectedDayDifference >= 0 && selectedDayDifference < 42) {
-                        view.dates[selectedDayDifference].selected = true;
-                        scope.selectedDate = view.dates[selectedDayDifference];
-                    } else {
-                        scope.selectedDate = {
-                            events: []
-                        };
-                    }
-
-                    if (currentDayDifference >= 0 && currentDayDifference < 42) {
-                        view.dates[currentDayDifference].current = true;
-                    }
-                }
-
                 scope.getHighlightClass = function (date) {
                     var className = '';
                     if (date.selected) {
@@ -437,51 +454,36 @@ angular.module('ui.rCalendar', ['ui.rCalendar.tpls'])
                     return className;
                 };
 
-                ctrl._refreshView = function () {
-                    var currentViewStartDate,
-                        currentViewData,
-                        toUpdateViewIndex,
-                        toClearViewIndex;
-
-                    if (ctrl.direction === 1) {
-                        currentViewStartDate = ctrl.getAdjacentViewStartTime(1);
-                        toUpdateViewIndex = (currentViewIndex + 1) % 3;
-                        toClearViewIndex = (currentViewIndex + 2) % 3;
-                        angular.copy(getViewData(currentViewStartDate), scope.views[toUpdateViewIndex]);
-                    } else if (ctrl.direction === -1) {
-                        currentViewStartDate = ctrl.getAdjacentViewStartTime(-1);
-                        toUpdateViewIndex = (currentViewIndex + 2) % 3;
-                        toClearViewIndex = (currentViewIndex + 1) % 3;
-                        angular.copy(getViewData(currentViewStartDate), scope.views[toUpdateViewIndex]);
-                    } else {
-                        currentViewData = [];
-                        currentViewStartDate = ctrl.range.startTime;
-                        currentViewData.push(getViewData(currentViewStartDate));
-                        currentViewStartDate = ctrl.getAdjacentViewStartTime(1);
-                        currentViewData.push(getViewData(currentViewStartDate));
-                        currentViewStartDate = ctrl.getAdjacentViewStartTime(-1);
-                        currentViewData.push(getViewData(currentViewStartDate));
-                        scope.views = currentViewData;
-                    }
-                    updateCurrentView(ctrl.range.startTime, scope.views[currentViewIndex]);
+                ctrl._getTitle = function () {
+                    var currentViewStartDate = ctrl.range.startTime,
+                        date = currentViewStartDate.getDate(),
+                        month = (currentViewStartDate.getMonth() + (date !== 1 ? 1 : 0)) % 12,
+                        year = currentViewStartDate.getFullYear() + (date !== 1 && month === 0 ? 1 : 0),
+                        headerDate = new Date(year, month, 1);
+                    return dateFilter(headerDate, ctrl.formatMonthTitle);
                 };
 
-                function createDateObject(date, format) {
-                    return {
-                        date: date,
-                        label: dateFilter(date, format)
-                    };
-                }
+                ctrl._getViewData = function (startTime) {
+                    var startDate = startTime,
+                        date = startDate.getDate(),
+                        month = (startDate.getMonth() + (date !== 1 ? 1 : 0)) % 12;
 
-                function compareEvent(event1, event2) {
-                    if (event1.allDay) {
-                        return 1;
-                    } else if (event2.allDay) {
-                        return -1;
-                    } else {
-                        return (event1.startTime.getTime() - event2.startTime.getTime());
+                    var days = getDates(startDate, 42);
+                    for (var i = 0; i < 42; i++) {
+                        days[i] = angular.extend(createDateObject(days[i], ctrl.formatDay), {
+                            secondary: days[i].getMonth() !== month
+                        });
                     }
-                }
+
+                    return {
+                        dates: days
+                    };
+                };
+
+                ctrl._refreshView = function () {
+                    ctrl.populateAdjacentViews(scope);
+                    updateCurrentView(ctrl.range.startTime, scope.views[scope.currentViewIndex]);
+                };
 
                 ctrl._onDataLoaded = function () {
                     var eventSource = ctrl.eventSource,
@@ -491,6 +493,7 @@ angular.module('ui.rCalendar', ['ui.rCalendar.tpls'])
                         timeZoneOffset = -new Date().getTimezoneOffset(),
                         utcStartTime = new Date(startTime.getTime() + timeZoneOffset * 60 * 1000),
                         utcEndTime = new Date(endTime.getTime() + timeZoneOffset * 60 * 1000),
+                        currentViewIndex = scope.currentViewIndex,
                         dates = scope.views[currentViewIndex].dates,
                         oneDay = 86400000,
                         eps = 0.001;
@@ -574,10 +577,6 @@ angular.module('ui.rCalendar', ['ui.rCalendar.tpls'])
                     }
                 };
 
-                ctrl.compare = function (date1, date2) {
-                    return (new Date(date1.getFullYear(), date1.getMonth(), date1.getDate()) - new Date(date2.getFullYear(), date2.getMonth(), date2.getDate()) );
-                };
-
                 ctrl._getRange = function getRange(currentDate) {
                     var year = currentDate.getFullYear(),
                         month = currentDate.getMonth(),
@@ -599,11 +598,14 @@ angular.module('ui.rCalendar', ['ui.rCalendar.tpls'])
                         endTime: endDate
                     };
                 };
+
+                ctrl.registerSlideChanged(scope);
+
                 ctrl.refreshView();
             }
         };
     }])
-    .directive('weekview', ['dateFilter', '$timeout', function (dateFilter, $timeout) {
+    .directive('weekview', ['dateFilter', function (dateFilter) {
         'use strict';
         return {
             restrict: 'EA',
@@ -629,30 +631,6 @@ angular.module('ui.rCalendar', ['ui.rCalendar.tpls'])
                     return dates;
                 }
 
-                var currentViewIndex = 0;
-                scope.currentViewIndex = currentViewIndex;
-                scope.slideChanged = function ($index) {
-                    $timeout(function () {
-                        var direction = 0;
-                        if ($index - currentViewIndex === 1 || ($index === 0 && currentViewIndex === 2)) {
-                            direction = 1;
-                        } else if (currentViewIndex - $index === 1 || ($index === 2 && currentViewIndex === 0)) {
-                            direction = -1;
-                        }
-                        currentViewIndex = $index;
-                        scope.currentViewIndex = currentViewIndex;
-                        ctrl.move(direction);
-                        scope.$digest();
-                    }, 200);
-                };
-
-                function getViewData(startTime) {
-                    return {
-                        rows: createDateObjects(startTime),
-                        dates: getDates(startTime, 7)
-                    };
-                }
-
                 function createDateObjects(startTime) {
                     var times = [],
                         row,
@@ -674,6 +652,41 @@ angular.module('ui.rCalendar', ['ui.rCalendar.tpls'])
                     return times;
                 }
 
+                //This can be decomissioned when upgrade to Angular 1.3
+                function getISO8601WeekNumber(date) {
+                    var checkDate = new Date(date);
+                    checkDate.setDate(checkDate.getDate() + 4 - (checkDate.getDay() || 7)); // Thursday
+                    var time = checkDate.getTime();
+                    checkDate.setMonth(0); // Compare with Jan 1
+                    checkDate.setDate(1);
+                    return Math.floor(Math.round((time - checkDate) / 86400000) / 7) + 1;
+                }
+
+                ctrl._getTitle = function () {
+                    var firstDayOfWeek = ctrl.range.startTime,
+                        weekNumberIndex,
+                        weekFormatPattern = 'w',
+                        title;
+
+                    weekNumberIndex = ctrl.formatWeekTitle.indexOf(weekFormatPattern);
+                    title = dateFilter(firstDayOfWeek, ctrl.formatWeekTitle);
+                    if (weekNumberIndex !== -1) {
+                        title = title.replace(weekFormatPattern, getISO8601WeekNumber(firstDayOfWeek));
+                    }
+
+                    return title;
+                };
+
+                ctrl._getViewData = function (startTime) {
+                    return {
+                        rows: createDateObjects(startTime),
+                        dates: getDates(startTime, 7)
+                    };
+                };
+
+                ctrl._refreshView = function () {
+                    ctrl.populateAdjacentViews(scope);
+                };
 
                 ctrl._onDataLoaded = function () {
                     var eventSource = ctrl.eventSource,
@@ -686,6 +699,7 @@ angular.module('ui.rCalendar', ['ui.rCalendar.tpls'])
                         timeZoneOffset = -new Date().getTimezoneOffset(),
                         utcStartTime = new Date(startTime.getTime() + timeZoneOffset * 60000),
                         utcEndTime = new Date(endTime.getTime() + timeZoneOffset * 60000),
+                        currentViewIndex = scope.currentViewIndex,
                         rows = scope.views[currentViewIndex].rows,
                         dates = scope.views[currentViewIndex].dates,
                         oneHour = 3600000,
@@ -826,49 +840,6 @@ angular.module('ui.rCalendar', ['ui.rCalendar.tpls'])
                     }
                 };
 
-                ctrl._refreshView = function () {
-                    var currentViewStartDate,
-                        currentViewData,
-                        toUpdateViewIndex,
-                        toClearViewIndex;
-
-                    if (ctrl.direction === 1) {
-                        currentViewStartDate = ctrl.getAdjacentViewStartTime(1);
-                        toUpdateViewIndex = (currentViewIndex + 1) % 3;
-                        toClearViewIndex = (currentViewIndex + 2) % 3;
-                        angular.copy(getViewData(currentViewStartDate), scope.views[toUpdateViewIndex]);
-                    } else if (ctrl.direction === -1) {
-                        currentViewStartDate = ctrl.getAdjacentViewStartTime(-1);
-                        toUpdateViewIndex = (currentViewIndex + 2) % 3;
-                        toClearViewIndex = (currentViewIndex + 1) % 3;
-                        angular.copy(getViewData(currentViewStartDate), scope.views[toUpdateViewIndex]);
-                    } else {
-                        currentViewData = [];
-                        currentViewStartDate = ctrl.range.startTime;
-                        currentViewData.push(getViewData(currentViewStartDate));
-                        currentViewStartDate = ctrl.getAdjacentViewStartTime(1);
-                        currentViewData.push(getViewData(currentViewStartDate));
-                        currentViewStartDate = ctrl.getAdjacentViewStartTime(-1);
-                        currentViewData.push(getViewData(currentViewStartDate));
-                        scope.views = currentViewData;
-                    }
-                };
-
-                ctrl._getTitle = function () {
-                    var firstDayOfWeek = ctrl.range.startTime,
-                        weekNumberIndex,
-                        weekFormatPattern = 'w',
-                        title;
-
-                    weekNumberIndex = ctrl.formatWeekTitle.indexOf(weekFormatPattern);
-                    title = dateFilter(firstDayOfWeek, ctrl.formatWeekTitle);
-                    if (weekNumberIndex !== -1) {
-                        title = title.replace(weekFormatPattern, getISO8601WeekNumber(firstDayOfWeek));
-                    }
-
-                    return title;
-                };
-
                 ctrl._getRange = function getRange(currentDate) {
                     var year = currentDate.getFullYear(),
                         month = currentDate.getMonth(),
@@ -883,21 +854,13 @@ angular.module('ui.rCalendar', ['ui.rCalendar.tpls'])
                     };
                 };
 
-                //This can be decomissioned when upgrade to Angular 1.3
-                function getISO8601WeekNumber(date) {
-                    var checkDate = new Date(date);
-                    checkDate.setDate(checkDate.getDate() + 4 - (checkDate.getDay() || 7)); // Thursday
-                    var time = checkDate.getTime();
-                    checkDate.setMonth(0); // Compare with Jan 1
-                    checkDate.setDate(1);
-                    return Math.floor(Math.round((time - checkDate) / 86400000) / 7) + 1;
-                }
+                ctrl.registerSlideChanged(scope);
 
                 ctrl.refreshView();
             }
         };
     }])
-    .directive('dayview', ['dateFilter', '$timeout', function (dateFilter, $timeout) {
+    .directive('dayview', ['dateFilter', function (dateFilter) {
         'use strict';
         return {
             restrict: 'EA',
@@ -925,30 +888,6 @@ angular.module('ui.rCalendar', ['ui.rCalendar.tpls'])
                     return rows;
                 }
 
-                var currentViewIndex = 0;
-                scope.currentViewIndex = currentViewIndex;
-                scope.slideChanged = function ($index) {
-                    $timeout(function () {
-                        var direction = 0;
-                        if ($index - currentViewIndex === 1 || ($index === 0 && currentViewIndex === 2)) {
-                            direction = 1;
-                        } else if (currentViewIndex - $index === 1 || ($index === 2 && currentViewIndex === 0)) {
-                            direction = -1;
-                        }
-                        currentViewIndex = $index;
-                        scope.currentViewIndex = currentViewIndex;
-                        ctrl.move(direction);
-                        scope.$digest();
-                    }, 200);
-                };
-
-                function getViewData(startTime) {
-                    return {
-                        rows: createDateObjects(startTime),
-                        allDayEvents: []
-                    };
-                }
-
                 ctrl._onDataLoaded = function () {
                     var eventSource = ctrl.eventSource,
                         hour,
@@ -958,6 +897,7 @@ angular.module('ui.rCalendar', ['ui.rCalendar.tpls'])
                         timeZoneOffset = -new Date().getTimezoneOffset(),
                         utcStartTime = new Date(startTime.getTime() + timeZoneOffset * 60 * 1000),
                         utcEndTime = new Date(endTime.getTime() + timeZoneOffset * 60 * 1000),
+                        currentViewIndex = scope.currentViewIndex,
                         rows = scope.views[currentViewIndex].rows,
                         allDayEvents = scope.views[currentViewIndex].allDayEvents = [],
                         oneHour = 3600000,
@@ -965,7 +905,7 @@ angular.module('ui.rCalendar', ['ui.rCalendar.tpls'])
                         eventSet,
                         normalEventInRange = false;
 
-                    for ( hour = 0; hour < 24; hour += 1) {
+                    for (hour = 0; hour < 24; hour += 1) {
                         rows[hour].events = [];
                     }
 
@@ -1036,38 +976,20 @@ angular.module('ui.rCalendar', ['ui.rCalendar.tpls'])
                     }
                 };
 
-                ctrl._refreshView = function () {
-                    var currentViewStartDate,
-                        currentViewData,
-                        toUpdateViewIndex,
-                        toClearViewIndex;
-
-                    if (ctrl.direction === 1) {
-                        currentViewStartDate = ctrl.getAdjacentViewStartTime(1);
-                        toUpdateViewIndex = (currentViewIndex + 1) % 3;
-                        toClearViewIndex = (currentViewIndex + 2) % 3;
-                        angular.copy(getViewData(currentViewStartDate), scope.views[toUpdateViewIndex]);
-                    } else if (ctrl.direction === -1) {
-                        currentViewStartDate = ctrl.getAdjacentViewStartTime(-1);
-                        toUpdateViewIndex = (currentViewIndex + 2) % 3;
-                        toClearViewIndex = (currentViewIndex + 1) % 3;
-                        angular.copy(getViewData(currentViewStartDate), scope.views[toUpdateViewIndex]);
-                    } else {
-                        currentViewData = [];
-                        currentViewStartDate = ctrl.range.startTime;
-                        currentViewData.push(getViewData(currentViewStartDate));
-                        currentViewStartDate = ctrl.getAdjacentViewStartTime(1);
-                        currentViewData.push(getViewData(currentViewStartDate));
-                        currentViewStartDate = ctrl.getAdjacentViewStartTime(-1);
-                        currentViewData.push(getViewData(currentViewStartDate));
-                        scope.views = currentViewData;
-                    }
+                ctrl._refreshView = function() {
+                    ctrl.populateAdjacentViews(scope);
                 };
 
                 ctrl._getTitle = function () {
-                    var startingDate = ctrl.range.startTime,
-                        title = dateFilter(startingDate, ctrl.formatDayTitle);
-                    return title;
+                    var startingDate = ctrl.range.startTime;
+                    return dateFilter(startingDate, ctrl.formatDayTitle);
+                };
+
+                ctrl._getViewData = function (startTime) {
+                    return {
+                        rows: createDateObjects(startTime),
+                        allDayEvents: []
+                    };
                 };
 
                 ctrl._getRange = function getRange(currentDate) {
@@ -1082,6 +1004,8 @@ angular.module('ui.rCalendar', ['ui.rCalendar.tpls'])
                         endTime: endTime
                     };
                 };
+
+                ctrl.registerSlideChanged(scope);
 
                 ctrl.refreshView();
             }

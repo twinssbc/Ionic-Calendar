@@ -15,9 +15,7 @@
         "calendar"
     ],
     "dependencies": {
-        "angular": "~1.2",
-        "ionic": "~1.1.1",
-        "bootstrap": "~3.0.3"
+        "ionic": "~1.1.1"
     },
     "license": "MIT",
     "ignore": [
