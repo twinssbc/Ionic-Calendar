@@ -249,7 +249,7 @@ angular.module('ui.rCalendar', ['ui.rCalendar.tpls'])
             };
         };
 
-        self.populateAdjacentViews = function(scope) {
+        self.populateAdjacentViews = function (scope) {
             var currentViewStartDate,
                 currentViewData,
                 toUpdateViewIndex,
@@ -678,6 +678,12 @@ angular.module('ui.rCalendar', ['ui.rCalendar.tpls'])
                     return title;
                 };
 
+                scope.select = function (selectedTime) {
+                    if (scope.timeSelected) {
+                        scope.timeSelected({selectedTime: selectedTime});
+                    }
+                };
+
                 ctrl._getViewData = function (startTime) {
                     return {
                         rows: createDateObjects(startTime),
@@ -889,6 +895,12 @@ angular.module('ui.rCalendar', ['ui.rCalendar.tpls'])
                     return rows;
                 }
 
+                scope.select = function (selectedTime) {
+                    if (scope.timeSelected) {
+                        scope.timeSelected({selectedTime: selectedTime});
+                    }
+                };
+
                 ctrl._onDataLoaded = function () {
                     var eventSource = ctrl.eventSource,
                         hour,
@@ -977,7 +989,7 @@ angular.module('ui.rCalendar', ['ui.rCalendar.tpls'])
                     }
                 };
 
-                ctrl._refreshView = function() {
+                ctrl._refreshView = function () {
                     ctrl.populateAdjacentViews(scope);
                 };
 
@@ -1057,7 +1069,7 @@ angular.module("templates/rcalendar/day.html", []).run(["$templateCache", functi
     "                        <td class=\"calendar-hour-column text-center\">\n" +
     "                            {{$index<12?($index === 0?12:$index)+'am':($index === 12?$index:$index-12)+'pm'}}\n" +
     "                        </td>\n" +
-    "                        <td class=\"calendar-cell\">\n" +
+    "                        <td class=\"calendar-cell\" ng-click=\"select(tm.time)\">\n" +
     "                            <div ng-class=\"{'calendar-event-wrap': tm.events}\" ng-if=\"tm.events\">\n" +
     "                                <div ng-repeat=\"displayEvent in tm.events\" class=\"calendar-event\"\n" +
     "                                     ng-click=\"eventSelected({event:displayEvent.event})\"\n" +
@@ -1409,7 +1421,7 @@ angular.module("templates/rcalendar/week.html", []).run(["$templateCache", funct
     "                            <td class=\"calendar-hour-column text-center\">\n" +
     "                                {{::$index<12?($index === 0?12:$index)+'am':($index === 12?$index:$index-12)+'pm'}}\n" +
     "                            </td>\n" +
-    "                            <td ng-repeat=\"tm in row track by tm.time\" class=\"calendar-cell\">\n" +
+    "                            <td ng-repeat=\"tm in row track by tm.time\" class=\"calendar-cell\" ng-click=\"select(tm.time)\">\n" +
     "                                <div ng-class=\"{'calendar-event-wrap': tm.events}\" ng-if=\"tm.events\">\n" +
     "                                    <div ng-repeat=\"displayEvent in tm.events\" class=\"calendar-event\"\n" +
     "                                         ng-click=\"eventSelected({event:displayEvent.event})\"\n" +

@@ -248,7 +248,7 @@ angular.module('ui.rCalendar', [])
             };
         };
 
-        self.populateAdjacentViews = function(scope) {
+        self.populateAdjacentViews = function (scope) {
             var currentViewStartDate,
                 currentViewData,
                 toUpdateViewIndex,
@@ -677,6 +677,12 @@ angular.module('ui.rCalendar', [])
                     return title;
                 };
 
+                scope.select = function (selectedTime) {
+                    if (scope.timeSelected) {
+                        scope.timeSelected({selectedTime: selectedTime});
+                    }
+                };
+
                 ctrl._getViewData = function (startTime) {
                     return {
                         rows: createDateObjects(startTime),
@@ -888,6 +894,12 @@ angular.module('ui.rCalendar', [])
                     return rows;
                 }
 
+                scope.select = function (selectedTime) {
+                    if (scope.timeSelected) {
+                        scope.timeSelected({selectedTime: selectedTime});
+                    }
+                };
+
                 ctrl._onDataLoaded = function () {
                     var eventSource = ctrl.eventSource,
                         hour,
@@ -976,7 +988,7 @@ angular.module('ui.rCalendar', [])
                     }
                 };
 
-                ctrl._refreshView = function() {
+                ctrl._refreshView = function () {
                     ctrl.populateAdjacentViews(scope);
                 };
 
