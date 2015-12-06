@@ -208,11 +208,15 @@ angular.module('ui.rCalendar', ['ui.rCalendar.tpls'])
         };
 
         self.move = function (direction) {
-            this.direction = direction;
-            self.currentCalendarDate = getAdjacentCalendarDate(self.currentCalendarDate, direction);
+            self.direction = direction;
+            if (self.moveOnSelected) {
+                self.moveOnSelected = false;
+            } else {
+                self.currentCalendarDate = getAdjacentCalendarDate(self.currentCalendarDate, direction);
+            }
             ngModelCtrl.$setViewValue(self.currentCalendarDate);
             self.refreshView();
-            this.direction = 0;
+            self.direction = 0;
         };
 
         self.rangeChanged = function () {
@@ -402,6 +406,7 @@ angular.module('ui.rCalendar', ['ui.rCalendar.tpls'])
                             direction = currentYear < selectedYear ? 1 : -1;
                         }
 
+                        ctrl.currentCalendarDate = selectedDate;
                         if (direction === 0) {
                             ctrl.currentCalendarDate = selectedDate;
                             if (ngModelCtrl) {
@@ -419,6 +424,7 @@ angular.module('ui.rCalendar', ['ui.rCalendar.tpls'])
                                 scope.selectedDate = dates[selectedDayDifference];
                             }
                         } else {
+                            ctrl.moveOnSelected = true;
                             if (direction === 1) {
                                 $ionicSlideBoxDelegate.next();
                             } else {
