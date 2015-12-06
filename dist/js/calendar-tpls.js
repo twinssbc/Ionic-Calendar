@@ -8,7 +8,8 @@ angular.module('ui.rCalendar', ['ui.rCalendar.tpls'])
         formatMonthTitle: 'MMMM yyyy',
         calendarMode: 'month',
         showEventDetail: true,
-        startingDay: 0,
+        startingDayMonth: 0,
+        startingDayWeek: 0,
         eventSource: null,
         queryMode: 'local'
     })
@@ -19,7 +20,7 @@ angular.module('ui.rCalendar', ['ui.rCalendar.tpls'])
 
         // Configuration attributes
         angular.forEach(['formatDay', 'formatDayHeader', 'formatDayTitle', 'formatWeekTitle', 'formatMonthTitle',
-            'showEventDetail', 'startingDay', 'eventSource', 'queryMode'], function (key, index) {
+            'showEventDetail', 'startingDayMonth', 'startingDayWeek', 'eventSource', 'queryMode'], function (key, index) {
             self[key] = angular.isDefined($attrs[key]) ? (index < 5 ? $interpolate($attrs[key])($scope.$parent) : $scope.$parent.$eval($attrs[key])) : calendarConfig[key];
         });
 
@@ -581,7 +582,7 @@ angular.module('ui.rCalendar', ['ui.rCalendar.tpls'])
                     var year = currentDate.getFullYear(),
                         month = currentDate.getMonth(),
                         firstDayOfMonth = new Date(year, month, 1),
-                        difference = ctrl.startingDay - firstDayOfMonth.getDay(),
+                        difference = ctrl.startingDayMonth - firstDayOfMonth.getDay(),
                         numDisplayedFromPreviousMonth = (difference > 0) ? 7 - difference : -difference,
                         startDate = new Date(firstDayOfMonth),
                         endDate;
@@ -845,7 +846,7 @@ angular.module('ui.rCalendar', ['ui.rCalendar.tpls'])
                         month = currentDate.getMonth(),
                         date = currentDate.getDate(),
                         day = currentDate.getDay(),
-                        firstDayOfWeek = new Date(year, month, date - day),
+                        firstDayOfWeek = new Date(year, month, date - day + ctrl.startingDayWeek),
                         endTime = new Date(year, month, date - day + 7);
 
                     return {
