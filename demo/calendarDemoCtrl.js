@@ -72,6 +72,10 @@ angular.module('calendarDemoApp', ['ionic', 'ngAnimate', 'ui.rCalendar'])
             return today.getTime() === currentCalendarDate.getTime();
         };
 
+        $scope.onTimeSelected = function (selectedTime) {
+            console.log('Selected time: ' + selectedTime);
+        };
+
         function createRandomEvents() {
             var events = [];
             for (var i = 0; i < 20; i += 1) {

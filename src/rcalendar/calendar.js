@@ -207,11 +207,15 @@ angular.module('ui.rCalendar', [])
         };
 
         self.move = function (direction) {
-            this.direction = direction;
-            self.currentCalendarDate = getAdjacentCalendarDate(self.currentCalendarDate, direction);
+            self.direction = direction;
+            if (self.moveOnSelected) {
+                self.moveOnSelected = false;
+            } else {
+                self.currentCalendarDate = getAdjacentCalendarDate(self.currentCalendarDate, direction);
+            }
             ngModelCtrl.$setViewValue(self.currentCalendarDate);
             self.refreshView();
-            this.direction = 0;
+            self.direction = 0;
         };
 
         self.rangeChanged = function () {
@@ -248,7 +252,7 @@ angular.module('ui.rCalendar', [])
             };
         };
 
-        self.populateAdjacentViews = function(scope) {
+        self.populateAdjacentViews = function (scope) {
             var currentViewStartDate,
                 currentViewData,
                 toUpdateViewIndex,
@@ -401,6 +405,7 @@ angular.module('ui.rCalendar', [])
                             direction = currentYear < selectedYear ? 1 : -1;
                         }
 
+                        ctrl.currentCalendarDate = selectedDate;
                         if (direction === 0) {
                             ctrl.currentCalendarDate = selectedDate;
                             if (ngModelCtrl) {
@@ -418,6 +423,7 @@ angular.module('ui.rCalendar', [])
                                 scope.selectedDate = dates[selectedDayDifference];
                             }
                         } else {
+                            ctrl.moveOnSelected = true;
                             if (direction === 1) {
                                 $ionicSlideBoxDelegate.next();
                             } else {
@@ -677,6 +683,12 @@ angular.module('ui.rCalendar', [])
                     return title;
                 };
 
+                scope.select = function (selectedTime) {
+                    if (scope.timeSelected) {
+                        scope.timeSelected({selectedTime: selectedTime});
+                    }
+                };
+
                 ctrl._getViewData = function (startTime) {
                     return {
                         rows: createDateObjects(startTime),
@@ -888,6 +900,12 @@ angular.module('ui.rCalendar', [])
                     return rows;
                 }
 
+                scope.select = function (selectedTime) {
+                    if (scope.timeSelected) {
+                        scope.timeSelected({selectedTime: selectedTime});
+                    }
+                };
+
                 ctrl._onDataLoaded = function () {
                     var eventSource = ctrl.eventSource,
                         hour,
@@ -976,7 +994,7 @@ angular.module('ui.rCalendar', [])
                     }
                 };
 
-                ctrl._refreshView = function() {
+                ctrl._refreshView = function () {
                     ctrl.populateAdjacentViews(scope);
                 };
 
