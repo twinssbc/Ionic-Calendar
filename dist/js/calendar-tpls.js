@@ -731,8 +731,6 @@ angular.module('ui.rCalendar', ['ui.rCalendar.tpls'])
                         endTime: new Date(ctrl.range.endTime.getTime() - (1000*60*60*24*7)),
                         index: (scope.currentViewIndex + 2) % 3
                     }];
-                    console.log('currentViewIndex:', scope.currentViewIndex);
-                    console.log('views:', views);
 
                     for (i = 0; i < 3; i += 1) {
                         views[i].utcStartTime = new Date(views[i].startTime.getTime() + timeZoneOffset * 60000);
