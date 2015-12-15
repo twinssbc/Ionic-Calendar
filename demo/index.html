@@ -31,7 +31,6 @@
         <ion-tab title="Contact" icon="ion-ios-world" ui-sref="tabs.contact">
             <ion-nav-view name="contact-tab"></ion-nav-view>
         </ion-tab>
-
     </ion-tabs>
 </script>
 
@@ -48,7 +47,8 @@
         <ion-content scroll="false" class="main-content">
             <calendar ng-model="calendar.currentDate" calendar-mode="calendar.mode" event-source="calendar.eventSource"
                       range-changed="reloadSource(startTime, endTime)"
-                      event-selected="onEventSelected(event)" title-changed="onViewTitleChanged(title)"></calendar>
+                      event-selected="onEventSelected(event)" title-changed="onViewTitleChanged(title)"
+                      time-selected="onTimeSelected(selectedTime)"></calendar>
         </ion-content>
     </ion-view>
 </script>

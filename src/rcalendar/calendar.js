@@ -7,7 +7,8 @@ angular.module('ui.rCalendar', [])
         formatMonthTitle: 'MMMM yyyy',
         calendarMode: 'month',
         showEventDetail: true,
-        startingDay: 0,
+        startingDayMonth: 0,
+        startingDayWeek: 0,
         eventSource: null,
         queryMode: 'local'
     })
@@ -18,7 +19,7 @@ angular.module('ui.rCalendar', [])
 
         // Configuration attributes
         angular.forEach(['formatDay', 'formatDayHeader', 'formatDayTitle', 'formatWeekTitle', 'formatMonthTitle',
-            'showEventDetail', 'startingDay', 'eventSource', 'queryMode'], function (key, index) {
+            'showEventDetail', 'startingDayMonth', 'startingDayWeek', 'eventSource', 'queryMode'], function (key, index) {
             self[key] = angular.isDefined($attrs[key]) ? (index < 5 ? $interpolate($attrs[key])($scope.$parent) : $scope.$parent.$eval($attrs[key])) : calendarConfig[key];
         });
 
@@ -206,11 +207,15 @@ angular.module('ui.rCalendar', [])
         };
 
         self.move = function (direction) {
-            this.direction = direction;
-            self.currentCalendarDate = getAdjacentCalendarDate(self.currentCalendarDate, direction);
+            self.direction = direction;
+            if (self.moveOnSelected) {
+                self.moveOnSelected = false;
+            } else {
+                self.currentCalendarDate = getAdjacentCalendarDate(self.currentCalendarDate, direction);
+            }
             ngModelCtrl.$setViewValue(self.currentCalendarDate);
             self.refreshView();
-            this.direction = 0;
+            self.direction = 0;
         };
 
         self.rangeChanged = function () {
@@ -247,7 +252,7 @@ angular.module('ui.rCalendar', [])
             };
         };
 
-        self.populateAdjacentViews = function(scope) {
+        self.populateAdjacentViews = function (scope) {
             var currentViewStartDate,
                 currentViewData,
                 toUpdateViewIndex,
@@ -400,6 +405,7 @@ angular.module('ui.rCalendar', [])
                             direction = currentYear < selectedYear ? 1 : -1;
                         }
 
+                        ctrl.currentCalendarDate = selectedDate;
                         if (direction === 0) {
                             ctrl.currentCalendarDate = selectedDate;
                             if (ngModelCtrl) {
@@ -417,6 +423,7 @@ angular.module('ui.rCalendar', [])
                                 scope.selectedDate = dates[selectedDayDifference];
                             }
                         } else {
+                            ctrl.moveOnSelected = true;
                             if (direction === 1) {
                                 $ionicSlideBoxDelegate.next();
                             } else {
@@ -580,7 +587,7 @@ angular.module('ui.rCalendar', [])
                     var year = currentDate.getFullYear(),
                         month = currentDate.getMonth(),
                         firstDayOfMonth = new Date(year, month, 1),
-                        difference = ctrl.startingDay - firstDayOfMonth.getDay(),
+                        difference = ctrl.startingDayMonth - firstDayOfMonth.getDay(),
                         numDisplayedFromPreviousMonth = (difference > 0) ? 7 - difference : -difference,
                         startDate = new Date(firstDayOfMonth),
                         endDate;
@@ -674,6 +681,12 @@ angular.module('ui.rCalendar', [])
                     }
 
                     return title;
+                };
+
+                scope.select = function (selectedTime) {
+                    if (scope.timeSelected) {
+                        scope.timeSelected({selectedTime: selectedTime});
+                    }
                 };
 
                 ctrl._getViewData = function (startTime) {
@@ -844,7 +857,7 @@ angular.module('ui.rCalendar', [])
                         month = currentDate.getMonth(),
                         date = currentDate.getDate(),
                         day = currentDate.getDay(),
-                        firstDayOfWeek = new Date(year, month, date - day),
+                        firstDayOfWeek = new Date(year, month, date - day + ctrl.startingDayWeek),
                         endTime = new Date(year, month, date - day + 7);
 
                     return {
@@ -886,6 +899,12 @@ angular.module('ui.rCalendar', [])
                     }
                     return rows;
                 }
+
+                scope.select = function (selectedTime) {
+                    if (scope.timeSelected) {
+                        scope.timeSelected({selectedTime: selectedTime});
+                    }
+                };
 
                 ctrl._onDataLoaded = function () {
                     var eventSource = ctrl.eventSource,
@@ -975,7 +994,7 @@ angular.module('ui.rCalendar', [])
                     }
                 };
 
-                ctrl._refreshView = function() {
+                ctrl._refreshView = function () {
                     ctrl.populateAdjacentViews(scope);
                 };
 
