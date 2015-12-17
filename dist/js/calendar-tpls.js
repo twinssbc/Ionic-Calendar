@@ -711,54 +711,75 @@ angular.module('ui.rCalendar', ['ui.rCalendar.tpls'])
                         day,
                         hour,
                         len = eventSource ? eventSource.length : 0,
-                        startTime = ctrl.range.startTime,
-                        endTime = ctrl.range.endTime,
                         timeZoneOffset = -new Date().getTimezoneOffset(),
-                        utcStartTime = new Date(startTime.getTime() + timeZoneOffset * 60000),
-                        utcEndTime = new Date(endTime.getTime() + timeZoneOffset * 60000),
-                        currentViewIndex = scope.currentViewIndex,
-                        rows = scope.views[currentViewIndex].rows,
-                        dates = scope.views[currentViewIndex].dates,
                         oneHour = 3600000,
                         oneDay = 86400000,
                     //add allday eps
                         eps = 0.016,
                         eventSet,
                         allDayEventInRange = false,
-                        normalEventInRange = false;
+                        normalEventInRange = false,
+                        view;
 
-                    for (i = 0; i < 7; i += 1) {
-                        dates[i].events = [];
-                    }
+                    // Views
+                    var views = [{ // Current
+                        startTime: ctrl.range.startTime,
+                        endTime: ctrl.range.endTime,
+                        index: scope.currentViewIndex
+                    }, { // Next
+                        startTime: new Date(ctrl.range.startTime.getTime() + (1000*60*60*24*7)),
+                        endTime: new Date(ctrl.range.endTime.getTime() + (1000*60*60*24*7)),
+                        index: (scope.currentViewIndex + 1) % 3
+                    }, { // Previous
+                        startTime: new Date(ctrl.range.startTime.getTime() - (1000*60*60*24*7)),
+                        endTime: new Date(ctrl.range.endTime.getTime() - (1000*60*60*24*7)),
+                        index: (scope.currentViewIndex + 2) % 3
+                    }];
 
-                    for (day = 0; day < 7; day += 1) {
-                        for (hour = 0; hour < 24; hour += 1) {
-                            rows[hour][day].events = [];
+                    for (i = 0; i < 3; i += 1) {
+                        views[i].utcStartTime = new Date(views[i].startTime.getTime() + timeZoneOffset * 60000);
+                        views[i].utcEndTime = new Date(views[i].endTime.getTime() + timeZoneOffset * 60000);
+                        views[i].rows = scope.views[views[i].index].rows;
+                        views[i].dates = scope.views[views[i].index].dates;
+
+                        for (day = 0; day < 7; day += 1) {
+                            views[i].dates[day].events = [];
+                            for (hour = 0; hour < 24; hour += 1) {
+                                views[i].rows[hour][day].events = [];
+                            }
                         }
                     }
+
                     for (i = 0; i < len; i += 1) {
                         var event = eventSource[i];
                         var eventStartTime = new Date(event.startTime);
                         var eventEndTime = new Date(event.endTime);
 
                         if (event.allDay) {
-                            if (eventEndTime <= utcStartTime || eventStartTime >= utcEndTime) {
+                            if (eventEndTime <= views[2].utcStartTime || eventStartTime >= views[1].utcEndTime) {
                                 continue;
                             } else {
+                                if (eventEndTime <= views[0].utcStartTime) {
+                                    view = 2;
+                                } else if (eventStartTime >= views[0].utcEndtime) {
+                                    view = 1;
+                                } else {
+                                    view = 0;
+                                }
                                 allDayEventInRange = true;
 
                                 var allDayStartIndex;
-                                if (eventStartTime <= utcStartTime) {
+                                if (eventStartTime <= views[view].utcStartTime) {
                                     allDayStartIndex = 0;
                                 } else {
-                                    allDayStartIndex = Math.floor((eventStartTime - utcStartTime) / oneDay);
+                                    allDayStartIndex = Math.floor((eventStartTime - views[view].utcStartTime) / oneDay);
                                 }
 
                                 var allDayEndIndex;
-                                if (eventEndTime >= utcEndTime) {
-                                    allDayEndIndex = Math.ceil((utcEndTime - utcStartTime) / oneDay);
+                                if (eventEndTime >= views[view].utcEndTime) {
+                                    allDayEndIndex = Math.ceil((views[view].utcEndTime - views[view].utcStartTime) / oneDay);
                                 } else {
-                                    allDayEndIndex = Math.ceil((eventEndTime - utcStartTime) / oneDay);
+                                    allDayEndIndex = Math.ceil((eventEndTime - views[view].utcStartTime) / oneDay);
                                 }
 
                                 var displayAllDayEvent = {
@@ -767,33 +788,40 @@ angular.module('ui.rCalendar', ['ui.rCalendar.tpls'])
                                     endIndex: allDayEndIndex
                                 };
 
-                                eventSet = dates[allDayStartIndex].events;
+                                eventSet = views[view].dates[allDayStartIndex].events;
                                 if (eventSet) {
                                     eventSet.push(displayAllDayEvent);
                                 } else {
                                     eventSet = [];
                                     eventSet.push(displayAllDayEvent);
-                                    dates[allDayStartIndex].events = eventSet;
+                                    views[view].dates[allDayStartIndex].events = eventSet;
                                 }
                             }
                         } else {
-                            if (eventEndTime <= startTime || eventStartTime >= endTime) {
+                            if (eventEndTime <= views[2].startTime || eventStartTime >= views[1].endTime) {
                                 continue;
                             } else {
+                                if (eventEndTime <= views[0].startTime) {
+                                    view = 2;
+                                } else if (eventStartTime >= views[0].endTime) {
+                                    view = 1;
+                                } else {
+                                    view = 0;
+                                }
                                 normalEventInRange = true;
 
                                 var timeDifferenceStart;
-                                if (eventStartTime <= startTime) {
+                                if (eventStartTime <= views[view].startTime) {
                                     timeDifferenceStart = 0;
                                 } else {
-                                    timeDifferenceStart = (eventStartTime - startTime) / oneHour;
+                                    timeDifferenceStart = (eventStartTime - views[view].startTime) / oneHour;
                                 }
 
                                 var timeDifferenceEnd;
-                                if (eventEndTime >= endTime) {
-                                    timeDifferenceEnd = (endTime - startTime) / oneHour;
+                                if (eventEndTime >= views[view].endTime) {
+                                    timeDifferenceEnd = (views[view].endTime - views[view].startTime) / oneHour;
                                 } else {
-                                    timeDifferenceEnd = (eventEndTime - startTime) / oneHour;
+                                    timeDifferenceEnd = (eventEndTime - views[view].startTime) / oneHour;
                                 }
 
                                 var startIndex = Math.floor(timeDifferenceStart);
@@ -815,13 +843,13 @@ angular.module('ui.rCalendar', ['ui.rCalendar.tpls'])
                                         startIndex: startRowIndex,
                                         endIndex: endRowIndex
                                     };
-                                    eventSet = rows[startRowIndex][dayIndex].events;
+                                    eventSet = views[view].rows[startRowIndex][dayIndex].events;
                                     if (eventSet) {
                                         eventSet.push(displayEvent);
                                     } else {
                                         eventSet = [];
                                         eventSet.push(displayEvent);
-                                        rows[startRowIndex][dayIndex].events = eventSet;
+                                        views[view].rows[startRowIndex][dayIndex].events = eventSet;
                                     }
                                     startRowIndex = 0;
                                     dayIndex += 1;
@@ -830,29 +858,31 @@ angular.module('ui.rCalendar', ['ui.rCalendar.tpls'])
                         }
                     }
 
-                    if (normalEventInRange) {
-                        for (day = 0; day < 7; day += 1) {
-                            var orderedEvents = [];
-                            for (hour = 0; hour < 24; hour += 1) {
-                                if (rows[hour][day].events) {
-                                    orderedEvents = orderedEvents.concat(rows[hour][day].events);
+                    for (i = 0; i < 3; i += 1) {
+                        if (normalEventInRange) {
+                            for (day = 0; day < 7; day += 1) {
+                                var orderedEvents = [];
+                                for (hour = 0; hour < 24; hour += 1) {
+                                    if (views[i].rows[hour][day].events) {
+                                        orderedEvents = orderedEvents.concat(views[i].rows[hour][day].events);
+                                    }
+                                }
+                                if (orderedEvents.length > 0) {
+                                    ctrl.placeEvents(orderedEvents);
                                 }
                             }
-                            if (orderedEvents.length > 0) {
-                                ctrl.placeEvents(orderedEvents);
-                            }
                         }
-                    }
 
-                    if (allDayEventInRange) {
-                        var orderedAllDayEvents = [];
-                        for (day = 0; day < 7; day += 1) {
-                            if (dates[day].events) {
-                                orderedAllDayEvents = orderedAllDayEvents.concat(dates[day].events);
+                        if (allDayEventInRange) {
+                            var orderedAllDayEvents = [];
+                            for (day = 0; day < 7; day += 1) {
+                                if (views[i].dates[day].events) {
+                                    orderedAllDayEvents = orderedAllDayEvents.concat(views[i].dates[day].events);
+                                }
                             }
-                        }
-                        if (orderedAllDayEvents.length > 0) {
-                            ctrl.placeAllDayEvents(orderedAllDayEvents);
+                            if (orderedAllDayEvents.length > 0) {
+                                ctrl.placeAllDayEvents(orderedAllDayEvents);
+                            }
                         }
                     }
                 };
