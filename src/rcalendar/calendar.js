@@ -310,6 +310,10 @@ angular.module('ui.rCalendar', [])
                     calendarCtrl.init(ngModelCtrl);
                 }
 
+                scope.$on('changeDate', function (event, direction) {
+                    calendarCtrl.move(direction);
+                });
+
                 scope.$on('eventSourceChanged', function (event, value) {
                     calendarCtrl.onEventSourceChanged(value);
                 });
