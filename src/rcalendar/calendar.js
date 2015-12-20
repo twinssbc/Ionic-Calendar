@@ -12,7 +12,7 @@ angular.module('ui.rCalendar', [])
         eventSource: null,
         queryMode: 'local'
     })
-    .controller('ui.rCalendar.CalendarController', ['$scope', '$attrs', '$parse', '$interpolate', '$log', 'dateFilter', 'calendarConfig', '$timeout', function ($scope, $attrs, $parse, $interpolate, $log, dateFilter, calendarConfig, $timeout) {
+    .controller('ui.rCalendar.CalendarController', ['$scope', '$attrs', '$parse', '$interpolate', '$log', 'dateFilter', 'calendarConfig', '$timeout', '$ionicSlideBoxDelegate', function ($scope, $attrs, $parse, $interpolate, $log, dateFilter, calendarConfig, $timeout, $ionicSlideBoxDelegate) {
         'use strict';
         var self = this,
             ngModelCtrl = {$setViewValue: angular.noop}; // nullModelCtrl;
@@ -287,6 +287,18 @@ angular.module('ui.rCalendar', [])
         self.placeAllDayEvents = function (orderedEvents) {
             calculatePosition(orderedEvents);
         };
+
+        self.slideView = function (direction) {
+            var slideHandle = $ionicSlideBoxDelegate.$getByHandle($scope.calendarMode + 'view-slide');
+
+            if (slideHandle) {
+                if (direction === 1) {
+                    slideHandle.next();
+                } else if(direction === -1) {
+                    slideHandle.previous();
+                }
+            }
+        };
     }])
     .directive('calendar', function () {
         'use strict';
@@ -310,13 +322,17 @@ angular.module('ui.rCalendar', [])
                     calendarCtrl.init(ngModelCtrl);
                 }
 
+                scope.$on('changeDate', function (event, direction) {
+                    calendarCtrl.slideView(direction);
+                });
+
                 scope.$on('eventSourceChanged', function (event, value) {
                     calendarCtrl.onEventSourceChanged(value);
                 });
             }
         };
     })
-    .directive('monthview', ['dateFilter', '$ionicSlideBoxDelegate', function (dateFilter, $ionicSlideBoxDelegate) {
+    .directive('monthview', ['dateFilter', function (dateFilter) {
         'use strict';
         return {
             restrict: 'EA',
@@ -424,11 +440,7 @@ angular.module('ui.rCalendar', [])
                             }
                         } else {
                             ctrl.moveOnSelected = true;
-                            if (direction === 1) {
-                                $ionicSlideBoxDelegate.next();
-                            } else {
-                                $ionicSlideBoxDelegate.previous();
-                            }
+                            ctrl.slideView(direction);
                         }
 
                         if (scope.timeSelected) {
