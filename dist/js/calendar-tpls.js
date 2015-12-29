@@ -13,7 +13,7 @@ angular.module('ui.rCalendar', ['ui.rCalendar.tpls'])
         eventSource: null,
         queryMode: 'local'
     })
-    .controller('ui.rCalendar.CalendarController', ['$scope', '$attrs', '$parse', '$interpolate', '$log', 'dateFilter', 'calendarConfig', '$timeout', function ($scope, $attrs, $parse, $interpolate, $log, dateFilter, calendarConfig, $timeout) {
+    .controller('ui.rCalendar.CalendarController', ['$scope', '$attrs', '$parse', '$interpolate', '$log', 'dateFilter', 'calendarConfig', '$timeout', '$ionicSlideBoxDelegate', function ($scope, $attrs, $parse, $interpolate, $log, dateFilter, calendarConfig, $timeout, $ionicSlideBoxDelegate) {
         'use strict';
         var self = this,
             ngModelCtrl = {$setViewValue: angular.noop}; // nullModelCtrl;
@@ -288,6 +288,18 @@ angular.module('ui.rCalendar', ['ui.rCalendar.tpls'])
         self.placeAllDayEvents = function (orderedEvents) {
             calculatePosition(orderedEvents);
         };
+
+        self.slideView = function (direction) {
+            var slideHandle = $ionicSlideBoxDelegate.$getByHandle($scope.calendarMode + 'view-slide');
+
+            if (slideHandle) {
+                if (direction === 1) {
+                    slideHandle.next();
+                } else if (direction === -1) {
+                    slideHandle.previous();
+                }
+            }
+        };
     }])
     .directive('calendar', function () {
         'use strict';
@@ -312,7 +324,7 @@ angular.module('ui.rCalendar', ['ui.rCalendar.tpls'])
                 }
 
                 scope.$on('changeDate', function (event, direction) {
-                    calendarCtrl.move(direction);
+                    calendarCtrl.slideView(direction);
                 });
 
                 scope.$on('eventSourceChanged', function (event, value) {
@@ -321,7 +333,7 @@ angular.module('ui.rCalendar', ['ui.rCalendar.tpls'])
             }
         };
     })
-    .directive('monthview', ['dateFilter', '$ionicSlideBoxDelegate', function (dateFilter, $ionicSlideBoxDelegate) {
+    .directive('monthview', ['dateFilter', function (dateFilter) {
         'use strict';
         return {
             restrict: 'EA',
@@ -429,11 +441,7 @@ angular.module('ui.rCalendar', ['ui.rCalendar.tpls'])
                             }
                         } else {
                             ctrl.moveOnSelected = true;
-                            if (direction === 1) {
-                                $ionicSlideBoxDelegate.next();
-                            } else {
-                                $ionicSlideBoxDelegate.previous();
-                            }
+                            ctrl.slideView(direction);
                         }
 
                         if (scope.timeSelected) {
@@ -645,17 +653,18 @@ angular.module('ui.rCalendar', ['ui.rCalendar.tpls'])
                 function createDateObjects(startTime) {
                     var times = [],
                         row,
-                        time = new Date(startTime.getTime()),
-                        currentHour = time.getHours(),
-                        currentDate = time.getDate();
+                        time,
+                        currentHour = startTime.getHours(),
+                        currentDate = startTime.getDate();
 
                     for (var hour = 0; hour < 24; hour += 1) {
                         row = [];
                         for (var day = 0; day < 7; day += 1) {
+                            time = new Date(startTime.getTime());
                             time.setHours(currentHour + hour);
                             time.setDate(currentDate + day);
                             row.push({
-                                time: new Date(time.getTime())
+                                time: time
                             });
                         }
                         times.push(row);
@@ -921,15 +930,16 @@ angular.module('ui.rCalendar', ['ui.rCalendar.tpls'])
 
                 function createDateObjects(startTime) {
                     var rows = [],
-                        time = new Date(startTime.getTime()),
-                        currentHour = time.getHours(),
-                        currentDate = time.getDate();
+                        time,
+                        currentHour = startTime.getHours(),
+                        currentDate = startTime.getDate();
 
                     for (var hour = 0; hour < 24; hour += 1) {
+                        time = new Date(startTime.getTime());
                         time.setHours(currentHour + hour);
                         time.setDate(currentDate);
                         rows.push({
-                            time: new Date(time.getTime())
+                            time: time
                         });
                     }
                     return rows;
@@ -1077,7 +1087,7 @@ angular.module("templates/rcalendar/day.html", []).run(["$templateCache", functi
   $templateCache.put("templates/rcalendar/day.html",
     "<div class=\"dayview\">\n" +
     "    <ion-slide-box class=\"dayview-slide\" on-slide-changed=\"slideChanged($index)\" does-continue=\"true\"\n" +
-    "                   show-pager=\"false\">\n" +
+    "                   show-pager=\"false\" delegate-handle=\"dayview-slide\">\n" +
     "        <ion-slide ng-repeat=\"view in views track by $index\">\n" +
     "            <div class=\"dayview-allday-table\">\n" +
     "                <div class=\"dayview-allday-label\">\n" +
@@ -1142,7 +1152,7 @@ angular.module("templates/rcalendar/month.html", []).run(["$templateCache", func
   $templateCache.put("templates/rcalendar/month.html",
     "<div>\n" +
     "    <ion-slide-box class=\"monthview-slide\" on-slide-changed=\"slideChanged($index)\" does-continue=\"true\"\n" +
-    "                   show-pager=\"false\">\n" +
+    "                   show-pager=\"false\" delegate-handle=\"monthview-slide\">\n" +
     "        <ion-slide ng-repeat=\"view in views track by $index\">\n" +
     "            <table ng-if=\"$index===currentViewIndex\" class=\"table table-bordered monthview-datetable\">\n" +
     "                <thead>\n" +
@@ -1420,13 +1430,13 @@ angular.module("templates/rcalendar/week.html", []).run(["$templateCache", funct
   $templateCache.put("templates/rcalendar/week.html",
     "<div class=\"weekview\">\n" +
     "    <ion-slide-box class=\"weekview-slide\" on-slide-changed=\"slideChanged($index)\" does-continue=\"true\"\n" +
-    "                   show-pager=\"false\">\n" +
+    "                   show-pager=\"false\" delegate-handle=\"weekview-slide\">\n" +
     "        <ion-slide ng-repeat=\"view in views track by $index\">\n" +
     "            <table class=\"table table-bordered table-fixed weekview-header\">\n" +
     "                <thead>\n" +
     "                <tr>\n" +
     "                    <th class=\"calendar-hour-column\"></th>\n" +
-    "                    <th class=\"weekview-header text-center\" ng-repeat=\"dt in view.dates\">{{::dt.date| date: 'EEE d'}}</span></th>\n" +
+    "                    <th class=\"weekview-header text-center\" ng-repeat=\"dt in view.dates\">{{::dt.date| date: 'EEE d'}}</th>\n" +
     "                </tr>\n" +
     "                </thead>\n" +
     "            </table>\n" +

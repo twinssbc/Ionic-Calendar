@@ -1,12 +1,12 @@
 <div class="weekview">
     <ion-slide-box class="weekview-slide" on-slide-changed="slideChanged($index)" does-continue="true"
-                   show-pager="false">
+                   show-pager="false" delegate-handle="weekview-slide">
         <ion-slide ng-repeat="view in views track by $index">
             <table class="table table-bordered table-fixed weekview-header">
                 <thead>
                 <tr>
                     <th class="calendar-hour-column"></th>
-                    <th class="weekview-header text-center" ng-repeat="dt in view.dates">{{::dt.date| date: 'EEE d'}}</span></th>
+                    <th class="weekview-header text-center" ng-repeat="dt in view.dates">{{::dt.date| date: 'EEE d'}}</th>
                 </tr>
                 </thead>
             </table>

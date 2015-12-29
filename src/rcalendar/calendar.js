@@ -12,7 +12,7 @@ angular.module('ui.rCalendar', [])
         eventSource: null,
         queryMode: 'local'
     })
-    .controller('ui.rCalendar.CalendarController', ['$scope', '$attrs', '$parse', '$interpolate', '$log', 'dateFilter', 'calendarConfig', '$timeout', function ($scope, $attrs, $parse, $interpolate, $log, dateFilter, calendarConfig, $timeout) {
+    .controller('ui.rCalendar.CalendarController', ['$scope', '$attrs', '$parse', '$interpolate', '$log', 'dateFilter', 'calendarConfig', '$timeout', '$ionicSlideBoxDelegate', function ($scope, $attrs, $parse, $interpolate, $log, dateFilter, calendarConfig, $timeout, $ionicSlideBoxDelegate) {
         'use strict';
         var self = this,
             ngModelCtrl = {$setViewValue: angular.noop}; // nullModelCtrl;
@@ -287,6 +287,18 @@ angular.module('ui.rCalendar', [])
         self.placeAllDayEvents = function (orderedEvents) {
             calculatePosition(orderedEvents);
         };
+
+        self.slideView = function (direction) {
+            var slideHandle = $ionicSlideBoxDelegate.$getByHandle($scope.calendarMode + 'view-slide');
+
+            if (slideHandle) {
+                if (direction === 1) {
+                    slideHandle.next();
+                } else if (direction === -1) {
+                    slideHandle.previous();
+                }
+            }
+        };
     }])
     .directive('calendar', function () {
         'use strict';
@@ -311,7 +323,7 @@ angular.module('ui.rCalendar', [])
                 }
 
                 scope.$on('changeDate', function (event, direction) {
-                    calendarCtrl.move(direction);
+                    calendarCtrl.slideView(direction);
                 });
 
                 scope.$on('eventSourceChanged', function (event, value) {
@@ -320,7 +332,7 @@ angular.module('ui.rCalendar', [])
             }
         };
     })
-    .directive('monthview', ['dateFilter', '$ionicSlideBoxDelegate', function (dateFilter, $ionicSlideBoxDelegate) {
+    .directive('monthview', ['dateFilter', function (dateFilter) {
         'use strict';
         return {
             restrict: 'EA',
@@ -428,11 +440,7 @@ angular.module('ui.rCalendar', [])
                             }
                         } else {
                             ctrl.moveOnSelected = true;
-                            if (direction === 1) {
-                                $ionicSlideBoxDelegate.next();
-                            } else {
-                                $ionicSlideBoxDelegate.previous();
-                            }
+                            ctrl.slideView(direction);
                         }
 
                         if (scope.timeSelected) {
@@ -644,17 +652,18 @@ angular.module('ui.rCalendar', [])
                 function createDateObjects(startTime) {
                     var times = [],
                         row,
-                        time = new Date(startTime.getTime()),
-                        currentHour = time.getHours(),
-                        currentDate = time.getDate();
+                        time,
+                        currentHour = startTime.getHours(),
+                        currentDate = startTime.getDate();
 
                     for (var hour = 0; hour < 24; hour += 1) {
                         row = [];
                         for (var day = 0; day < 7; day += 1) {
+                            time = new Date(startTime.getTime());
                             time.setHours(currentHour + hour);
                             time.setDate(currentDate + day);
                             row.push({
-                                time: new Date(time.getTime())
+                                time: time
                             });
                         }
                         times.push(row);
@@ -920,15 +929,16 @@ angular.module('ui.rCalendar', [])
 
                 function createDateObjects(startTime) {
                     var rows = [],
-                        time = new Date(startTime.getTime()),
-                        currentHour = time.getHours(),
-                        currentDate = time.getDate();
+                        time,
+                        currentHour = startTime.getHours(),
+                        currentDate = startTime.getDate();
 
                     for (var hour = 0; hour < 24; hour += 1) {
+                        time = new Date(startTime.getTime());
                         time.setHours(currentHour + hour);
                         time.setDate(currentDate);
                         rows.push({
-                            time: new Date(time.getTime())
+                            time: time
                         });
                     }
                     return rows;

@@ -1,6 +1,6 @@
 <div class="dayview">
     <ion-slide-box class="dayview-slide" on-slide-changed="slideChanged($index)" does-continue="true"
-                   show-pager="false">
+                   show-pager="false" delegate-handle="dayview-slide">
         <ion-slide ng-repeat="view in views track by $index">
             <div class="dayview-allday-table">
                 <div class="dayview-allday-label">
