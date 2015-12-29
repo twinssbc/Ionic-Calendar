@@ -294,7 +294,7 @@ angular.module('ui.rCalendar', [])
             if (slideHandle) {
                 if (direction === 1) {
                     slideHandle.next();
-                } else if(direction === -1) {
+                } else if (direction === -1) {
                     slideHandle.previous();
                 }
             }
@@ -652,17 +652,18 @@ angular.module('ui.rCalendar', [])
                 function createDateObjects(startTime) {
                     var times = [],
                         row,
-                        time = new Date(startTime.getTime()),
-                        currentHour = time.getHours(),
-                        currentDate = time.getDate();
+                        time,
+                        currentHour = startTime.getHours(),
+                        currentDate = startTime.getDate();
 
                     for (var hour = 0; hour < 24; hour += 1) {
                         row = [];
                         for (var day = 0; day < 7; day += 1) {
+                            time = new Date(startTime.getTime());
                             time.setHours(currentHour + hour);
                             time.setDate(currentDate + day);
                             row.push({
-                                time: new Date(time.getTime())
+                                time: time
                             });
                         }
                         times.push(row);
@@ -898,15 +899,16 @@ angular.module('ui.rCalendar', [])
 
                 function createDateObjects(startTime) {
                     var rows = [],
-                        time = new Date(startTime.getTime()),
-                        currentHour = time.getHours(),
-                        currentDate = time.getDate();
+                        time,
+                        currentHour = startTime.getHours(),
+                        currentDate = startTime.getDate();
 
                     for (var hour = 0; hour < 24; hour += 1) {
+                        time = new Date(startTime.getTime());
                         time.setHours(currentHour + hour);
                         time.setDate(currentDate);
                         rows.push({
-                            time: new Date(time.getTime())
+                            time: time
                         });
                     }
                     return rows;
