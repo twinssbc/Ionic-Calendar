@@ -672,29 +672,9 @@ angular.module('ui.rCalendar', ['ui.rCalendar.tpls'])
                     return times;
                 }
 
-                //This can be decomissioned when upgrade to Angular 1.3
-                function getISO8601WeekNumber(date) {
-                    var checkDate = new Date(date);
-                    checkDate.setDate(checkDate.getDate() + 4 - (checkDate.getDay() || 7)); // Thursday
-                    var time = checkDate.getTime();
-                    checkDate.setMonth(0); // Compare with Jan 1
-                    checkDate.setDate(1);
-                    return Math.floor(Math.round((time - checkDate) / 86400000) / 7) + 1;
-                }
-
                 ctrl._getTitle = function () {
-                    var firstDayOfWeek = ctrl.range.startTime,
-                        weekNumberIndex,
-                        weekFormatPattern = 'w',
-                        title;
-
-                    weekNumberIndex = ctrl.formatWeekTitle.indexOf(weekFormatPattern);
-                    title = dateFilter(firstDayOfWeek, ctrl.formatWeekTitle);
-                    if (weekNumberIndex !== -1) {
-                        title = title.replace(weekFormatPattern, getISO8601WeekNumber(firstDayOfWeek));
-                    }
-
-                    return title;
+                    var startingDate = ctrl.range.startTime;
+                    return dateFilter(startingDate, ctrl.formatWeekTitle);
                 };
 
                 scope.select = function (selectedTime) {
