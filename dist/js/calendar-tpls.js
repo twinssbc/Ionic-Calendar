@@ -685,7 +685,7 @@ angular.module('ui.rCalendar', ['ui.rCalendar.tpls'])
                 ctrl._getTitle = function () {
                     var firstDayOfWeek = ctrl.range.startTime,
                         weekNumberIndex,
-                        weekFormatPattern = 'w',
+                        weekFormatPattern = 'WNUM',
                         title;
 
                     weekNumberIndex = ctrl.formatWeekTitle.indexOf(weekFormatPattern);
