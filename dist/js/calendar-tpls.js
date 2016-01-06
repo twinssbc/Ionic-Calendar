@@ -11,7 +11,8 @@ angular.module('ui.rCalendar', ['ui.rCalendar.tpls'])
         startingDayMonth: 0,
         startingDayWeek: 0,
         eventSource: null,
-        queryMode: 'local'
+        queryMode: 'local',
+        step: 60
     })
     .controller('ui.rCalendar.CalendarController', ['$scope', '$attrs', '$parse', '$interpolate', '$log', 'dateFilter', 'calendarConfig', '$timeout', '$ionicSlideBoxDelegate', function ($scope, $attrs, $parse, $interpolate, $log, dateFilter, calendarConfig, $timeout, $ionicSlideBoxDelegate) {
         'use strict';
@@ -20,9 +21,16 @@ angular.module('ui.rCalendar', ['ui.rCalendar.tpls'])
 
         // Configuration attributes
         angular.forEach(['formatDay', 'formatDayHeader', 'formatDayTitle', 'formatWeekTitle', 'formatMonthTitle',
-            'showEventDetail', 'startingDayMonth', 'startingDayWeek', 'eventSource', 'queryMode'], function (key, index) {
+            'showEventDetail', 'startingDayMonth', 'startingDayWeek', 'eventSource', 'queryMode', 'step'], function (key, index) {
             self[key] = angular.isDefined($attrs[key]) ? (index < 5 ? $interpolate($attrs[key])($scope.$parent) : $scope.$parent.$eval($attrs[key])) : calendarConfig[key];
         });
+
+        self.hourParts = 1;
+        if (self.step === 60 || self.step === 30 || self.step === 15) {
+            self.hourParts = Math.floor(60 / self.step);
+        } else {
+            throw new Error('Invalid step parameter: ' + self.step);
+        }
 
         $scope.$parent.$watch($attrs.eventSource, function (value) {
             self.onEventSourceChanged(value);
@@ -40,7 +48,18 @@ angular.module('ui.rCalendar', ['ui.rCalendar.tpls'])
         }
 
         function overlap(event1, event2) {
-            return !(event1.endIndex <= event2.startIndex || event2.endIndex <= event1.startIndex);
+            var earlyEvent = event1,
+                lateEvent = event2;
+            if (event1.startIndex > event2.startIndex || (event1.startIndex === event2.startIndex && event1.startOffset > event2.startOffset)) {
+                earlyEvent = event2;
+                lateEvent = event1;
+            }
+
+            if (earlyEvent.endIndex <= lateEvent.startIndex) {
+                return false;
+            } else {
+                return !(earlyEvent.endIndex - lateEvent.startIndex === 1 && earlyEvent.endOffset + lateEvent.startOffset > self.hourParts);
+            }
         }
 
         function calculatePosition(events) {
@@ -295,7 +314,7 @@ angular.module('ui.rCalendar', ['ui.rCalendar.tpls'])
             if (slideHandle) {
                 if (direction === 1) {
                     slideHandle.next();
-                } else if(direction === -1) {
+                } else if (direction === -1) {
                     slideHandle.previous();
                 }
             }
@@ -636,6 +655,8 @@ angular.module('ui.rCalendar', ['ui.rCalendar.tpls'])
                     step: {days: 7}
                 };
 
+                scope.hourParts = ctrl.hourParts;
+
                 function getDates(startTime, n) {
                     var dates = new Array(n),
                         current = new Date(startTime),
@@ -670,6 +691,10 @@ angular.module('ui.rCalendar', ['ui.rCalendar.tpls'])
                         times.push(row);
                     }
                     return times;
+                }
+
+                function compareEventByStartOffset(eventA, eventB) {
+                    return eventA.startOffset - eventB.startOffset;
                 }
 
                 //This can be decomissioned when upgrade to Angular 1.3
@@ -811,6 +836,11 @@ angular.module('ui.rCalendar', ['ui.rCalendar.tpls'])
                                 var dayIndex = Math.floor(startIndex / 24);
                                 var endOfDay = dayIndex * 24;
                                 var endRowIndex;
+                                var startOffset = 0;
+                                var endOffset = 0;
+                                if (ctrl.hourParts !== 1) {
+                                    startOffset = Math.floor((timeDifferenceStart - startIndex) * ctrl.hourParts);
+                                }
 
                                 do {
                                     endOfDay += 24;
@@ -818,11 +848,16 @@ angular.module('ui.rCalendar', ['ui.rCalendar.tpls'])
                                         endRowIndex = 24;
                                     } else {
                                         endRowIndex = endIndex % 24;
+                                        if (ctrl.hourParts !== 1) {
+                                            endOffset = Math.floor((endIndex - timeDifferenceEnd) * ctrl.hourParts);
+                                        }
                                     }
                                     var displayEvent = {
                                         event: event,
                                         startIndex: startRowIndex,
-                                        endIndex: endRowIndex
+                                        endIndex: endRowIndex,
+                                        startOffset: startOffset,
+                                        endOffset: endOffset
                                     };
                                     eventSet = rows[startRowIndex][dayIndex].events;
                                     if (eventSet) {
@@ -833,6 +868,7 @@ angular.module('ui.rCalendar', ['ui.rCalendar.tpls'])
                                         rows[startRowIndex][dayIndex].events = eventSet;
                                     }
                                     startRowIndex = 0;
+                                    startOffset = 0;
                                     dayIndex += 1;
                                 } while (endOfDay < endIndex);
                             }
@@ -844,6 +880,8 @@ angular.module('ui.rCalendar', ['ui.rCalendar.tpls'])
                             var orderedEvents = [];
                             for (hour = 0; hour < 24; hour += 1) {
                                 if (rows[hour][day].events) {
+                                    rows[hour][day].events.sort(compareEventByStartOffset);
+
                                     orderedEvents = orderedEvents.concat(rows[hour][day].events);
                                 }
                             }
@@ -898,6 +936,8 @@ angular.module('ui.rCalendar', ['ui.rCalendar.tpls'])
                     step: {days: 1}
                 };
 
+                scope.hourParts = ctrl.hourParts;
+
                 function createDateObjects(startTime) {
                     var rows = [],
                         time,
@@ -913,6 +953,10 @@ angular.module('ui.rCalendar', ['ui.rCalendar.tpls'])
                         });
                     }
                     return rows;
+                }
+
+                function compareEventByStartOffset(eventA, eventB) {
+                    return eventA.startOffset - eventB.startOffset;
                 }
 
                 scope.select = function (selectedTime) {
@@ -978,11 +1022,19 @@ angular.module('ui.rCalendar', ['ui.rCalendar.tpls'])
 
                             var startIndex = Math.floor(timeDifferenceStart);
                             var endIndex = Math.ceil(timeDifferenceEnd - eps);
+                            var startOffset = 0;
+                            var endOffset = 0;
+                            if (ctrl.hourParts !== 1) {
+                                startOffset = Math.floor((timeDifferenceStart - startIndex) * ctrl.hourParts);
+                                endOffset = Math.floor((endIndex - timeDifferenceEnd) * ctrl.hourParts);
+                            }
 
                             var displayEvent = {
                                 event: event,
                                 startIndex: startIndex,
-                                endIndex: endIndex
+                                endIndex: endIndex,
+                                startOffset: startOffset,
+                                endOffset: endOffset
                             };
 
                             eventSet = rows[startIndex].events;
@@ -1000,6 +1052,8 @@ angular.module('ui.rCalendar', ['ui.rCalendar.tpls'])
                         var orderedEvents = [];
                         for (hour = 0; hour < 24; hour += 1) {
                             if (rows[hour].events) {
+                                rows[hour].events.sort(compareEventByStartOffset);
+
                                 orderedEvents = orderedEvents.concat(rows[hour].events);
                             }
                         }
@@ -1093,7 +1147,7 @@ angular.module("templates/rcalendar/day.html", []).run(["$templateCache", functi
     "                            <div ng-class=\"{'calendar-event-wrap': tm.events}\" ng-if=\"tm.events\">\n" +
     "                                <div ng-repeat=\"displayEvent in tm.events\" class=\"calendar-event\"\n" +
     "                                     ng-click=\"eventSelected({event:displayEvent.event})\"\n" +
-    "                                     ng-style=\"{left: 100/displayEvent.overlapNumber*displayEvent.position+'%', width: 100/displayEvent.overlapNumber+'%', height: 37*(displayEvent.endIndex-displayEvent.startIndex)+'px'}\">\n" +
+    "                                     ng-style=\"{top: (37*displayEvent.startOffset/hourParts)+'px', left: 100/displayEvent.overlapNumber*displayEvent.position+'%', width: 100/displayEvent.overlapNumber+'%', height: 37*(displayEvent.endIndex -displayEvent.startIndex - (displayEvent.endOffset + displayEvent.startOffset)/hourParts)+'px'}\">\n" +
     "                                    <div class=\"calendar-event-inner\">{{displayEvent.event.title}}</div>\n" +
     "                                </div>\n" +
     "                            </div>\n" +
@@ -1445,7 +1499,7 @@ angular.module("templates/rcalendar/week.html", []).run(["$templateCache", funct
     "                                <div ng-class=\"{'calendar-event-wrap': tm.events}\" ng-if=\"tm.events\">\n" +
     "                                    <div ng-repeat=\"displayEvent in tm.events\" class=\"calendar-event\"\n" +
     "                                         ng-click=\"eventSelected({event:displayEvent.event})\"\n" +
-    "                                         ng-style=\"{left: 100/displayEvent.overlapNumber*displayEvent.position+'%', width: 100/displayEvent.overlapNumber+'%', height: 37*(displayEvent.endIndex-displayEvent.startIndex)+'px'}\">\n" +
+    "                                         ng-style=\"{top: (37*displayEvent.startOffset/hourParts)+'px',left: 100/displayEvent.overlapNumber*displayEvent.position+'%', width: 100/displayEvent.overlapNumber+'%', height: 37*(displayEvent.endIndex -displayEvent.startIndex - (displayEvent.endOffset + displayEvent.startOffset)/hourParts)+'px'}\">\n" +
     "                                        <div class=\"calendar-event-inner\">{{displayEvent.event.title}}</div>\n" +
     "                                    </div>\n" +
     "                                </div>\n" +
