@@ -682,6 +682,11 @@ angular.module('ui.rCalendar', [])
                     }
                 };
 
+                scope.isToday = function (d1) {
+                    var d2 = new Date();
+	                return d1.getFullYear() == d2.getFullYear() && d1.getMonth() == d2.getMonth() && d1.getDate() == d2.getDate();
+                };
+
                 ctrl._getViewData = function (startTime) {
                     return {
                         rows: createDateObjects(startTime),
