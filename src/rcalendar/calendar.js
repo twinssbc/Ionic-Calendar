@@ -10,7 +10,8 @@ angular.module('ui.rCalendar', [])
         startingDayMonth: 0,
         startingDayWeek: 0,
         eventSource: null,
-        queryMode: 'local'
+        queryMode: 'local',
+        step: 60
     })
     .controller('ui.rCalendar.CalendarController', ['$scope', '$attrs', '$parse', '$interpolate', '$log', 'dateFilter', 'calendarConfig', '$timeout', '$ionicSlideBoxDelegate', function ($scope, $attrs, $parse, $interpolate, $log, dateFilter, calendarConfig, $timeout, $ionicSlideBoxDelegate) {
         'use strict';
@@ -19,9 +20,16 @@ angular.module('ui.rCalendar', [])
 
         // Configuration attributes
         angular.forEach(['formatDay', 'formatDayHeader', 'formatDayTitle', 'formatWeekTitle', 'formatMonthTitle',
-            'showEventDetail', 'startingDayMonth', 'startingDayWeek', 'eventSource', 'queryMode'], function (key, index) {
+            'showEventDetail', 'startingDayMonth', 'startingDayWeek', 'eventSource', 'queryMode', 'step'], function (key, index) {
             self[key] = angular.isDefined($attrs[key]) ? (index < 5 ? $interpolate($attrs[key])($scope.$parent) : $scope.$parent.$eval($attrs[key])) : calendarConfig[key];
         });
+
+        self.hourParts = 1;
+        if (self.step === 60 || self.step === 30 || self.step === 15) {
+            self.hourParts = Math.floor(60 / self.step);
+        } else {
+            throw new Error('Invalid step parameter: ' + self.step);
+        }
 
         $scope.$parent.$watch($attrs.eventSource, function (value) {
             self.onEventSourceChanged(value);
@@ -39,7 +47,18 @@ angular.module('ui.rCalendar', [])
         }
 
         function overlap(event1, event2) {
-            return !(event1.endIndex <= event2.startIndex || event2.endIndex <= event1.startIndex);
+            var earlyEvent = event1,
+                lateEvent = event2;
+            if (event1.startIndex > event2.startIndex || (event1.startIndex === event2.startIndex && event1.startOffset > event2.startOffset)) {
+                earlyEvent = event2;
+                lateEvent = event1;
+            }
+
+            if (earlyEvent.endIndex <= lateEvent.startIndex) {
+                return false;
+            } else {
+                return !(earlyEvent.endIndex - lateEvent.startIndex === 1 && earlyEvent.endOffset + lateEvent.startOffset > self.hourParts);
+            }
         }
 
         function calculatePosition(events) {
@@ -635,6 +654,8 @@ angular.module('ui.rCalendar', [])
                     step: {days: 7}
                 };
 
+                scope.hourParts = ctrl.hourParts;
+
                 function getDates(startTime, n) {
                     var dates = new Array(n),
                         current = new Date(startTime),
@@ -671,6 +692,10 @@ angular.module('ui.rCalendar', [])
                     return times;
                 }
 
+                function compareEventByStartOffset(eventA, eventB) {
+                    return eventA.startOffset - eventB.startOffset;
+                }
+
                 ctrl._getTitle = function () {
                     var startingDate = ctrl.range.startTime;
                     return dateFilter(startingDate, ctrl.formatWeekTitle);
@@ -684,7 +709,7 @@ angular.module('ui.rCalendar', [])
 
                 scope.isToday = function (d1) {
                     var d2 = new Date();
-	                return d1.getFullYear() == d2.getFullYear() && d1.getMonth() == d2.getMonth() && d1.getDate() == d2.getDate();
+                    return d1.getFullYear() === d2.getFullYear() && d1.getMonth() === d2.getMonth() && d1.getDate() === d2.getDate();
                 };
 
                 ctrl._getViewData = function (startTime) {
@@ -823,6 +848,11 @@ angular.module('ui.rCalendar', [])
                                 var dayIndex = Math.floor(startIndex / 24);
                                 var endOfDay = dayIndex * 24;
                                 var endRowIndex;
+                                var startOffset = 0;
+                                var endOffset = 0;
+                                if (ctrl.hourParts !== 1) {
+                                    startOffset = Math.floor((timeDifferenceStart - startIndex) * ctrl.hourParts);
+                                }
 
                                 do {
                                     endOfDay += 24;
@@ -830,11 +860,16 @@ angular.module('ui.rCalendar', [])
                                         endRowIndex = 24;
                                     } else {
                                         endRowIndex = endIndex % 24;
+                                        if (ctrl.hourParts !== 1) {
+                                            endOffset = Math.floor((endIndex - timeDifferenceEnd) * ctrl.hourParts);
+                                        }
                                     }
                                     var displayEvent = {
                                         event: event,
                                         startIndex: startRowIndex,
-                                        endIndex: endRowIndex
+                                        endIndex: endRowIndex,
+                                        startOffset: startOffset,
+                                        endOffset: endOffset
                                     };
                                     eventSet = views[view].rows[startRowIndex][dayIndex].events;
                                     if (eventSet) {
@@ -845,6 +880,7 @@ angular.module('ui.rCalendar', [])
                                         views[view].rows[startRowIndex][dayIndex].events = eventSet;
                                     }
                                     startRowIndex = 0;
+                                    startOffset = 0;
                                     dayIndex += 1;
                                 } while (endOfDay < endIndex);
                             }
@@ -857,6 +893,7 @@ angular.module('ui.rCalendar', [])
                                 var orderedEvents = [];
                                 for (hour = 0; hour < 24; hour += 1) {
                                     if (views[i].rows[hour][day].events) {
+                                        views[i].rows[hour][day].events.sort(compareEventByStartOffset);
                                         orderedEvents = orderedEvents.concat(views[i].rows[hour][day].events);
                                     }
                                 }
@@ -912,6 +949,8 @@ angular.module('ui.rCalendar', [])
                     step: {days: 1}
                 };
 
+                scope.hourParts = ctrl.hourParts;
+
                 function createDateObjects(startTime) {
                     var rows = [],
                         time,
@@ -927,6 +966,10 @@ angular.module('ui.rCalendar', [])
                         });
                     }
                     return rows;
+                }
+
+                function compareEventByStartOffset(eventA, eventB) {
+                    return eventA.startOffset - eventB.startOffset;
                 }
 
                 scope.select = function (selectedTime) {
@@ -992,11 +1035,19 @@ angular.module('ui.rCalendar', [])
 
                             var startIndex = Math.floor(timeDifferenceStart);
                             var endIndex = Math.ceil(timeDifferenceEnd - eps);
+                            var startOffset = 0;
+                            var endOffset = 0;
+                            if (ctrl.hourParts !== 1) {
+                                startOffset = Math.floor((timeDifferenceStart - startIndex) * ctrl.hourParts);
+                                endOffset = Math.floor((endIndex - timeDifferenceEnd) * ctrl.hourParts);
+                            }
 
                             var displayEvent = {
                                 event: event,
                                 startIndex: startIndex,
-                                endIndex: endIndex
+                                endIndex: endIndex,
+                                startOffset: startOffset,
+                                endOffset: endOffset
                             };
 
                             eventSet = rows[startIndex].events;
@@ -1014,6 +1065,8 @@ angular.module('ui.rCalendar', [])
                         var orderedEvents = [];
                         for (hour = 0; hour < 24; hour += 1) {
                             if (rows[hour].events) {
+                                rows[hour].events.sort(compareEventByStartOffset);
+
                                 orderedEvents = orderedEvents.concat(rows[hour].events);
                             }
                         }
