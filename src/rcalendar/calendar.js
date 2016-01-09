@@ -268,14 +268,25 @@ angular.module('ui.rCalendar', [])
                 toUpdateViewIndex = (currentViewIndex + 2) % 3;
                 angular.copy(getViewData(currentViewStartDate), scope.views[toUpdateViewIndex]);
             } else {
-                currentViewData = [];
-                currentViewStartDate = self.range.startTime;
-                currentViewData.push(getViewData(currentViewStartDate));
-                currentViewStartDate = self.getAdjacentViewStartTime(1);
-                currentViewData.push(getViewData(currentViewStartDate));
-                currentViewStartDate = self.getAdjacentViewStartTime(-1);
-                currentViewData.push(getViewData(currentViewStartDate));
-                scope.views = currentViewData;
+                if(!scope.views) {
+                    currentViewData = [];
+                    currentViewStartDate = self.range.startTime;
+                    currentViewData.push(getViewData(currentViewStartDate));
+                    currentViewStartDate = self.getAdjacentViewStartTime(1);
+                    currentViewData.push(getViewData(currentViewStartDate));
+                    currentViewStartDate = self.getAdjacentViewStartTime(-1);
+                    currentViewData.push(getViewData(currentViewStartDate));
+                    scope.views = currentViewData;
+                } else {
+                    currentViewStartDate = self.range.startTime;
+                    angular.copy(getViewData(currentViewStartDate), scope.views[currentViewIndex]);
+                    currentViewStartDate = self.getAdjacentViewStartTime(-1);
+                    toUpdateViewIndex = (currentViewIndex + 2) % 3;
+                    angular.copy(getViewData(currentViewStartDate), scope.views[toUpdateViewIndex]);
+                    currentViewStartDate = self.getAdjacentViewStartTime(1);
+                    toUpdateViewIndex = (currentViewIndex + 1) % 3;
+                    angular.copy(getViewData(currentViewStartDate), scope.views[toUpdateViewIndex]);
+                }
             }
         };
 
