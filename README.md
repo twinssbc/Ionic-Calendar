@@ -44,9 +44,6 @@ Default value: 'MMMM yyyy'
 * calendarMode    
 The initial mode of the calendar.    
 Default value: 'month'
-* showWeeks    
-If set to true, a week number column will be displayed in the month view.       
-Default value: false
 * showEventDetail    
 If set to true, when selecting the date in the month view, the events happened on that day will be shown below.    
 Default value: true
