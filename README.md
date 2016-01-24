@@ -41,6 +41,9 @@ Default value: 'MMMM yyyy, Week w'
 * formatMonthTitle    
 The format of the title displayed in the month view.    
 Default value: 'MMMM yyyy'
+* formatWeekViewHeader    
+The format of the header displayed in the week view.
+Default value: 'EEE d'
 * calendarMode    
 The initial mode of the calendar.    
 Default value: 'month'

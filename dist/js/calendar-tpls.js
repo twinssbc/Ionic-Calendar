@@ -6,6 +6,7 @@ angular.module('ui.rCalendar', ['ui.rCalendar.tpls'])
         formatDayTitle: 'MMMM dd, yyyy',
         formatWeekTitle: 'MMMM yyyy, Week w',
         formatMonthTitle: 'MMMM yyyy',
+        formatWeekViewDayHeader: 'EEE d',
         calendarMode: 'month',
         showEventDetail: true,
         startingDayMonth: 0,
@@ -19,9 +20,9 @@ angular.module('ui.rCalendar', ['ui.rCalendar.tpls'])
             ngModelCtrl = {$setViewValue: angular.noop}; // nullModelCtrl;
 
         // Configuration attributes
-        angular.forEach(['formatDay', 'formatDayHeader', 'formatDayTitle', 'formatWeekTitle', 'formatMonthTitle',
+        angular.forEach(['formatDay', 'formatDayHeader', 'formatDayTitle', 'formatWeekTitle', 'formatMonthTitle', 'formatWeekViewDayHeader',
             'showEventDetail', 'startingDayMonth', 'startingDayWeek', 'eventSource', 'queryMode'], function (key, index) {
-            self[key] = angular.isDefined($attrs[key]) ? (index < 5 ? $interpolate($attrs[key])($scope.$parent) : $scope.$parent.$eval($attrs[key])) : calendarConfig[key];
+            self[key] = angular.isDefined($attrs[key]) ? (index < 6 ? $interpolate($attrs[key])($scope.$parent) : $scope.$parent.$eval($attrs[key])) : calendarConfig[key];
         });
 
         $scope.$parent.$watch($attrs.eventSource, function (value) {
@@ -355,6 +356,7 @@ angular.module('ui.rCalendar', ['ui.rCalendar.tpls'])
                 var ctrl = ctrls[0],
                     ngModelCtrl = ctrls[1];
                 scope.showEventDetail = ctrl.showEventDetail;
+                scope.formatDayHeader = ctrl.formatDayHeader;
 
                 ctrl.mode = {
                     step: {months: 1}
@@ -643,6 +645,8 @@ angular.module('ui.rCalendar', ['ui.rCalendar.tpls'])
             templateUrl: 'templates/rcalendar/week.html',
             require: '^calendar',
             link: function (scope, element, attrs, ctrl) {
+                scope.formatWeekViewDayHeader = ctrl.formatWeekViewDayHeader;
+
                 ctrl.mode = {
                     step: {days: 7}
                 };
@@ -1138,26 +1142,8 @@ angular.module("templates/rcalendar/month.html", []).run(["$templateCache", func
     "            <table ng-if=\"$index===currentViewIndex\" class=\"table table-bordered monthview-datetable\">\n" +
     "                <thead>\n" +
     "                <tr>\n" +
-    "                    <th>\n" +
-    "                        <small>Sun</small>\n" +
-    "                    </th>\n" +
-    "                    <th>\n" +
-    "                        <small>Mon</small>\n" +
-    "                    </th>\n" +
-    "                    <th>\n" +
-    "                        <small>Tue</small>\n" +
-    "                    </th>\n" +
-    "                    <th>\n" +
-    "                        <small>Wed</small>\n" +
-    "                    </th>\n" +
-    "                    <th>\n" +
-    "                        <small>Thu</small>\n" +
-    "                    </th>\n" +
-    "                    <th>\n" +
-    "                        <small>Fri</small>\n" +
-    "                    </th>\n" +
-    "                    <th>\n" +
-    "                        <small>Sat</small>\n" +
+    "                    <th ng-repeat=\"day in view.dates.slice(0,7) track by day.date\">\n" +
+    "                        <small>{{::day.date | date: formatDayHeader}}</small>\n" +
     "                    </th>\n" +
     "                </tr>\n" +
     "                </thead>\n" +
@@ -1305,26 +1291,8 @@ angular.module("templates/rcalendar/month.html", []).run(["$templateCache", func
     "            <table ng-if=\"$index!==currentViewIndex\" class=\"table table-bordered monthview-datetable\">\n" +
     "                <thead>\n" +
     "                <tr class=\"text-center\">\n" +
-    "                    <th>\n" +
-    "                        <small>Sun</small>\n" +
-    "                    </th>\n" +
-    "                    <th>\n" +
-    "                        <small>Mon</small>\n" +
-    "                    </th>\n" +
-    "                    <th>\n" +
-    "                        <small>Tue</small>\n" +
-    "                    </th>\n" +
-    "                    <th>\n" +
-    "                        <small>Wed</small>\n" +
-    "                    </th>\n" +
-    "                    <th>\n" +
-    "                        <small>Thu</small>\n" +
-    "                    </th>\n" +
-    "                    <th>\n" +
-    "                        <small>Fri</small>\n" +
-    "                    </th>\n" +
-    "                    <th>\n" +
-    "                        <small>Sat</small>\n" +
+    "                    <th ng-repeat=\"day in view.dates.slice(0,7) track by day.date\">\n" +
+    "                        <small>{{::day.date | date: formatDayHeader}}</small>\n" +
     "                    </th>\n" +
     "                </tr>\n" +
     "                </thead>\n" +
@@ -1417,7 +1385,7 @@ angular.module("templates/rcalendar/week.html", []).run(["$templateCache", funct
     "                <thead>\n" +
     "                <tr>\n" +
     "                    <th class=\"calendar-hour-column\"></th>\n" +
-    "                    <th class=\"weekview-header text-center\" ng-repeat=\"dt in view.dates\">{{::dt.date| date: 'EEE d'}}</th>\n" +
+    "                    <th class=\"weekview-header text-center\" ng-repeat=\"dt in view.dates\">{{::dt.date| date: formatWeekViewDayHeader}}</th>\n" +
     "                </tr>\n" +
     "                </thead>\n" +
     "            </table>\n" +

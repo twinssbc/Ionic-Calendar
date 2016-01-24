@@ -5,26 +5,8 @@
             <table ng-if="$index===currentViewIndex" class="table table-bordered monthview-datetable">
                 <thead>
                 <tr>
-                    <th>
-                        <small>Sun</small>
-                    </th>
-                    <th>
-                        <small>Mon</small>
-                    </th>
-                    <th>
-                        <small>Tue</small>
-                    </th>
-                    <th>
-                        <small>Wed</small>
-                    </th>
-                    <th>
-                        <small>Thu</small>
-                    </th>
-                    <th>
-                        <small>Fri</small>
-                    </th>
-                    <th>
-                        <small>Sat</small>
+                    <th ng-repeat="day in view.dates.slice(0,7) track by day.date">
+                        <small>{{::day.date | date: formatDayHeader}}</small>
                     </th>
                 </tr>
                 </thead>
@@ -172,26 +154,8 @@
             <table ng-if="$index!==currentViewIndex" class="table table-bordered monthview-datetable">
                 <thead>
                 <tr class="text-center">
-                    <th>
-                        <small>Sun</small>
-                    </th>
-                    <th>
-                        <small>Mon</small>
-                    </th>
-                    <th>
-                        <small>Tue</small>
-                    </th>
-                    <th>
-                        <small>Wed</small>
-                    </th>
-                    <th>
-                        <small>Thu</small>
-                    </th>
-                    <th>
-                        <small>Fri</small>
-                    </th>
-                    <th>
-                        <small>Sat</small>
+                    <th ng-repeat="day in view.dates.slice(0,7) track by day.date">
+                        <small>{{::day.date | date: formatDayHeader}}</small>
                     </th>
                 </tr>
                 </thead>

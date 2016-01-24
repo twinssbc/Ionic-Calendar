@@ -5,6 +5,7 @@ angular.module('ui.rCalendar', [])
         formatDayTitle: 'MMMM dd, yyyy',
         formatWeekTitle: 'MMMM yyyy, Week w',
         formatMonthTitle: 'MMMM yyyy',
+        formatWeekViewDayHeader: 'EEE d',
         calendarMode: 'month',
         showEventDetail: true,
         startingDayMonth: 0,
@@ -18,9 +19,9 @@ angular.module('ui.rCalendar', [])
             ngModelCtrl = {$setViewValue: angular.noop}; // nullModelCtrl;
 
         // Configuration attributes
-        angular.forEach(['formatDay', 'formatDayHeader', 'formatDayTitle', 'formatWeekTitle', 'formatMonthTitle',
+        angular.forEach(['formatDay', 'formatDayHeader', 'formatDayTitle', 'formatWeekTitle', 'formatMonthTitle', 'formatWeekViewDayHeader',
             'showEventDetail', 'startingDayMonth', 'startingDayWeek', 'eventSource', 'queryMode'], function (key, index) {
-            self[key] = angular.isDefined($attrs[key]) ? (index < 5 ? $interpolate($attrs[key])($scope.$parent) : $scope.$parent.$eval($attrs[key])) : calendarConfig[key];
+            self[key] = angular.isDefined($attrs[key]) ? (index < 6 ? $interpolate($attrs[key])($scope.$parent) : $scope.$parent.$eval($attrs[key])) : calendarConfig[key];
         });
 
         $scope.$parent.$watch($attrs.eventSource, function (value) {
@@ -354,6 +355,7 @@ angular.module('ui.rCalendar', [])
                 var ctrl = ctrls[0],
                     ngModelCtrl = ctrls[1];
                 scope.showEventDetail = ctrl.showEventDetail;
+                scope.formatDayHeader = ctrl.formatDayHeader;
 
                 ctrl.mode = {
                     step: {months: 1}
@@ -642,6 +644,8 @@ angular.module('ui.rCalendar', [])
             templateUrl: 'templates/rcalendar/week.html',
             require: '^calendar',
             link: function (scope, element, attrs, ctrl) {
+                scope.formatWeekViewDayHeader = ctrl.formatWeekViewDayHeader;
+
                 ctrl.mode = {
                     step: {days: 7}
                 };
