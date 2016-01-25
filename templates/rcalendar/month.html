@@ -2,7 +2,7 @@
     <ion-slide-box class="monthview-slide" on-slide-changed="slideChanged($index)" does-continue="true"
                    show-pager="false" delegate-handle="monthview-slide">
         <ion-slide ng-repeat="view in views track by $index">
-            <table ng-if="$index===currentViewIndex" class="table table-bordered monthview-datetable">
+            <table ng-if="$index===currentViewIndex" class="table table-bordered table-fixed monthview-datetable">
                 <thead>
                 <tr>
                     <th ng-repeat="day in view.dates.slice(0,7) track by day.date">
@@ -151,7 +151,7 @@
                 </tr>
                 </tbody>
             </table>
-            <table ng-if="$index!==currentViewIndex" class="table table-bordered monthview-datetable">
+            <table ng-if="$index!==currentViewIndex" class="table table-bordered table-fixed monthview-datetable">
                 <thead>
                 <tr class="text-center">
                     <th ng-repeat="day in view.dates.slice(0,7) track by day.date">

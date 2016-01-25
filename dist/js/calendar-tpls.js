@@ -1139,7 +1139,7 @@ angular.module("templates/rcalendar/month.html", []).run(["$templateCache", func
     "    <ion-slide-box class=\"monthview-slide\" on-slide-changed=\"slideChanged($index)\" does-continue=\"true\"\n" +
     "                   show-pager=\"false\" delegate-handle=\"monthview-slide\">\n" +
     "        <ion-slide ng-repeat=\"view in views track by $index\">\n" +
-    "            <table ng-if=\"$index===currentViewIndex\" class=\"table table-bordered monthview-datetable\">\n" +
+    "            <table ng-if=\"$index===currentViewIndex\" class=\"table table-bordered table-fixed monthview-datetable\">\n" +
     "                <thead>\n" +
     "                <tr>\n" +
     "                    <th ng-repeat=\"day in view.dates.slice(0,7) track by day.date\">\n" +
@@ -1288,7 +1288,7 @@ angular.module("templates/rcalendar/month.html", []).run(["$templateCache", func
     "                </tr>\n" +
     "                </tbody>\n" +
     "            </table>\n" +
-    "            <table ng-if=\"$index!==currentViewIndex\" class=\"table table-bordered monthview-datetable\">\n" +
+    "            <table ng-if=\"$index!==currentViewIndex\" class=\"table table-bordered table-fixed monthview-datetable\">\n" +
     "                <thead>\n" +
     "                <tr class=\"text-center\">\n" +
     "                    <th ng-repeat=\"day in view.dates.slice(0,7) track by day.date\">\n" +
