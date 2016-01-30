@@ -44,6 +44,9 @@ Default value: 'MMMM yyyy'
 * formatWeekViewHeader    
 The format of the header displayed in the week view.
 Default value: 'EEE d'
+* formatHourColumn    
+The format of the hour column displayed in the week and day view.
+Default value: 'ha'
 * calendarMode    
 The initial mode of the calendar.    
 Default value: 'month'

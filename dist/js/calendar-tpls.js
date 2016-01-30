@@ -7,6 +7,7 @@ angular.module('ui.rCalendar', ['ui.rCalendar.tpls'])
         formatWeekTitle: 'MMMM yyyy, Week w',
         formatMonthTitle: 'MMMM yyyy',
         formatWeekViewDayHeader: 'EEE d',
+        formatHourColumn: 'ha',
         calendarMode: 'month',
         showEventDetail: true,
         startingDayMonth: 0,
@@ -20,9 +21,9 @@ angular.module('ui.rCalendar', ['ui.rCalendar.tpls'])
             ngModelCtrl = {$setViewValue: angular.noop}; // nullModelCtrl;
 
         // Configuration attributes
-        angular.forEach(['formatDay', 'formatDayHeader', 'formatDayTitle', 'formatWeekTitle', 'formatMonthTitle', 'formatWeekViewDayHeader',
+        angular.forEach(['formatDay', 'formatDayHeader', 'formatDayTitle', 'formatWeekTitle', 'formatMonthTitle', 'formatWeekViewDayHeader', 'formatHourColumn',
             'showEventDetail', 'startingDayMonth', 'startingDayWeek', 'eventSource', 'queryMode'], function (key, index) {
-            self[key] = angular.isDefined($attrs[key]) ? (index < 6 ? $interpolate($attrs[key])($scope.$parent) : $scope.$parent.$eval($attrs[key])) : calendarConfig[key];
+            self[key] = angular.isDefined($attrs[key]) ? (index < 7 ? $interpolate($attrs[key])($scope.$parent) : $scope.$parent.$eval($attrs[key])) : calendarConfig[key];
         });
 
         $scope.$parent.$watch($attrs.eventSource, function (value) {
@@ -270,7 +271,7 @@ angular.module('ui.rCalendar', ['ui.rCalendar.tpls'])
                 toUpdateViewIndex = (currentViewIndex + 2) % 3;
                 angular.copy(getViewData(currentViewStartDate), scope.views[toUpdateViewIndex]);
             } else {
-                if(!scope.views) {
+                if (!scope.views) {
                     currentViewData = [];
                     currentViewStartDate = self.range.startTime;
                     currentViewData.push(getViewData(currentViewStartDate));
@@ -646,6 +647,7 @@ angular.module('ui.rCalendar', ['ui.rCalendar.tpls'])
             require: '^calendar',
             link: function (scope, element, attrs, ctrl) {
                 scope.formatWeekViewDayHeader = ctrl.formatWeekViewDayHeader;
+                scope.formatHourColumn = ctrl.formatHourColumn;
 
                 ctrl.mode = {
                     step: {days: 7}
@@ -909,6 +911,8 @@ angular.module('ui.rCalendar', ['ui.rCalendar.tpls'])
             templateUrl: 'templates/rcalendar/day.html',
             require: '^calendar',
             link: function (scope, element, attrs, ctrl) {
+                scope.formatHourColumn = ctrl.formatHourColumn;
+
                 ctrl.mode = {
                     step: {days: 1}
                 };
@@ -1102,7 +1106,7 @@ angular.module("templates/rcalendar/day.html", []).run(["$templateCache", functi
     "                    <tbody>\n" +
     "                    <tr ng-repeat=\"tm in view.rows track by $index\">\n" +
     "                        <td class=\"calendar-hour-column text-center\">\n" +
-    "                            {{$index<12?($index === 0?12:$index)+'am':($index === 12?$index:$index-12)+'pm'}}\n" +
+    "                            {{::tm.time | date: formatHourColumn}}\n" +
     "                        </td>\n" +
     "                        <td class=\"calendar-cell\" ng-click=\"select(tm.time)\">\n" +
     "                            <div ng-class=\"{'calendar-event-wrap': tm.events}\" ng-if=\"tm.events\">\n" +
@@ -1120,7 +1124,7 @@ angular.module("templates/rcalendar/day.html", []).run(["$templateCache", functi
     "                    <tbody>\n" +
     "                    <tr ng-repeat=\"tm in view.rows track by $index\">\n" +
     "                        <td class=\"calendar-hour-column text-center\">\n" +
-    "                            {{$index<12?($index === 0?12:$index)+'am':($index === 12?$index:$index-12)+'pm'}}\n" +
+    "                            {{::tm.time | date: formatHourColumn}}\n" +
     "                        </td>\n" +
     "                        <td class=\"calendar-cell\">\n" +
     "                        </td>\n" +
@@ -1418,7 +1422,7 @@ angular.module("templates/rcalendar/week.html", []).run(["$templateCache", funct
     "                        <tbody>\n" +
     "                        <tr ng-repeat=\"row in view.rows track by $index\">\n" +
     "                            <td class=\"calendar-hour-column text-center\">\n" +
-    "                                {{::$index<12?($index === 0?12:$index)+'am':($index === 12?$index:$index-12)+'pm'}}\n" +
+    "                                {{::row[0].time | date: formatHourColumn}}\n" +
     "                            </td>\n" +
     "                            <td ng-repeat=\"tm in row track by tm.time\" class=\"calendar-cell\" ng-click=\"select(tm.time)\">\n" +
     "                                <div ng-class=\"{'calendar-event-wrap': tm.events}\" ng-if=\"tm.events\">\n" +
@@ -1456,7 +1460,7 @@ angular.module("templates/rcalendar/week.html", []).run(["$templateCache", funct
     "                        <tbody>\n" +
     "                        <tr ng-repeat=\"row in view.rows track by $index\">\n" +
     "                            <td class=\"calendar-hour-column text-center\">\n" +
-    "                                {{::$index<12?($index === 0?12:$index)+'am':($index === 12?$index:$index-12)+'pm'}}\n" +
+    "                                {{::row[0].time | date: formatHourColumn}}\n" +
     "                            </td>\n" +
     "                            <td ng-repeat=\"tm in row track by tm.time\" class=\"calendar-cell\">\n" +
     "                            </td>\n" +
