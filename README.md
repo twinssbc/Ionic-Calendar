@@ -68,7 +68,9 @@ If queryMode is set to 'local', when the range or mode is changed, the calendar 
 If queryMode is set to 'remote', when the range or mode is changed, the calendar will trigger a callback function rangeChanged.    
 Users will need to implement their custom loading data logic in this function, and fill it into the eventSource. The eventSource is watched, so the view will be updated once the eventSource is changed.    
 Default value: 'local'
-* rangeChanged    
+* step
+It can be set to 15 or 30, so that the event can be displayed at more accurate position in weekview or dayview.
+* rangeChanged
 The callback function triggered when the range or mode is changed if the queryMode is set to 'remote'
 
         $scope.rangeChanged = function (startTime, endTime) {
