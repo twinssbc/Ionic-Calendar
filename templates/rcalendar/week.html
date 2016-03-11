@@ -6,7 +6,7 @@
                 <thead>
                 <tr>
                     <th class="calendar-hour-column"></th>
-                    <th class="weekview-header text-center" ng-repeat="dt in view.dates">{{::dt.date| date: 'EEE d'}}</th>
+                    <th class="weekview-header text-center" ng-repeat="dt in view.dates">{{::dt.date| date: formatWeekViewDayHeader}}</th>
                 </tr>
                 </thead>
             </table>
@@ -39,7 +39,7 @@
                         <tbody>
                         <tr ng-repeat="row in view.rows track by $index">
                             <td class="calendar-hour-column text-center">
-                                {{::$index<12?($index === 0?12:$index)+'am':($index === 12?$index:$index-12)+'pm'}}
+                                {{::row[0].time | date: formatHourColumn}}
                             </td>
                             <td ng-repeat="tm in row track by tm.time" class="calendar-cell" ng-click="select(tm.time)">
                                 <div ng-class="{'calendar-event-wrap': tm.events}" ng-if="tm.events">
@@ -77,7 +77,7 @@
                         <tbody>
                         <tr ng-repeat="row in view.rows track by $index">
                             <td class="calendar-hour-column text-center">
-                                {{::$index<12?($index === 0?12:$index)+'am':($index === 12?$index:$index-12)+'pm'}}
+                                {{::row[0].time | date: formatHourColumn}}
                             </td>
                             <td ng-repeat="tm in row track by tm.time" class="calendar-cell">
                             </td>

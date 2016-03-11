@@ -41,12 +41,15 @@ Default value: 'MMMM yyyy, Week w'
 * formatMonthTitle    
 The format of the title displayed in the month view.    
 Default value: 'MMMM yyyy'
+* formatWeekViewHeader    
+The format of the header displayed in the week view.    
+Default value: 'EEE d'
+* formatHourColumn    
+The format of the hour column displayed in the week and day view.    
+Default value: 'ha'
 * calendarMode    
 The initial mode of the calendar.    
 Default value: 'month'
-* showWeeks    
-If set to true, a week number column will be displayed in the month view.       
-Default value: false
 * showEventDetail    
 If set to true, when selecting the date in the month view, the events happened on that day will be shown below.    
 Default value: true
@@ -65,9 +68,9 @@ If queryMode is set to 'local', when the range or mode is changed, the calendar 
 If queryMode is set to 'remote', when the range or mode is changed, the calendar will trigger a callback function rangeChanged.    
 Users will need to implement their custom loading data logic in this function, and fill it into the eventSource. The eventSource is watched, so the view will be updated once the eventSource is changed.    
 Default value: 'local'
-* step
+* step    
 It can be set to 15 or 30, so that the event can be displayed at more accurate position in weekview or dayview.
-* rangeChanged
+* rangeChanged    
 The callback function triggered when the range or mode is changed if the queryMode is set to 'remote'
 
         $scope.rangeChanged = function (startTime, endTime) {
@@ -86,7 +89,7 @@ The callback function triggered when an event is clicked
             console.log(event.title);
         };
 
-* timeSelected
+* timeSelected    
 The callback function triggered when a date is selected in the monthview
 
         <calendar ... time-selected="onTimeSelected(selectedTime)"></calendar>
@@ -123,7 +126,7 @@ In case you want to manually insert/remove/update the element in the eventSource
 
 # Events
 
-* changeDate
+* changeDate    
 When receiving this event, the calendar will move the current view to previous or next range.  
 Parameter: direction  
 1 - Forward  
@@ -131,7 +134,7 @@ Parameter: direction
 
         $scope.$broadcast('changeDate', 1);
 
-* eventSourceChanged
+* eventSourceChanged    
 This event is only needed when you manually modify the element in the eventSource array.  
 Parameter: value  
 The whole event source object

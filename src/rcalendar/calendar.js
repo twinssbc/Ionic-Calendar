@@ -5,6 +5,8 @@ angular.module('ui.rCalendar', [])
         formatDayTitle: 'MMMM dd, yyyy',
         formatWeekTitle: 'MMMM yyyy, Week w',
         formatMonthTitle: 'MMMM yyyy',
+        formatWeekViewDayHeader: 'EEE d',
+        formatHourColumn: 'ha',
         calendarMode: 'month',
         showEventDetail: true,
         startingDayMonth: 0,
@@ -19,9 +21,9 @@ angular.module('ui.rCalendar', [])
             ngModelCtrl = {$setViewValue: angular.noop}; // nullModelCtrl;
 
         // Configuration attributes
-        angular.forEach(['formatDay', 'formatDayHeader', 'formatDayTitle', 'formatWeekTitle', 'formatMonthTitle',
+        angular.forEach(['formatDay', 'formatDayHeader', 'formatDayTitle', 'formatWeekTitle', 'formatMonthTitle', 'formatWeekViewDayHeader', 'formatHourColumn',
             'showEventDetail', 'startingDayMonth', 'startingDayWeek', 'eventSource', 'queryMode', 'step'], function (key, index) {
-            self[key] = angular.isDefined($attrs[key]) ? (index < 5 ? $interpolate($attrs[key])($scope.$parent) : $scope.$parent.$eval($attrs[key])) : calendarConfig[key];
+            self[key] = angular.isDefined($attrs[key]) ? (index < 7 ? $interpolate($attrs[key])($scope.$parent) : $scope.$parent.$eval($attrs[key])) : calendarConfig[key];
         });
 
         self.hourParts = 1;
@@ -287,14 +289,25 @@ angular.module('ui.rCalendar', [])
                 toUpdateViewIndex = (currentViewIndex + 2) % 3;
                 angular.copy(getViewData(currentViewStartDate), scope.views[toUpdateViewIndex]);
             } else {
-                currentViewData = [];
-                currentViewStartDate = self.range.startTime;
-                currentViewData.push(getViewData(currentViewStartDate));
-                currentViewStartDate = self.getAdjacentViewStartTime(1);
-                currentViewData.push(getViewData(currentViewStartDate));
-                currentViewStartDate = self.getAdjacentViewStartTime(-1);
-                currentViewData.push(getViewData(currentViewStartDate));
-                scope.views = currentViewData;
+                if (!scope.views) {
+                    currentViewData = [];
+                    currentViewStartDate = self.range.startTime;
+                    currentViewData.push(getViewData(currentViewStartDate));
+                    currentViewStartDate = self.getAdjacentViewStartTime(1);
+                    currentViewData.push(getViewData(currentViewStartDate));
+                    currentViewStartDate = self.getAdjacentViewStartTime(-1);
+                    currentViewData.push(getViewData(currentViewStartDate));
+                    scope.views = currentViewData;
+                } else {
+                    currentViewStartDate = self.range.startTime;
+                    angular.copy(getViewData(currentViewStartDate), scope.views[currentViewIndex]);
+                    currentViewStartDate = self.getAdjacentViewStartTime(-1);
+                    toUpdateViewIndex = (currentViewIndex + 2) % 3;
+                    angular.copy(getViewData(currentViewStartDate), scope.views[toUpdateViewIndex]);
+                    currentViewStartDate = self.getAdjacentViewStartTime(1);
+                    toUpdateViewIndex = (currentViewIndex + 1) % 3;
+                    angular.copy(getViewData(currentViewStartDate), scope.views[toUpdateViewIndex]);
+                }
             }
         };
 
@@ -362,6 +375,7 @@ angular.module('ui.rCalendar', [])
                 var ctrl = ctrls[0],
                     ngModelCtrl = ctrls[1];
                 scope.showEventDetail = ctrl.showEventDetail;
+                scope.formatDayHeader = ctrl.formatDayHeader;
 
                 ctrl.mode = {
                     step: {months: 1}
@@ -650,6 +664,9 @@ angular.module('ui.rCalendar', [])
             templateUrl: 'templates/rcalendar/week.html',
             require: '^calendar',
             link: function (scope, element, attrs, ctrl) {
+                scope.formatWeekViewDayHeader = ctrl.formatWeekViewDayHeader;
+                scope.formatHourColumn = ctrl.formatHourColumn;
+
                 ctrl.mode = {
                     step: {days: 7}
                 };
@@ -945,6 +962,8 @@ angular.module('ui.rCalendar', [])
             templateUrl: 'templates/rcalendar/day.html',
             require: '^calendar',
             link: function (scope, element, attrs, ctrl) {
+                scope.formatHourColumn = ctrl.formatHourColumn;
+
                 ctrl.mode = {
                     step: {days: 1}
                 };

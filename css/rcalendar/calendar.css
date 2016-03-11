@@ -109,6 +109,7 @@
     position: absolute;
     padding: 2px;
     cursor: pointer;
+    z-index: 10000;
 }
 
 .calendar-event-inner {
@@ -122,7 +123,7 @@
 }
 
 .calendar-cell {
-    padding: 0px !important;
+    padding: 0 !important;
     height: 37px;
 }
 
@@ -164,9 +165,8 @@
     line-height: 50px;
     text-align: center;
     width: 50px;
-    border-width: 1px 0px 1px 1px;
-    border-color: #ddd;
-    border-style: solid;
+    border: 1px solid #ddd;
+    border-right-width: 0;
 }
 
 .weekview-allday-content-wrapper, .dayview-allday-content-wrapper {
@@ -215,14 +215,14 @@
     }
 
     .table > tbody > tr > td.calendar-hour-column {
-        padding-left: 0px;
-        padding-right: 0px;
+        padding-left: 0;
+        padding-right: 0;
         font-size: 12px;
     }
 
     .table > thead > tr > th.weekview-header {
-        padding-left: 0px;
-        padding-right: 0px;
+        padding-left: 0;
+        padding-right: 0;
         font-size: 12px;
     }
 

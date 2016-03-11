@@ -30,7 +30,7 @@
                     <tbody>
                     <tr ng-repeat="tm in view.rows track by $index">
                         <td class="calendar-hour-column text-center">
-                            {{$index<12?($index === 0?12:$index)+'am':($index === 12?$index:$index-12)+'pm'}}
+                            {{::tm.time | date: formatHourColumn}}
                         </td>
                         <td class="calendar-cell" ng-click="select(tm.time)">
                             <div ng-class="{'calendar-event-wrap': tm.events}" ng-if="tm.events">
@@ -48,7 +48,7 @@
                     <tbody>
                     <tr ng-repeat="tm in view.rows track by $index">
                         <td class="calendar-hour-column text-center">
-                            {{$index<12?($index === 0?12:$index)+'am':($index === 12?$index:$index-12)+'pm'}}
+                            {{::tm.time | date: formatHourColumn}}
                         </td>
                         <td class="calendar-cell">
                         </td>
