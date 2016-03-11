@@ -14,7 +14,8 @@ angular.module('ui.rCalendar', ['ui.rCalendar.tpls'])
         startingDayWeek: 0,
         eventSource: null,
         queryMode: 'local',
-        step: 60
+        step: 60,
+        scrollY: 0
     })
     .controller('ui.rCalendar.CalendarController', ['$scope', '$attrs', '$parse', '$interpolate', '$log', 'dateFilter', 'calendarConfig', '$timeout', '$ionicSlideBoxDelegate', function ($scope, $attrs, $parse, $interpolate, $log, dateFilter, calendarConfig, $timeout, $ionicSlideBoxDelegate) {
         'use strict';
@@ -23,7 +24,7 @@ angular.module('ui.rCalendar', ['ui.rCalendar.tpls'])
 
         // Configuration attributes
         angular.forEach(['formatDay', 'formatDayHeader', 'formatDayTitle', 'formatWeekTitle', 'formatMonthTitle', 'formatWeekViewDayHeader', 'formatHourColumn',
-            'showEventDetail', 'startingDayMonth', 'startingDayWeek', 'eventSource', 'queryMode', 'step'], function (key, index) {
+            'showEventDetail', 'startingDayMonth', 'startingDayWeek', 'eventSource', 'queryMode', 'step', 'scrollY'], function (key, index) {
             self[key] = angular.isDefined($attrs[key]) ? (index < 7 ? $interpolate($attrs[key])($scope.$parent) : $scope.$parent.$eval($attrs[key])) : calendarConfig[key];
         });
 
@@ -657,7 +658,7 @@ angular.module('ui.rCalendar', ['ui.rCalendar.tpls'])
             }
         };
     }])
-    .directive('weekview', ['dateFilter', function (dateFilter) {
+    .directive('weekview', ['dateFilter', '$timeout', '$ionicScrollDelegate', function (dateFilter, $timeout, $ionicScrollDelegate) {
         'use strict';
         return {
             restrict: 'EA',
@@ -729,6 +730,19 @@ angular.module('ui.rCalendar', ['ui.rCalendar.tpls'])
                     var d2 = new Date();
                     return d1.getFullYear() === d2.getFullYear() && d1.getMonth() === d2.getMonth() && d1.getDate() === d2.getDate();
                 };
+
+                scope.scrollDebounce = function (el) {
+                    var scrollTop = el.scrollCtrl.getScrollPosition().top;
+                    $timeout.cancel(ctrl.scrollTimeout);
+                    ctrl.scrollTimeout = $timeout(function () {
+                        if (ctrl.scrollY !== scrollTop) {
+                            $ionicScrollDelegate.$getByHandle('calendar').scrollTo(0, scrollTop, false);
+                            ctrl.scrollY = scrollTop;
+                        }
+                    }, 50);
+                };
+
+                scope.scrollY = ctrl.scrollY;
 
                 ctrl._getViewData = function (startTime) {
                     return {
@@ -1523,7 +1537,7 @@ angular.module("templates/rcalendar/week.html", []).run(["$templateCache", funct
     "                        </table>\n" +
     "                    </ion-scroll>\n" +
     "                </div>\n" +
-    "                <ion-content class=\"weekview-normal-event-container\" has-bouncing=\"false\">\n" +
+    "                <ion-content class=\"weekview-normal-event-container\" start-y=\"{{ scrollY }}\" delegate-handle=\"calendar\" on-scroll=\"scrollDebounce(this)\" has-bouncing=\"false\">\n" +
     "                    <table class=\"table table-bordered table-fixed weekview-normal-event-table\">\n" +
     "                        <tbody>\n" +
     "                        <tr ng-repeat=\"row in view.rows track by $index\">\n" +

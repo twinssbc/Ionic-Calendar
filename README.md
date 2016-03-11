@@ -70,6 +70,8 @@ Users will need to implement their custom loading data logic in this function, a
 Default value: 'local'
 * step    
 It can be set to 15 or 30, so that the event can be displayed at more accurate position in weekview or dayview.
+* scrollY (integer)
+Sets the initial scrolling position of the weekview.
 * rangeChanged    
 The callback function triggered when the range or mode is changed if the queryMode is set to 'remote'
 
