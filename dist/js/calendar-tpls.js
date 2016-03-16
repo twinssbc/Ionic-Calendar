@@ -761,7 +761,6 @@ angular.module('ui.rCalendar', ['ui.rCalendar.tpls'])
                         day,
                         hour,
                         len = eventSource ? eventSource.length : 0,
-                        timeZoneOffset = -new Date().getTimezoneOffset(),
                         oneHour = 3600000,
                         oneDay = 86400000,
                     //add allday eps
@@ -786,9 +785,22 @@ angular.module('ui.rCalendar', ['ui.rCalendar.tpls'])
                         index: (scope.currentViewIndex + 2) % 3
                     }];
 
+                    var dstCheckNext = views[0].endTime.getTimezoneOffset() - views[0].startTime.getTimezoneOffset();
+                    if (dstCheckNext !== 0) {
+                        views[1].startTime = new Date(views[1].startTime.getTime() + dstCheckNext * 60000);
+                    }
+
+                    var dstCheckPrev = views[2].startTime.getTimezoneOffset() - views[2].endTime.getTimezoneOffset();
+                    if (dstCheckPrev !== 0) {
+                        views[2].startTime = new Date(views[2].startTime.getTime() + dstCheckPrev * 60000);
+                    }
+
                     for (i = 0; i < 3; i += 1) {
-                        views[i].utcStartTime = new Date(views[i].startTime.getTime() + timeZoneOffset * 60000);
-                        views[i].utcEndTime = new Date(views[i].endTime.getTime() + timeZoneOffset * 60000);
+                        var timeZoneOffsetStart = -views[i].startTime.getTimezoneOffset();
+                        var timeZoneOffsetEnd = -views[i].endTime.getTimezoneOffset();
+
+                        views[i].utcStartTime = new Date(views[i].startTime.getTime() + timeZoneOffsetStart * 60000);
+                        views[i].utcEndTime = new Date(views[i].endTime.getTime() + timeZoneOffsetEnd * 60000);
                         views[i].rows = scope.views[views[i].index].rows;
                         views[i].dates = scope.views[views[i].index].dates;
 
