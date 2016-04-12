@@ -98,6 +98,14 @@ The callback function triggered when a date is selected in the monthview
             console.log(event.selectedTime);
         };
 
+* titleChanged    
+The callback function triggered when the view title is changed
+
+        <calendar ... title-changed="onViewTitleChanged(title)”></calendar>
+        
+        $scope.onViewTitleChanged = function (title) {
+            $scope.viewTitle = title;
+        };
 
 # EventSource
 
