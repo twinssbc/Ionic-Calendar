@@ -218,7 +218,7 @@
             </table>
         </ion-slide>
     </ion-slide-box>
-    <ion-content class="event-detail-container" has-bouncing="false" ng-if="showEventDetail">
+    <ion-content class="event-detail-container" has-bouncing="false" ng-show="showEventDetail">
         <table class="table table-bordered table-striped table-fixed event-detail-table">
             <tr ng-repeat="event in selectedDate.events" ng-click="eventSelected({event:event})">
                 <td ng-if="!event.allDay" class="monthview-eventdetail-timecolumn">{{::event.startTime|date: 'HH:mm'}}
