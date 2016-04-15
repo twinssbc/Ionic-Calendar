@@ -1151,7 +1151,7 @@ angular.module("templates/rcalendar/day.html", []).run(["$templateCache", functi
     "                                <div ng-repeat=\"displayEvent in view.allDayEvents\" class=\"calendar-event\"\n" +
     "                                     ng-click=\"eventSelected({event:displayEvent.event})\"\n" +
     "                                     ng-style=\"{top: 25*$index+'px',width: '100%',height:'25px'}\">\n" +
-    "                                    <div class=\"calendar-event-inner\">{{displayEvent.event.title}}</div>\n" +
+    "                                    <div class=\"calendar-event-inner\"><span ng-bind-html=\"displayEvent.event.title\"></span></div>\n" +
     "                                </div>\n" +
     "                            </td>\n" +
     "                            <td class=\"calendar-cell\" ng-if=\"$index!==currentViewIndex\">\n" +
@@ -1173,7 +1173,7 @@ angular.module("templates/rcalendar/day.html", []).run(["$templateCache", functi
     "                                <div ng-repeat=\"displayEvent in tm.events\" class=\"calendar-event\"\n" +
     "                                     ng-click=\"eventSelected({event:displayEvent.event})\"\n" +
     "                                     ng-style=\"{top: (37*displayEvent.startOffset/hourParts)+'px', left: 100/displayEvent.overlapNumber*displayEvent.position+'%', width: 100/displayEvent.overlapNumber+'%', height: 37*(displayEvent.endIndex -displayEvent.startIndex - (displayEvent.endOffset + displayEvent.startOffset)/hourParts)+'px'}\">\n" +
-    "                                    <div class=\"calendar-event-inner\">{{displayEvent.event.title}}</div>\n" +
+    "                                    <div class=\"calendar-event-inner\"><span ng-bind-html=\"displayEvent.event.title\"></span></div>\n" +
     "                                </div>\n" +
     "                            </div>\n" +
     "                        </td>\n" +
@@ -1427,7 +1427,7 @@ angular.module("templates/rcalendar/month.html", []).run(["$templateCache", func
     "                    {{::event.endTime|date: 'HH:mm'}}\n" +
     "                </td>\n" +
     "                <td ng-if=\"event.allDay\" class=\"monthview-eventdetail-timecolumn\">All day</td>\n" +
-    "                <td class=\"event-detail\">{{::event.title}}</td>\n" +
+    "                <td class=\"event-detail\"><span ng-bind-html=\"::event.title\"></span></td>\n" +
     "            </tr>\n" +
     "            <tr ng-if=\"!selectedDate.events\">\n" +
     "                <td class=\"no-event-label\"><span ng-bind=\"noEventsLabel\"></span></td>\n" +
@@ -1467,7 +1467,7 @@ angular.module("templates/rcalendar/week.html", []).run(["$templateCache", funct
     "                                        <div ng-repeat=\"displayEvent in day.events\" class=\"calendar-event\"\n" +
     "                                             ng-click=\"eventSelected({event:displayEvent.event})\"\n" +
     "                                             ng-style=\"{top: 25*displayEvent.position+'px', width: 100*(displayEvent.endIndex-displayEvent.startIndex)+'%', height: '25px'}\">\n" +
-    "                                            <div class=\"calendar-event-inner\">{{displayEvent.event.title}}</div>\n" +
+    "                                            <div class=\"calendar-event-inner\"><span ng-bind-html=\"displayEvent.event.title\"></span></div>\n" +
     "                                        </div>\n" +
     "                                    </div>\n" +
     "                                </td>\n" +
@@ -1488,7 +1488,7 @@ angular.module("templates/rcalendar/week.html", []).run(["$templateCache", funct
     "                                    <div ng-repeat=\"displayEvent in tm.events\" class=\"calendar-event\"\n" +
     "                                         ng-click=\"eventSelected({event:displayEvent.event})\"\n" +
     "                                         ng-style=\"{top: (37*displayEvent.startOffset/hourParts)+'px',left: 100/displayEvent.overlapNumber*displayEvent.position+'%', width: 100/displayEvent.overlapNumber+'%', height: 37*(displayEvent.endIndex -displayEvent.startIndex - (displayEvent.endOffset + displayEvent.startOffset)/hourParts)+'px'}\">\n" +
-    "                                        <div class=\"calendar-event-inner\">{{displayEvent.event.title}}</div>\n" +
+    "                                        <div class=\"calendar-event-inner\"><span ng-bind-html=\"displayEvent.event.title\"></span></div>\n" +
     "                                    </div>\n" +
     "                                </div>\n" +
     "                            </td>\n" +

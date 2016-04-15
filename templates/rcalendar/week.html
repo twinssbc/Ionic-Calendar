@@ -25,7 +25,7 @@
                                         <div ng-repeat="displayEvent in day.events" class="calendar-event"
                                              ng-click="eventSelected({event:displayEvent.event})"
                                              ng-style="{top: 25*displayEvent.position+'px', width: 100*(displayEvent.endIndex-displayEvent.startIndex)+'%', height: '25px'}">
-                                            <div class="calendar-event-inner">{{displayEvent.event.title}}</div>
+                                            <div class="calendar-event-inner"><span ng-bind-html="displayEvent.event.title"></span></div>
                                         </div>
                                     </div>
                                 </td>
@@ -46,7 +46,7 @@
                                     <div ng-repeat="displayEvent in tm.events" class="calendar-event"
                                          ng-click="eventSelected({event:displayEvent.event})"
                                          ng-style="{top: (37*displayEvent.startOffset/hourParts)+'px',left: 100/displayEvent.overlapNumber*displayEvent.position+'%', width: 100/displayEvent.overlapNumber+'%', height: 37*(displayEvent.endIndex -displayEvent.startIndex - (displayEvent.endOffset + displayEvent.startOffset)/hourParts)+'px'}">
-                                        <div class="calendar-event-inner">{{displayEvent.event.title}}</div>
+                                        <div class="calendar-event-inner"><span ng-bind-html="displayEvent.event.title"></span></div>
                                     </div>
                                 </div>
                             </td>
