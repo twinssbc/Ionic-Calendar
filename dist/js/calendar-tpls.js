@@ -14,6 +14,7 @@ angular.module('ui.rCalendar', ['ui.rCalendar.tpls'])
         startingDayMonth: 0,
         startingDayWeek: 0,
         eventSource: null,
+        noEventsLabel: 'No Events',
         queryMode: 'local',
         step: 60
     })
@@ -24,7 +25,7 @@ angular.module('ui.rCalendar', ['ui.rCalendar.tpls'])
 
         // Configuration attributes
         angular.forEach(['formatDay', 'formatDayHeader', 'formatDayTitle', 'formatWeekTitle', 'formatMonthTitle', 'formatWeekViewDayHeader', 'formatHourColumn',
-            'allDayLabel', 'showEventDetail', 'startingDayMonth', 'startingDayWeek', 'eventSource', 'queryMode', 'step'], function (key, index) {
+            'allDayLabel', 'showEventDetail', 'startingDayMonth', 'startingDayWeek', 'eventSource', 'noEventsLabel', 'queryMode', 'step'], function (key, index) {
             self[key] = angular.isDefined($attrs[key]) ? (index < 7 ? $interpolate($attrs[key])($scope.$parent) : $scope.$parent.$eval($attrs[key])) : calendarConfig[key];
         });
 
@@ -382,6 +383,8 @@ angular.module('ui.rCalendar', ['ui.rCalendar.tpls'])
                 ctrl.mode = {
                     step: {months: 1}
                 };
+
+                scope.noEventsLabel = ctrl.noEventsLabel;
 
                 function getDates(startDate, n) {
                     var dates = new Array(n), current = new Date(startDate), i = 0;
@@ -1427,7 +1430,7 @@ angular.module("templates/rcalendar/month.html", []).run(["$templateCache", func
     "                <td class=\"event-detail\">{{::event.title}}</td>\n" +
     "            </tr>\n" +
     "            <tr ng-if=\"!selectedDate.events\">\n" +
-    "                <td class=\"no-event-label\">No Events</td>\n" +
+    "                <td class=\"no-event-label\"><span ng-bind=\"noEventsLabel\"></span></td>\n" +
     "            </tr>\n" +
     "        </table>\n" +
     "    </ion-content>\n" +

@@ -13,6 +13,7 @@ angular.module('ui.rCalendar', [])
         startingDayMonth: 0,
         startingDayWeek: 0,
         eventSource: null,
+        noEventsLabel: 'No Events',
         queryMode: 'local',
         step: 60
     })
@@ -23,7 +24,7 @@ angular.module('ui.rCalendar', [])
 
         // Configuration attributes
         angular.forEach(['formatDay', 'formatDayHeader', 'formatDayTitle', 'formatWeekTitle', 'formatMonthTitle', 'formatWeekViewDayHeader', 'formatHourColumn',
-            'allDayLabel', 'showEventDetail', 'startingDayMonth', 'startingDayWeek', 'eventSource', 'queryMode', 'step'], function (key, index) {
+            'allDayLabel', 'showEventDetail', 'startingDayMonth', 'startingDayWeek', 'eventSource', 'noEventsLabel', 'queryMode', 'step'], function (key, index) {
             self[key] = angular.isDefined($attrs[key]) ? (index < 7 ? $interpolate($attrs[key])($scope.$parent) : $scope.$parent.$eval($attrs[key])) : calendarConfig[key];
         });
 
@@ -381,6 +382,8 @@ angular.module('ui.rCalendar', [])
                 ctrl.mode = {
                     step: {months: 1}
                 };
+
+                scope.noEventsLabel = ctrl.noEventsLabel;
 
                 function getDates(startDate, n) {
                     var dates = new Array(n), current = new Date(startDate), i = 0;

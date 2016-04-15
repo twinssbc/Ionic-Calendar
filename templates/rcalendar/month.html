@@ -229,7 +229,7 @@
                 <td class="event-detail">{{::event.title}}</td>
             </tr>
             <tr ng-if="!selectedDate.events">
-                <td class="no-event-label">No Events</td>
+                <td class="no-event-label"><span ng-bind="noEventsLabel"></span></td>
             </tr>
         </table>
     </ion-content>
