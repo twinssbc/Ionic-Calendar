@@ -7,6 +7,7 @@ angular.module('ui.rCalendar', [])
         formatMonthTitle: 'MMMM yyyy',
         formatWeekViewDayHeader: 'EEE d',
         formatHourColumn: 'ha',
+        allDayLabel: 'all day',
         calendarMode: 'month',
         showEventDetail: true,
         startingDayMonth: 0,
@@ -22,7 +23,7 @@ angular.module('ui.rCalendar', [])
 
         // Configuration attributes
         angular.forEach(['formatDay', 'formatDayHeader', 'formatDayTitle', 'formatWeekTitle', 'formatMonthTitle', 'formatWeekViewDayHeader', 'formatHourColumn',
-            'showEventDetail', 'startingDayMonth', 'startingDayWeek', 'eventSource', 'queryMode', 'step'], function (key, index) {
+            'allDayLabel', 'showEventDetail', 'startingDayMonth', 'startingDayWeek', 'eventSource', 'queryMode', 'step'], function (key, index) {
             self[key] = angular.isDefined($attrs[key]) ? (index < 7 ? $interpolate($attrs[key])($scope.$parent) : $scope.$parent.$eval($attrs[key])) : calendarConfig[key];
         });
 
@@ -671,6 +672,7 @@ angular.module('ui.rCalendar', [])
                     step: {days: 7}
                 };
 
+                scope.allDayLabel = ctrl.allDayLabel;
                 scope.hourParts = ctrl.hourParts;
 
                 function getDates(startTime, n) {
@@ -954,6 +956,7 @@ angular.module('ui.rCalendar', [])
                     step: {days: 1}
                 };
 
+                scope.allDayLabel = ctrl.allDayLabel;
                 scope.hourParts = ctrl.hourParts;
 
                 function createDateObjects(startTime) {

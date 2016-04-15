@@ -8,6 +8,7 @@ angular.module('ui.rCalendar', ['ui.rCalendar.tpls'])
         formatMonthTitle: 'MMMM yyyy',
         formatWeekViewDayHeader: 'EEE d',
         formatHourColumn: 'ha',
+        allDayLabel: 'all day',
         calendarMode: 'month',
         showEventDetail: true,
         startingDayMonth: 0,
@@ -23,7 +24,7 @@ angular.module('ui.rCalendar', ['ui.rCalendar.tpls'])
 
         // Configuration attributes
         angular.forEach(['formatDay', 'formatDayHeader', 'formatDayTitle', 'formatWeekTitle', 'formatMonthTitle', 'formatWeekViewDayHeader', 'formatHourColumn',
-            'showEventDetail', 'startingDayMonth', 'startingDayWeek', 'eventSource', 'queryMode', 'step'], function (key, index) {
+            'allDayLabel', 'showEventDetail', 'startingDayMonth', 'startingDayWeek', 'eventSource', 'queryMode', 'step'], function (key, index) {
             self[key] = angular.isDefined($attrs[key]) ? (index < 7 ? $interpolate($attrs[key])($scope.$parent) : $scope.$parent.$eval($attrs[key])) : calendarConfig[key];
         });
 
@@ -672,6 +673,7 @@ angular.module('ui.rCalendar', ['ui.rCalendar.tpls'])
                     step: {days: 7}
                 };
 
+                scope.allDayLabel = ctrl.allDayLabel;
                 scope.hourParts = ctrl.hourParts;
 
                 function getDates(startTime, n) {
@@ -955,6 +957,7 @@ angular.module('ui.rCalendar', ['ui.rCalendar.tpls'])
                     step: {days: 1}
                 };
 
+                scope.allDayLabel = ctrl.allDayLabel;
                 scope.hourParts = ctrl.hourParts;
 
                 function createDateObjects(startTime) {
@@ -1134,7 +1137,7 @@ angular.module("templates/rcalendar/day.html", []).run(["$templateCache", functi
     "        <ion-slide ng-repeat=\"view in views track by $index\">\n" +
     "            <div class=\"dayview-allday-table\">\n" +
     "                <div class=\"dayview-allday-label\">\n" +
-    "                    all day\n" +
+    "                    <span ng-bind=\"allDayLabel\"></span>\n" +
     "                </div>\n" +
     "                <ion-scroll zooming=\"true\" direction=\"y\" class=\"dayview-allday-content-wrapper\" has-bouncing=\"false\">\n" +
     "                    <table class=\"table table-bordered weekview-allday-content-table\">\n" +
@@ -1449,7 +1452,7 @@ angular.module("templates/rcalendar/week.html", []).run(["$templateCache", funct
     "            <div ng-if=\"$index===currentViewIndex\">\n" +
     "                <div class=\"weekview-allday-table\">\n" +
     "                    <div class=\"weekview-allday-label\">\n" +
-    "                        all day\n" +
+    "                        <span ng-bind=\"allDayLabel\"></span>\n" +
     "                    </div>\n" +
     "                    <ion-scroll zooming=\"true\" direction=\"y\" class=\"weekview-allday-content-wrapper\"\n" +
     "                                has-bouncing=\"false\">\n" +
@@ -1494,7 +1497,7 @@ angular.module("templates/rcalendar/week.html", []).run(["$templateCache", funct
     "            <div ng-if=\"$index!==currentViewIndex\">\n" +
     "                <div class=\"weekview-allday-table\">\n" +
     "                    <div class=\"weekview-allday-label\">\n" +
-    "                        all day\n" +
+    "                        <span ng-bind=\"allDayLabel\"></span>\n" +
     "                    </div>\n" +
     "                    <ion-scroll zooming=\"true\" direction=\"y\" class=\"weekview-allday-content-wrapper\"\n" +
     "                                has-bouncing=\"false\">\n" +

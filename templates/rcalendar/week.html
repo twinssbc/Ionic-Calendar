@@ -13,7 +13,7 @@
             <div ng-if="$index===currentViewIndex">
                 <div class="weekview-allday-table">
                     <div class="weekview-allday-label">
-                        all day
+                        <span ng-bind="allDayLabel"></span>
                     </div>
                     <ion-scroll zooming="true" direction="y" class="weekview-allday-content-wrapper"
                                 has-bouncing="false">
@@ -58,7 +58,7 @@
             <div ng-if="$index!==currentViewIndex">
                 <div class="weekview-allday-table">
                     <div class="weekview-allday-label">
-                        all day
+                        <span ng-bind="allDayLabel"></span>
                     </div>
                     <ion-scroll zooming="true" direction="y" class="weekview-allday-content-wrapper"
                                 has-bouncing="false">

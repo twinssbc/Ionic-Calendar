@@ -4,7 +4,7 @@
         <ion-slide ng-repeat="view in views track by $index">
             <div class="dayview-allday-table">
                 <div class="dayview-allday-label">
-                    all day
+                    <span ng-bind="allDayLabel"></span>
                 </div>
                 <ion-scroll zooming="true" direction="y" class="dayview-allday-content-wrapper" has-bouncing="false">
                     <table class="table table-bordered weekview-allday-content-table">
