@@ -6,7 +6,9 @@
                 <thead>
                 <tr>
                     <th class="calendar-hour-column"></th>
-                    <th class="weekview-header text-center" ng-repeat="dt in view.dates">{{::dt.date| date: formatWeekViewDayHeader}}</th>
+                    <th class="weekview-header text-center" ng-repeat="dt in view.dates">{{::dt.date| date:
+                        formatWeekViewDayHeader}}
+                    </th>
                 </tr>
                 </thead>
             </table>
@@ -15,13 +17,13 @@
                     <div class="weekview-allday-label">
                         all day
                     </div>
-                    <ion-scroll zooming="true" direction="y" class="weekview-allday-content-wrapper"
-                                has-bouncing="false">
-                        <table class="table table-bordered table-fixed weekview-allday-content-table">
+                    <ion-content class="weekview-allday-content-wrapper" has-bouncing="false" overflow-scroll="false">
+                        <table class="table table-fixed weekview-allday-content-table">
                             <tbody>
                             <tr>
                                 <td ng-repeat="day in view.dates track by day.date" class="calendar-cell">
-                                    <div ng-class="{'calendar-event-wrap': day.events}" ng-if="day.events">
+                                    <div ng-class="{'calendar-event-wrap': day.events}" ng-if="day.events"
+                                         ng-style="{height: 25*day.events.length+'px'}">
                                         <div ng-repeat="displayEvent in day.events" class="calendar-event"
                                              ng-click="eventSelected({event:displayEvent.event})"
                                              ng-style="{top: 25*displayEvent.position+'px', width: 100*(displayEvent.endIndex-displayEvent.startIndex)+'%', height: '25px'}">
@@ -32,9 +34,9 @@
                             </tr>
                             </tbody>
                         </table>
-                    </ion-scroll>
+                    </ion-content>
                 </div>
-                <ion-content class="weekview-normal-event-container" has-bouncing="false">
+                <ion-content class="weekview-normal-event-container" has-bouncing="false" overflow-scroll="false">
                     <table class="table table-bordered table-fixed weekview-normal-event-table">
                         <tbody>
                         <tr ng-repeat="row in view.rows track by $index">
@@ -60,9 +62,8 @@
                     <div class="weekview-allday-label">
                         all day
                     </div>
-                    <ion-scroll zooming="true" direction="y" class="weekview-allday-content-wrapper"
-                                has-bouncing="false">
-                        <table class="table table-bordered table-fixed weekview-allday-content-table">
+                    <ion-content class="weekview-allday-content-wrapper" has-bouncing="false" overflow-scroll="false">
+                        <table class="table table-fixed weekview-allday-content-table">
                             <tbody>
                             <tr>
                                 <td ng-repeat="day in view.dates track by day.date" class="calendar-cell">
@@ -70,9 +71,9 @@
                             </tr>
                             </tbody>
                         </table>
-                    </ion-scroll>
+                    </ion-content>
                 </div>
-                <ion-content class="weekview-normal-event-container" has-bouncing="false">
+                <ion-content class="weekview-normal-event-container" has-bouncing="false" overflow-scroll="false">
                     <table class="table table-bordered table-fixed weekview-normal-event-table">
                         <tbody>
                         <tr ng-repeat="row in view.rows track by $index">
