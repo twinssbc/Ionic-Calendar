@@ -59,6 +59,12 @@ Default value: 0
 * startingDayWeek    
 Control week view starting from which day.    
 Default value: 0
+* allDayLabel    
+The text displayed in the allDay column header.    
+Default value: ‘all day’
+* noEventsLabel    
+The text displayed when there’s no event on the selected date in month view.    
+Default value: ‘No Events’
 * eventSource    
 The data source of the calendar, when the eventSource is set, the view will be updated accordingly.    
 Default value: null    

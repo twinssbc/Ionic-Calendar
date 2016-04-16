@@ -8,13 +8,13 @@ angular.module('ui.rCalendar', ['ui.rCalendar.tpls'])
         formatMonthTitle: 'MMMM yyyy',
         formatWeekViewDayHeader: 'EEE d',
         formatHourColumn: 'ha',
-        allDayLabel: 'all day',
         calendarMode: 'month',
         showEventDetail: true,
         startingDayMonth: 0,
         startingDayWeek: 0,
-        eventSource: null,
+        allDayLabel: 'all day',
         noEventsLabel: 'No Events',
+        eventSource: null,
         queryMode: 'local',
         step: 60
     })
@@ -25,8 +25,8 @@ angular.module('ui.rCalendar', ['ui.rCalendar.tpls'])
 
         // Configuration attributes
         angular.forEach(['formatDay', 'formatDayHeader', 'formatDayTitle', 'formatWeekTitle', 'formatMonthTitle', 'formatWeekViewDayHeader', 'formatHourColumn',
-            'allDayLabel', 'showEventDetail', 'startingDayMonth', 'startingDayWeek', 'eventSource', 'noEventsLabel', 'queryMode', 'step'], function (key, index) {
-            self[key] = angular.isDefined($attrs[key]) ? (index < 7 ? $interpolate($attrs[key])($scope.$parent) : $scope.$parent.$eval($attrs[key])) : calendarConfig[key];
+            'showEventDetail', 'startingDayMonth', 'startingDayWeek', 'allDayLabel', 'noEventsLabel', 'eventSource', 'queryMode', 'step'], function (key, index) {
+            self[key] = angular.isDefined($attrs[key]) ? (index < 12 ? $interpolate($attrs[key])($scope.$parent) : $scope.$parent.$eval($attrs[key])) : calendarConfig[key];
         });
 
         self.hourParts = 1;
@@ -1139,9 +1139,7 @@ angular.module("templates/rcalendar/day.html", []).run(["$templateCache", functi
     "                   show-pager=\"false\" delegate-handle=\"dayview-slide\">\n" +
     "        <ion-slide ng-repeat=\"view in views track by $index\">\n" +
     "            <div class=\"dayview-allday-table\">\n" +
-    "                <div class=\"dayview-allday-label\">\n" +
-    "                    <span ng-bind=\"allDayLabel\"></span>\n" +
-    "                </div>\n" +
+    "                <div class=\"dayview-allday-label\" ng-bind=\"::allDayLabel\"></div>\n" +
     "                <ion-content class=\"dayview-allday-content-wrapper\" has-bouncing=\"false\" overflow-scroll=\"false\">\n" +
     "                    <table class=\"table table-bordered weekview-allday-content-table\">\n" +
     "                        <tbody>\n" +
@@ -1151,7 +1149,7 @@ angular.module("templates/rcalendar/day.html", []).run(["$templateCache", functi
     "                                <div ng-repeat=\"displayEvent in view.allDayEvents\" class=\"calendar-event\"\n" +
     "                                     ng-click=\"eventSelected({event:displayEvent.event})\"\n" +
     "                                     ng-style=\"{top: 25*$index+'px',width: '100%',height:'25px'}\">\n" +
-    "                                    <div class=\"calendar-event-inner\"><span ng-bind-html=\"displayEvent.event.title\"></span></div>\n" +
+    "                                    <div class=\"calendar-event-inner\">{{displayEvent.event.title}}</div>\n" +
     "                                </div>\n" +
     "                            </td>\n" +
     "                            <td class=\"calendar-cell\" ng-if=\"$index!==currentViewIndex\">\n" +
@@ -1174,7 +1172,7 @@ angular.module("templates/rcalendar/day.html", []).run(["$templateCache", functi
     "                                <div ng-repeat=\"displayEvent in tm.events\" class=\"calendar-event\"\n" +
     "                                     ng-click=\"eventSelected({event:displayEvent.event})\"\n" +
     "                                     ng-style=\"{top: (37*displayEvent.startOffset/hourParts)+'px', left: 100/displayEvent.overlapNumber*displayEvent.position+'%', width: 100/displayEvent.overlapNumber+'%', height: 37*(displayEvent.endIndex -displayEvent.startIndex - (displayEvent.endOffset + displayEvent.startOffset)/hourParts)+'px'}\">\n" +
-    "                                    <div class=\"calendar-event-inner\"><span ng-bind-html=\"displayEvent.event.title\"></span></div>\n" +
+    "                                    <div class=\"calendar-event-inner\">{{displayEvent.event.title}}</div>\n" +
     "                                </div>\n" +
     "                            </div>\n" +
     "                        </td>\n" +
@@ -1429,10 +1427,10 @@ angular.module("templates/rcalendar/month.html", []).run(["$templateCache", func
     "                    {{::event.endTime|date: 'HH:mm'}}\n" +
     "                </td>\n" +
     "                <td ng-if=\"event.allDay\" class=\"monthview-eventdetail-timecolumn\">All day</td>\n" +
-    "                <td class=\"event-detail\"><span ng-bind-html=\"::event.title\"></span></td>\n" +
+    "                <td class=\"event-detail\">{{::event.title}}</td>\n" +
     "            </tr>\n" +
     "            <tr ng-if=\"!selectedDate.events\">\n" +
-    "                <td class=\"no-event-label\"><span ng-bind=\"noEventsLabel\"></span></td>\n" +
+    "                <td class=\"no-event-label\" ng-bind=\"::noEventsLabel\"></td>\n" +
     "            </tr>\n" +
     "        </table>\n" +
     "    </ion-content>\n" +
@@ -1458,8 +1456,7 @@ angular.module("templates/rcalendar/week.html", []).run(["$templateCache", funct
     "            </table>\n" +
     "            <div ng-if=\"$index===currentViewIndex\">\n" +
     "                <div class=\"weekview-allday-table\">\n" +
-    "                    <div class=\"weekview-allday-label\">\n" +
-    "                        <span ng-bind=\"allDayLabel\"></span>\n" +
+    "                    <div class=\"weekview-allday-label\" ng-bind=\"::allDayLabel\">\n" +
     "                    </div>\n" +
     "                    <ion-content class=\"weekview-allday-content-wrapper\" has-bouncing=\"false\" overflow-scroll=\"false\">\n" +
     "                        <table class=\"table table-fixed weekview-allday-content-table\">\n" +
@@ -1471,7 +1468,7 @@ angular.module("templates/rcalendar/week.html", []).run(["$templateCache", funct
     "                                        <div ng-repeat=\"displayEvent in day.events\" class=\"calendar-event\"\n" +
     "                                             ng-click=\"eventSelected({event:displayEvent.event})\"\n" +
     "                                             ng-style=\"{top: 25*displayEvent.position+'px', width: 100*(displayEvent.endIndex-displayEvent.startIndex)+'%', height: '25px'}\">\n" +
-    "                                            <div class=\"calendar-event-inner\"><span ng-bind-html=\"displayEvent.event.title\"></span></div>\n" +
+    "                                            <div class=\"calendar-event-inner\">{{displayEvent.event.title}}</div>\n" +
     "                                        </div>\n" +
     "                                    </div>\n" +
     "                                </td>\n" +
@@ -1492,7 +1489,7 @@ angular.module("templates/rcalendar/week.html", []).run(["$templateCache", funct
     "                                    <div ng-repeat=\"displayEvent in tm.events\" class=\"calendar-event\"\n" +
     "                                         ng-click=\"eventSelected({event:displayEvent.event})\"\n" +
     "                                         ng-style=\"{top: (37*displayEvent.startOffset/hourParts)+'px',left: 100/displayEvent.overlapNumber*displayEvent.position+'%', width: 100/displayEvent.overlapNumber+'%', height: 37*(displayEvent.endIndex -displayEvent.startIndex - (displayEvent.endOffset + displayEvent.startOffset)/hourParts)+'px'}\">\n" +
-    "                                        <div class=\"calendar-event-inner\"><span ng-bind-html=\"displayEvent.event.title\"></span></div>\n" +
+    "                                        <div class=\"calendar-event-inner\">{{displayEvent.event.title}}</div>\n" +
     "                                    </div>\n" +
     "                                </div>\n" +
     "                            </td>\n" +
@@ -1503,9 +1500,7 @@ angular.module("templates/rcalendar/week.html", []).run(["$templateCache", funct
     "            </div>\n" +
     "            <div ng-if=\"$index!==currentViewIndex\">\n" +
     "                <div class=\"weekview-allday-table\">\n" +
-    "                    <div class=\"weekview-allday-label\">\n" +
-    "                        <span ng-bind=\"allDayLabel\"></span>\n" +
-    "                    </div>\n" +
+    "                    <div class=\"weekview-allday-label\" ng-bind=\"::allDayLabel\"></div>\n" +
     "                    <ion-content class=\"weekview-allday-content-wrapper\" has-bouncing=\"false\" overflow-scroll=\"false\">\n" +
     "                        <table class=\"table table-fixed weekview-allday-content-table\">\n" +
     "                            <tbody>\n" +

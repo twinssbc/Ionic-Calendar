@@ -103,7 +103,7 @@ angular.module('calendarDemoApp', ['ionic', 'ngAnimate', 'ui.rCalendar'])
                     startTime = new Date(date.getFullYear(), date.getMonth(), date.getDate() + startDay, 0, date.getMinutes() + startMinute);
                     endTime = new Date(date.getFullYear(), date.getMonth(), date.getDate() + endDay, 0, date.getMinutes() + endMinute);
                     events.push({
-                        title: 'Event - ' + i + '<b>test</b>',
+                        title: 'Event - ' + i,
                         startTime: startTime,
                         endTime: endTime,
                         allDay: false

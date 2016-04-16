@@ -14,8 +14,7 @@
             </table>
             <div ng-if="$index===currentViewIndex">
                 <div class="weekview-allday-table">
-                    <div class="weekview-allday-label">
-                        <span ng-bind="allDayLabel"></span>
+                    <div class="weekview-allday-label" ng-bind="::allDayLabel">
                     </div>
                     <ion-content class="weekview-allday-content-wrapper" has-bouncing="false" overflow-scroll="false">
                         <table class="table table-fixed weekview-allday-content-table">
@@ -27,7 +26,7 @@
                                         <div ng-repeat="displayEvent in day.events" class="calendar-event"
                                              ng-click="eventSelected({event:displayEvent.event})"
                                              ng-style="{top: 25*displayEvent.position+'px', width: 100*(displayEvent.endIndex-displayEvent.startIndex)+'%', height: '25px'}">
-                                            <div class="calendar-event-inner"><span ng-bind-html="displayEvent.event.title"></span></div>
+                                            <div class="calendar-event-inner">{{displayEvent.event.title}}</div>
                                         </div>
                                     </div>
                                 </td>
@@ -48,7 +47,7 @@
                                     <div ng-repeat="displayEvent in tm.events" class="calendar-event"
                                          ng-click="eventSelected({event:displayEvent.event})"
                                          ng-style="{top: (37*displayEvent.startOffset/hourParts)+'px',left: 100/displayEvent.overlapNumber*displayEvent.position+'%', width: 100/displayEvent.overlapNumber+'%', height: 37*(displayEvent.endIndex -displayEvent.startIndex - (displayEvent.endOffset + displayEvent.startOffset)/hourParts)+'px'}">
-                                        <div class="calendar-event-inner"><span ng-bind-html="displayEvent.event.title"></span></div>
+                                        <div class="calendar-event-inner">{{displayEvent.event.title}}</div>
                                     </div>
                                 </div>
                             </td>
@@ -59,9 +58,7 @@
             </div>
             <div ng-if="$index!==currentViewIndex">
                 <div class="weekview-allday-table">
-                    <div class="weekview-allday-label">
-                        <span ng-bind="allDayLabel"></span>
-                    </div>
+                    <div class="weekview-allday-label" ng-bind="::allDayLabel"></div>
                     <ion-content class="weekview-allday-content-wrapper" has-bouncing="false" overflow-scroll="false">
                         <table class="table table-fixed weekview-allday-content-table">
                             <tbody>
