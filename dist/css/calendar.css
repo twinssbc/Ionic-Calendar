@@ -211,9 +211,13 @@
 }
 
 @media (max-width: 750px) {
-    .weekview-allday-label, .dayview-allday-label, .calendar-hour-column, .calendar-week-column {
-        width: 30px;
-        font-size: 14px;
+    .weekview-allday-label, .dayview-allday-label, .calendar-hour-column {
+        width: 31px;
+        font-size: 12px;
+    }
+
+    .weekview-allday-label, .dayview-allday-label {
+        padding-top: 4px;
     }
 
     .weekview-normal-event-container {
@@ -223,7 +227,8 @@
     .table > tbody > tr > td.calendar-hour-column {
         padding-left: 0;
         padding-right: 0;
-        font-size: 12px;
+        vertical-align: middle;
+        line-height: 12px;
     }
 
     .table > thead > tr > th.weekview-header {
@@ -237,7 +242,7 @@
     }
 
     .weekview-allday-content-wrapper, .dayview-allday-content-wrapper {
-        margin-left: 30px;
+        margin-left: 31px;
     }
 
     .calendar-event-inner {
