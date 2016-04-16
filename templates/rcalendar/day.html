@@ -4,7 +4,7 @@
         <ion-slide ng-repeat="view in views track by $index">
             <div class="dayview-allday-table">
                 <div class="dayview-allday-label">
-                    all day
+                    <span ng-bind="allDayLabel"></span>
                 </div>
                 <ion-content class="dayview-allday-content-wrapper" has-bouncing="false" overflow-scroll="false">
                     <table class="table table-bordered weekview-allday-content-table">
@@ -15,7 +15,7 @@
                                 <div ng-repeat="displayEvent in view.allDayEvents" class="calendar-event"
                                      ng-click="eventSelected({event:displayEvent.event})"
                                      ng-style="{top: 25*$index+'px',width: '100%',height:'25px'}">
-                                    <div class="calendar-event-inner">{{displayEvent.event.title}}</div>
+                                    <div class="calendar-event-inner"><span ng-bind-html="displayEvent.event.title"></span></div>
                                 </div>
                             </td>
                             <td class="calendar-cell" ng-if="$index!==currentViewIndex">
@@ -38,7 +38,7 @@
                                 <div ng-repeat="displayEvent in tm.events" class="calendar-event"
                                      ng-click="eventSelected({event:displayEvent.event})"
                                      ng-style="{top: (37*displayEvent.startOffset/hourParts)+'px', left: 100/displayEvent.overlapNumber*displayEvent.position+'%', width: 100/displayEvent.overlapNumber+'%', height: 37*(displayEvent.endIndex -displayEvent.startIndex - (displayEvent.endOffset + displayEvent.startOffset)/hourParts)+'px'}">
-                                    <div class="calendar-event-inner">{{displayEvent.event.title}}</div>
+                                    <div class="calendar-event-inner"><span ng-bind-html="displayEvent.event.title"></span></div>
                                 </div>
                             </div>
                         </td>
