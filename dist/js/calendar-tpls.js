@@ -1141,7 +1141,7 @@ angular.module("templates/rcalendar/day.html", []).run(["$templateCache", functi
     "            <div class=\"dayview-allday-table\">\n" +
     "                <div class=\"dayview-allday-label\" ng-bind=\"::allDayLabel\"></div>\n" +
     "                <ion-content class=\"dayview-allday-content-wrapper\" has-bouncing=\"false\" overflow-scroll=\"false\">\n" +
-    "                    <table class=\"table table-bordered weekview-allday-content-table\">\n" +
+    "                    <table class=\"table table-bordered dayview-allday-content-table\">\n" +
     "                        <tbody>\n" +
     "                        <tr>\n" +
     "                            <td class=\"calendar-cell\" ng-class=\"{'calendar-event-wrap':allDayEvents}\"\n" +

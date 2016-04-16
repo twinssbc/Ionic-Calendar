@@ -89,13 +89,9 @@
     padding-top: 5px;
 }
 
-.calendar-hour-column, .calendar-week-column {
+.calendar-hour-column {
     width: 50px;
     white-space: nowrap;
-}
-
-.calendar-navbar {
-    margin-bottom: 5px;
 }
 
 .calendar-event-wrap {
