@@ -27,7 +27,7 @@ angular.module('ui.rCalendar', ['ui.rCalendar.tpls'])
         // Configuration attributes
         angular.forEach(['formatDay', 'formatDayHeader', 'formatDayTitle', 'formatWeekTitle', 'formatMonthTitle', 'formatWeekViewDayHeader', 'formatHourColumn',
             'showEventDetail', 'startingDayMonth', 'startingDayWeek', 'allDayLabel', 'noEventsLabel', 'eventSource', 'queryMode', 'step', 'scrollY'], function (key, index) {
-            self[key] = angular.isDefined($attrs[key]) ? (index < 12 ? $interpolate($attrs[key])($scope.$parent) : $scope.$parent.$eval($attrs[key])) : calendarConfig[key];
+            self[key] = angular.isDefined($attrs[key]) ? (index < 9 ? $interpolate($attrs[key])($scope.$parent) : $scope.$parent.$eval($attrs[key])) : calendarConfig[key];
         });
 
         self.hourParts = 1;
@@ -1552,7 +1552,6 @@ angular.module("templates/rcalendar/week.html", []).run(["$templateCache", funct
     "                        </table>\n" +
     "                    </ion-content>\n" +
     "                </div>\n" +
-    "<<<<<<< HEAD\n" +
     "                <ion-content class=\"weekview-normal-event-container\" start-y=\"{{ scrollY }}\" delegate-handle=\"calendar\" on-scroll=\"scrollDebounce(this)\" has-bouncing=\"false\">\n" +
     "                    <table class=\"table table-bordered table-fixed weekview-normal-event-table\">\n" +
     "                        <tbody>\n" +
