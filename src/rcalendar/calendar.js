@@ -11,6 +11,8 @@ angular.module('ui.rCalendar', [])
         showEventDetail: true,
         startingDayMonth: 0,
         startingDayWeek: 0,
+        allDayLabel: 'all day',
+        noEventsLabel: 'No Events',
         eventSource: null,
         queryMode: 'local',
         step: 60,
@@ -23,8 +25,8 @@ angular.module('ui.rCalendar', [])
 
         // Configuration attributes
         angular.forEach(['formatDay', 'formatDayHeader', 'formatDayTitle', 'formatWeekTitle', 'formatMonthTitle', 'formatWeekViewDayHeader', 'formatHourColumn',
-            'showEventDetail', 'startingDayMonth', 'startingDayWeek', 'eventSource', 'queryMode', 'step', 'scrollY'], function (key, index) {
-            self[key] = angular.isDefined($attrs[key]) ? (index < 7 ? $interpolate($attrs[key])($scope.$parent) : $scope.$parent.$eval($attrs[key])) : calendarConfig[key];
+            'showEventDetail', 'startingDayMonth', 'startingDayWeek', 'allDayLabel', 'noEventsLabel', 'eventSource', 'queryMode', 'step', 'scrollY'], function (key, index) {
+            self[key] = angular.isDefined($attrs[key]) ? (index < 12 ? $interpolate($attrs[key])($scope.$parent) : $scope.$parent.$eval($attrs[key])) : calendarConfig[key];
         });
 
         self.hourParts = 1;
@@ -382,6 +384,8 @@ angular.module('ui.rCalendar', [])
                     step: {months: 1}
                 };
 
+                scope.noEventsLabel = ctrl.noEventsLabel;
+
                 function getDates(startDate, n) {
                     var dates = new Array(n), current = new Date(startDate), i = 0;
                     current.setHours(12); // Prevent repeated dates because of timezone bug
@@ -672,6 +676,7 @@ angular.module('ui.rCalendar', [])
                     step: {days: 7}
                 };
 
+                scope.allDayLabel = ctrl.allDayLabel;
                 scope.hourParts = ctrl.hourParts;
 
                 function getDates(startTime, n) {
@@ -994,6 +999,7 @@ angular.module('ui.rCalendar', [])
                     step: {days: 1}
                 };
 
+                scope.allDayLabel = ctrl.allDayLabel;
                 scope.hourParts = ctrl.hourParts;
 
                 function createDateObjects(startTime) {
