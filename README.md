@@ -33,7 +33,7 @@ Default value: 'dd'
 The format of the header displayed in the month view.    
 Default value: 'EEE'
 * formatDayTitle    
-The format of the title displayed in the month view.    
+The format of the title displayed in the day view.    
 Default value: 'MMMM dd, yyyy'
 * formatWeekTitle    
 The format of the title displayed in the week view.    
