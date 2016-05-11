@@ -490,9 +490,17 @@ angular.module('ui.rCalendar', ['ui.rCalendar.tpls'])
                 scope.getHighlightClass = function (date) {
                     var className = '';
                     if (date.selected) {
-                        className = 'monthview-selected';
+                        if (date.hasEvent){
+                            className = 'monthview-selected monthview-primary-with-event';
+                        }else{
+                            className = 'monthview-selected';
+                        }
                     } else if (date.current) {
-                        className = 'monthview-current';
+                        if (date.hasEvent){
+                            className = 'monthview-current monthview-primary-with-event';
+                        }else{
+                            className = 'monthview-current';
+                        }
                     } else if (date.hasEvent) {
                         if (date.secondary) {
                             className = 'monthview-secondary-with-event';
@@ -1123,6 +1131,7 @@ angular.module('ui.rCalendar', ['ui.rCalendar.tpls'])
             }
         };
     }]);
+
 angular.module("templates/rcalendar/calendar.html", []).run(["$templateCache", function($templateCache) {
   $templateCache.put("templates/rcalendar/calendar.html",
     "<div class=\"calendar-container\" ng-switch=\"calendarMode\">\n" +
