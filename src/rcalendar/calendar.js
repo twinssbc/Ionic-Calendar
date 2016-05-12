@@ -24,8 +24,8 @@ angular.module('ui.rCalendar', [])
 
         // Configuration attributes
         angular.forEach(['formatDay', 'formatDayHeader', 'formatDayTitle', 'formatWeekTitle', 'formatMonthTitle', 'formatWeekViewDayHeader', 'formatHourColumn',
-            'showEventDetail', 'startingDayMonth', 'startingDayWeek', 'allDayLabel', 'noEventsLabel', 'eventSource', 'queryMode', 'step'], function (key, index) {
-            self[key] = angular.isDefined($attrs[key]) ? (index < 12 ? $interpolate($attrs[key])($scope.$parent) : $scope.$parent.$eval($attrs[key])) : calendarConfig[key];
+            'showEventDetail', 'allDayLabel', 'noEventsLabel', 'eventSource', 'queryMode', 'step', 'startingDayMonth', 'startingDayWeek'], function (key, index) {
+            self[key] = angular.isDefined($attrs[key]) ? (index < 10 ? $interpolate($attrs[key])($scope.$parent) : $scope.$parent.$eval($attrs[key])) : calendarConfig[key];
         });
 
         self.hourParts = 1;
