@@ -154,3 +154,8 @@ Parameter: value
 The whole event source object
 
         $scope.$broadcast('eventSourceChanged',$scope.eventSource);
+
+# i18n support
+When including the angular locale script, the viewTitle and header of the calendar will be translated to local language automatically.
+
+        <script src="http://code.angularjs.org/1.4.3/i18n/angular-locale_xx.js"></script>
