@@ -489,31 +489,34 @@ angular.module('ui.rCalendar', ['ui.rCalendar.tpls'])
 
                 scope.getHighlightClass = function (date) {
                     var className = '';
-                    if (date.selected) {
-                        if (date.hasEvent){
-                            className = 'monthview-selected monthview-primary-with-event';
-                        }else{
-                            className = 'monthview-selected';
-                        }
-                    } else if (date.current) {
-                        if (date.hasEvent){
-                            className = 'monthview-current monthview-primary-with-event';
-                        }else{
-                            className = 'monthview-current';
-                        }
-                    } else if (date.hasEvent) {
+
+                    if (date.hasEvent) {
                         if (date.secondary) {
                             className = 'monthview-secondary-with-event';
                         } else {
                             className = 'monthview-primary-with-event';
                         }
                     }
+
+                    if (date.selected) {
+                        if (className) {
+                            className += ' ';
+                        }
+                        className += 'monthview-selected';
+                    }
+
+                    if (date.current) {
+                        if (className) {
+                            className += ' ';
+                        }
+                        className += 'monthview-current';
+                    }
+
                     if (date.secondary) {
                         if (className) {
-                            className += ' text-muted';
-                        } else {
-                            className = 'text-muted';
+                            className += ' ';
                         }
+                        className += 'text-muted';
                     }
                     return className;
                 };

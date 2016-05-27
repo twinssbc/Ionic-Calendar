@@ -24,7 +24,7 @@ angular.module('ui.rCalendar', [])
 
         // Configuration attributes
         angular.forEach(['formatDay', 'formatDayHeader', 'formatDayTitle', 'formatWeekTitle', 'formatMonthTitle', 'formatWeekViewDayHeader', 'formatHourColumn',
-        'showEventDetail', 'allDayLabel', 'noEventsLabel', 'eventSource', 'queryMode', 'step', 'startingDayMonth', 'startingDayWeek'], function (key, index) {
+            'showEventDetail', 'allDayLabel', 'noEventsLabel', 'eventSource', 'queryMode', 'step', 'startingDayMonth', 'startingDayWeek'], function (key, index) {
             self[key] = angular.isDefined($attrs[key]) ? (index < 10 ? $interpolate($attrs[key])($scope.$parent) : $scope.$parent.$eval($attrs[key])) : calendarConfig[key];
         });
 
@@ -488,31 +488,34 @@ angular.module('ui.rCalendar', [])
 
                 scope.getHighlightClass = function (date) {
                     var className = '';
-                    if (date.selected) {
-                        if (date.hasEvent){
-                            className = 'monthview-selected monthview-primary-with-event';
-                        }else{
-                            className = 'monthview-selected';
-                        }
-                    } else if (date.current) {
-                        if (date.hasEvent){
-                            className = 'monthview-current monthview-primary-with-event';
-                        }else{
-                            className = 'monthview-current';
-                        }
-                    } else if (date.hasEvent) {
+
+                    if (date.hasEvent) {
                         if (date.secondary) {
                             className = 'monthview-secondary-with-event';
                         } else {
                             className = 'monthview-primary-with-event';
                         }
                     }
+
+                    if (date.selected) {
+                        if (className) {
+                            className += ' ';
+                        }
+                        className += 'monthview-selected';
+                    }
+
+                    if (date.current) {
+                        if (className) {
+                            className += ' ';
+                        }
+                        className += 'monthview-current';
+                    }
+
                     if (date.secondary) {
                         if (className) {
-                            className += ' text-muted';
-                        } else {
-                            className = 'text-muted';
+                            className += ' ';
                         }
+                        className += 'text-muted';
                     }
                     return className;
                 };

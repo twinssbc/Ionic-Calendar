@@ -127,13 +127,13 @@
     color: white;
 }
 
+.monthview-current {
+    background-color: lightgrey;
+}
+
 .monthview-selected {
     background-color: #009900;
     color: white;
-}
-
-.monthview-current {
-    background-color: lightgrey;
 }
 
 .monthview-eventdetail-timecolumn {
