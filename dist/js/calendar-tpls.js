@@ -942,8 +942,16 @@ angular.module('ui.rCalendar', ['ui.rCalendar.tpls'])
                         month = currentDate.getMonth(),
                         date = currentDate.getDate(),
                         day = currentDate.getDay(),
-                        firstDayOfWeek = new Date(year, month, date - day + ctrl.startingDayWeek),
-                        endTime = new Date(year, month, date - day + ctrl.startingDayWeek + 7);
+                        difference = day - ctrl.startingDayWeek,
+                        firstDayOfWeek,
+                        endTime;
+
+                    if (difference < 0) {
+                        difference += 7;
+                    }
+
+                    firstDayOfWeek = new Date(year, month, date - difference);
+                    endTime = new Date(year, month, date - difference + 7);
 
                     return {
                         startTime: firstDayOfWeek,
