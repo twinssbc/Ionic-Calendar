@@ -48,7 +48,7 @@
             <calendar ng-model="calendar.currentDate" calendar-mode="calendar.mode" event-source="calendar.eventSource"
                       range-changed="reloadSource(startTime, endTime)"
                       event-selected="onEventSelected(event)" title-changed="onViewTitleChanged(title)"
-                      time-selected="onTimeSelected(selectedTime)" step="30"></calendar>
+                      time-selected="onTimeSelected(selectedTime, events)" step="30"></calendar>
         </ion-content>
     </ion-view>
 </script>

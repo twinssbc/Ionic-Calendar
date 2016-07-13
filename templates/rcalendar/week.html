@@ -42,7 +42,7 @@
                             <td class="calendar-hour-column text-center">
                                 {{::row[0].time | date: formatHourColumn}}
                             </td>
-                            <td ng-repeat="tm in row track by tm.time" class="calendar-cell" ng-click="select(tm.time)">
+                            <td ng-repeat="tm in row track by tm.time" class="calendar-cell" ng-click="select(tm.time, tm.events)">
                                 <div ng-class="{'calendar-event-wrap': tm.events}" ng-if="tm.events">
                                     <div ng-repeat="displayEvent in tm.events" class="calendar-event"
                                          ng-click="eventSelected({event:displayEvent.event})"

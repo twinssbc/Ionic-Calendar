@@ -96,12 +96,12 @@ The callback function triggered when an event is clicked
         };
 
 * timeSelected    
-The callback function triggered when a date is selected in the monthview
+The callback function triggered when a date is selected in the monthview. If there's no event at the selected time, the events parameter will be either undefined or empty array
 
-        <calendar ... time-selected="onTimeSelected(selectedTime)"></calendar>
+        <calendar ... time-selected="onTimeSelected(selectedTime, events)"></calendar>
         
-        $scope.onTimeSelected = function (selectedTime) {
-            console.log(event.selectedTime);
+        $scope.onTimeSelected = function (selectedTime, events) {
+            console.log('Selected time: ' + selectedTime + ', hasEvents: ' + (events !== undefined && events.length !== 0));
         };
 
 * titleChanged    
