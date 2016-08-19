@@ -689,6 +689,10 @@ angular.module('ui.rCalendar', [])
                 scope.allDayLabel = ctrl.allDayLabel;
                 scope.hourParts = ctrl.hourParts;
 
+                scope.fetchWeekEventClass = function(event) {
+                    return event.event.className ? event.event.className : '';
+                };
+
                 function getDates(startTime, n) {
                     var dates = new Array(n),
                         current = new Date(startTime),
@@ -980,6 +984,10 @@ angular.module('ui.rCalendar', [])
 
                 scope.allDayLabel = ctrl.allDayLabel;
                 scope.hourParts = ctrl.hourParts;
+
+                scope.fetchDayEventClass = function(event) {
+                    return event.event.className ? event.event.className : '';
+                };
 
                 function createDateObjects(startTime) {
                     var rows = [],

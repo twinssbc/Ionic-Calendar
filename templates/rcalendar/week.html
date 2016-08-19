@@ -23,7 +23,9 @@
                                 <td ng-repeat="day in view.dates track by day.date" class="calendar-cell">
                                     <div ng-class="{'calendar-event-wrap': day.events}" ng-if="day.events"
                                          ng-style="{height: 25*day.events.length+'px'}">
-                                        <div ng-repeat="displayEvent in day.events" class="calendar-event"
+                                        <div ng-repeat="displayEvent in day.events"
+                                             class="calendar-event"
+                                             ng-class="fetchWeekEventClass(displayEvent)"
                                              ng-click="eventSelected({event:displayEvent.event})"
                                              ng-style="{top: 25*displayEvent.position+'px', width: 100*(displayEvent.endIndex-displayEvent.startIndex)+'%', height: '25px'}">
                                             <div class="calendar-event-inner">{{displayEvent.event.title}}</div>
@@ -44,7 +46,9 @@
                             </td>
                             <td ng-repeat="tm in row track by tm.time" class="calendar-cell" ng-click="select(tm.time, tm.events)">
                                 <div ng-class="{'calendar-event-wrap': tm.events}" ng-if="tm.events">
-                                    <div ng-repeat="displayEvent in tm.events" class="calendar-event"
+                                    <div ng-repeat="displayEvent in tm.events"
+                                         class="calendar-event"
+                                         ng-class="fetchWeekEventClass(displayEvent)"
                                          ng-click="eventSelected({event:displayEvent.event})"
                                          ng-style="{top: (37*displayEvent.startOffset/hourParts)+'px',left: 100/displayEvent.overlapNumber*displayEvent.position+'%', width: 100/displayEvent.overlapNumber+'%', height: 37*(displayEvent.endIndex -displayEvent.startIndex - (displayEvent.endOffset + displayEvent.startOffset)/hourParts)+'px'}">
                                         <div class="calendar-event-inner">{{displayEvent.event.title}}</div>

@@ -690,6 +690,10 @@ angular.module('ui.rCalendar', ['ui.rCalendar.tpls'])
                 scope.allDayLabel = ctrl.allDayLabel;
                 scope.hourParts = ctrl.hourParts;
 
+                scope.fetchWeekEventClass = function(event) {
+                    return event.event.className ? event.event.className : '';
+                };
+
                 function getDates(startTime, n) {
                     var dates = new Array(n),
                         current = new Date(startTime),
@@ -982,6 +986,10 @@ angular.module('ui.rCalendar', ['ui.rCalendar.tpls'])
                 scope.allDayLabel = ctrl.allDayLabel;
                 scope.hourParts = ctrl.hourParts;
 
+                scope.fetchDayEventClass = function(event) {
+                    return event.event.className ? event.event.className : '';
+                };
+
                 function createDateObjects(startTime) {
                     var rows = [],
                         time,
@@ -1166,7 +1174,9 @@ angular.module("templates/rcalendar/day.html", []).run(["$templateCache", functi
     "                        <tr>\n" +
     "                            <td class=\"calendar-cell\" ng-class=\"{'calendar-event-wrap':allDayEvents}\"\n" +
     "                                ng-if=\"$index===currentViewIndex\" ng-style=\"{height: 25*day.events.length+'px'}\">\n" +
-    "                                <div ng-repeat=\"displayEvent in view.allDayEvents\" class=\"calendar-event\"\n" +
+    "                                <div ng-repeat=\"displayEvent in view.allDayEvents\"\n" +
+    "                                     class=\"calendar-event\"\n" +
+    "                                     ng-class=\"fetchDayEventClass(displayEvent)\"\n" +
     "                                     ng-click=\"eventSelected({event:displayEvent.event})\"\n" +
     "                                     ng-style=\"{top: 25*$index+'px',width: '100%',height:'25px'}\">\n" +
     "                                    <div class=\"calendar-event-inner\">{{displayEvent.event.title}}</div>\n" +
@@ -1189,7 +1199,9 @@ angular.module("templates/rcalendar/day.html", []).run(["$templateCache", functi
     "                        </td>\n" +
     "                        <td class=\"calendar-cell\" ng-click=\"select(tm.time, tm.events)\">\n" +
     "                            <div ng-class=\"{'calendar-event-wrap': tm.events}\" ng-if=\"tm.events\">\n" +
-    "                                <div ng-repeat=\"displayEvent in tm.events\" class=\"calendar-event\"\n" +
+    "                                <div ng-repeat=\"displayEvent in tm.events\"\n" +
+    "                                     class=\"calendar-event\"\n" +
+    "                                     ng-class=\"fetchDayEventClass(displayEvent)\"\n" +
     "                                     ng-click=\"eventSelected({event:displayEvent.event})\"\n" +
     "                                     ng-style=\"{top: (37*displayEvent.startOffset/hourParts)+'px', left: 100/displayEvent.overlapNumber*displayEvent.position+'%', width: 100/displayEvent.overlapNumber+'%', height: 37*(displayEvent.endIndex -displayEvent.startIndex - (displayEvent.endOffset + displayEvent.startOffset)/hourParts)+'px'}\">\n" +
     "                                    <div class=\"calendar-event-inner\">{{displayEvent.event.title}}</div>\n" +
@@ -1214,7 +1226,8 @@ angular.module("templates/rcalendar/day.html", []).run(["$templateCache", functi
     "            </ion-content>\n" +
     "        </ion-slide>\n" +
     "    </ion-slide-box>\n" +
-    "</div>");
+    "</div>\n" +
+    "");
 }]);
 
 angular.module("templates/rcalendar/month.html", []).run(["$templateCache", function($templateCache) {
@@ -1485,7 +1498,9 @@ angular.module("templates/rcalendar/week.html", []).run(["$templateCache", funct
     "                                <td ng-repeat=\"day in view.dates track by day.date\" class=\"calendar-cell\">\n" +
     "                                    <div ng-class=\"{'calendar-event-wrap': day.events}\" ng-if=\"day.events\"\n" +
     "                                         ng-style=\"{height: 25*day.events.length+'px'}\">\n" +
-    "                                        <div ng-repeat=\"displayEvent in day.events\" class=\"calendar-event\"\n" +
+    "                                        <div ng-repeat=\"displayEvent in day.events\"\n" +
+    "                                             class=\"calendar-event\"\n" +
+    "                                             ng-class=\"fetchWeekEventClass(displayEvent)\"\n" +
     "                                             ng-click=\"eventSelected({event:displayEvent.event})\"\n" +
     "                                             ng-style=\"{top: 25*displayEvent.position+'px', width: 100*(displayEvent.endIndex-displayEvent.startIndex)+'%', height: '25px'}\">\n" +
     "                                            <div class=\"calendar-event-inner\">{{displayEvent.event.title}}</div>\n" +
@@ -1506,7 +1521,9 @@ angular.module("templates/rcalendar/week.html", []).run(["$templateCache", funct
     "                            </td>\n" +
     "                            <td ng-repeat=\"tm in row track by tm.time\" class=\"calendar-cell\" ng-click=\"select(tm.time, tm.events)\">\n" +
     "                                <div ng-class=\"{'calendar-event-wrap': tm.events}\" ng-if=\"tm.events\">\n" +
-    "                                    <div ng-repeat=\"displayEvent in tm.events\" class=\"calendar-event\"\n" +
+    "                                    <div ng-repeat=\"displayEvent in tm.events\"\n" +
+    "                                         class=\"calendar-event\"\n" +
+    "                                         ng-class=\"fetchWeekEventClass(displayEvent)\"\n" +
     "                                         ng-click=\"eventSelected({event:displayEvent.event})\"\n" +
     "                                         ng-style=\"{top: (37*displayEvent.startOffset/hourParts)+'px',left: 100/displayEvent.overlapNumber*displayEvent.position+'%', width: 100/displayEvent.overlapNumber+'%', height: 37*(displayEvent.endIndex -displayEvent.startIndex - (displayEvent.endOffset + displayEvent.startOffset)/hourParts)+'px'}\">\n" +
     "                                        <div class=\"calendar-event-inner\">{{displayEvent.event.title}}</div>\n" +
@@ -1548,5 +1565,6 @@ angular.module("templates/rcalendar/week.html", []).run(["$templateCache", funct
     "            </div>\n" +
     "        </ion-slide>\n" +
     "    </ion-slide-box>\n" +
-    "</div>");
+    "</div>\n" +
+    "");
 }]);
