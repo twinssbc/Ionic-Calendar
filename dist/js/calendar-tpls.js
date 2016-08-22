@@ -1172,8 +1172,8 @@ angular.module("templates/rcalendar/day.html", []).run(["$templateCache", functi
     "                    <table class=\"table table-bordered dayview-allday-content-table\">\n" +
     "                        <tbody>\n" +
     "                        <tr>\n" +
-    "                            <td class=\"calendar-cell\" ng-class=\"{'calendar-event-wrap':allDayEvents}\"\n" +
-    "                                ng-if=\"$index===currentViewIndex\" ng-style=\"{height: 25*day.events.length+'px'}\">\n" +
+    "                            <td class=\"calendar-cell\" ng-class=\"{'calendar-event-wrap':view.allDayEvents}\"\n" +
+    "                                ng-if=\"$index===currentViewIndex\" ng-style=\"{height: 25*view.allDayEvents.length+'px'}\">\n" +
     "                                <div ng-repeat=\"displayEvent in view.allDayEvents\"\n" +
     "                                     class=\"calendar-event\"\n" +
     "                                     ng-class=\"fetchDayEventClass(displayEvent)\"\n" +

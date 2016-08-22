@@ -8,8 +8,8 @@
                     <table class="table table-bordered dayview-allday-content-table">
                         <tbody>
                         <tr>
-                            <td class="calendar-cell" ng-class="{'calendar-event-wrap':allDayEvents}"
-                                ng-if="$index===currentViewIndex" ng-style="{height: 25*day.events.length+'px'}">
+                            <td class="calendar-cell" ng-class="{'calendar-event-wrap':view.allDayEvents}"
+                                ng-if="$index===currentViewIndex" ng-style="{height: 25*view.allDayEvents.length+'px'}">
                                 <div ng-repeat="displayEvent in view.allDayEvents"
                                      class="calendar-event"
                                      ng-class="fetchDayEventClass(displayEvent)"
