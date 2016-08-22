@@ -133,6 +133,9 @@ For example, if an allDay event ending to 2014-05-10, then endTime is
 * allDay    
 Indicates the event is allDay event or regular event
 
+* className    
+Type: String, This will add the passed classes on the Event elements. (Applicable only on Week & Day views)
+
 **Note**
 In the current version, the calendar controller only watches for the eventSource reference as it's the least expensive.
 That means only you manually reassign the eventSource value, the controller get notified, and this is usually fit to the scenario when the range is changed, you load a new data set from the backend.
