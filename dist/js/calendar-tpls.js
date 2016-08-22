@@ -1164,8 +1164,8 @@ angular.module("templates/rcalendar/day.html", []).run(["$templateCache", functi
     "                    <table class=\"table table-bordered dayview-allday-content-table\">\n" +
     "                        <tbody>\n" +
     "                        <tr>\n" +
-    "                            <td class=\"calendar-cell\" ng-class=\"{'calendar-event-wrap':allDayEvents}\"\n" +
-    "                                ng-if=\"$index===currentViewIndex\" ng-style=\"{height: 25*day.events.length+'px'}\">\n" +
+    "                            <td class=\"calendar-cell\" ng-class=\"{'calendar-event-wrap':view.allDayEvents}\"\n" +
+    "                                ng-if=\"$index===currentViewIndex\" ng-style=\"{height: 25*view.allDayEvents.length+'px'}\">\n" +
     "                                <div ng-repeat=\"displayEvent in view.allDayEvents\" class=\"calendar-event\"\n" +
     "                                     ng-click=\"eventSelected({event:displayEvent.event})\"\n" +
     "                                     ng-style=\"{top: 25*$index+'px',width: '100%',height:'25px'}\">\n" +
@@ -1214,7 +1214,8 @@ angular.module("templates/rcalendar/day.html", []).run(["$templateCache", functi
     "            </ion-content>\n" +
     "        </ion-slide>\n" +
     "    </ion-slide-box>\n" +
-    "</div>");
+    "</div>\n" +
+    "");
 }]);
 
 angular.module("templates/rcalendar/month.html", []).run(["$templateCache", function($templateCache) {
