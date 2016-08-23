@@ -8,7 +8,7 @@
                     <table class="table table-bordered dayview-allday-content-table">
                         <tbody>
                         <tr>
-                            <td class="calendar-cell" ng-class="{'calendar-event-wrap':view.allDayEvents}"
+                            <td class="calendar-cell" ng-class="{'calendar-event-wrap':view.allDayEvents.length>0}"
                                 ng-if="$index===currentViewIndex" ng-style="{height: 25*view.allDayEvents.length+'px'}">
                                 <div ng-repeat="displayEvent in view.allDayEvents" class="calendar-event"
                                      ng-click="eventSelected({event:displayEvent.event})"

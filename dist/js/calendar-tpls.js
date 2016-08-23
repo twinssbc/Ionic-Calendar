@@ -1164,7 +1164,7 @@ angular.module("templates/rcalendar/day.html", []).run(["$templateCache", functi
     "                    <table class=\"table table-bordered dayview-allday-content-table\">\n" +
     "                        <tbody>\n" +
     "                        <tr>\n" +
-    "                            <td class=\"calendar-cell\" ng-class=\"{'calendar-event-wrap':view.allDayEvents}\"\n" +
+    "                            <td class=\"calendar-cell\" ng-class=\"{'calendar-event-wrap':view.allDayEvents.length>0}\"\n" +
     "                                ng-if=\"$index===currentViewIndex\" ng-style=\"{height: 25*view.allDayEvents.length+'px'}\">\n" +
     "                                <div ng-repeat=\"displayEvent in view.allDayEvents\" class=\"calendar-event\"\n" +
     "                                     ng-click=\"eventSelected({event:displayEvent.event})\"\n" +
