@@ -15,7 +15,13 @@ angular.module('ui.rCalendar', [])
         noEventsLabel: 'No Events',
         eventSource: null,
         queryMode: 'local',
-        step: 60
+        step: 60,
+        monthviewDisplayEventTemplateUrl: 'templates/rcalendar/monthviewDisplayEvent.html',
+        monthviewEventDetailTemplateUrl: 'templates/rcalendar/monthviewEventDetail.html',
+        weekviewAllDayEventTemplateUrl: 'templates/rcalendar/displayEvent.html',
+        weekviewNormalEventTemplateUrl: 'templates/rcalendar/displayEvent.html',
+        dayviewAllDayEventTemplateUrl: 'templates/rcalendar/displayEvent.html',
+        dayviewNormalEventTemplateUrl: 'templates/rcalendar/displayEvent.html'
     })
     .controller('ui.rCalendar.CalendarController', ['$scope', '$attrs', '$parse', '$interpolate', '$log', 'dateFilter', 'calendarConfig', '$timeout', '$ionicSlideBoxDelegate', function ($scope, $attrs, $parse, $interpolate, $log, dateFilter, calendarConfig, $timeout, $ionicSlideBoxDelegate) {
         'use strict';
@@ -24,8 +30,12 @@ angular.module('ui.rCalendar', [])
 
         // Configuration attributes
         angular.forEach(['formatDay', 'formatDayHeader', 'formatDayTitle', 'formatWeekTitle', 'formatMonthTitle', 'formatWeekViewDayHeader', 'formatHourColumn',
-            'allDayLabel', 'noEventsLabel', 'showEventDetail', 'eventSource', 'queryMode', 'step', 'startingDayMonth', 'startingDayWeek'], function (key, index) {
-            self[key] = angular.isDefined($attrs[key]) ? (index < 9 ? $interpolate($attrs[key])($scope.$parent) : $scope.$parent.$eval($attrs[key])) : calendarConfig[key];
+            'allDayLabel', 'noEventsLabel', 'showEventDetail'], function (key, index) {
+            self[key] = angular.isDefined($attrs[key]) ? $interpolate($attrs[key])($scope.$parent) : calendarConfig[key];
+        });
+
+        angular.forEach(['monthviewDisplayEventTemplateUrl', 'monthviewEventDetailTemplateUrl', 'weekviewAllDayEventTemplateUrl', 'weekviewNormalEventTemplateUrl', 'dayviewAllDayEventTemplateUrl', 'dayviewNormalEventTemplateUrl', 'eventSource', 'queryMode', 'step', 'startingDayMonth', 'startingDayWeek'], function (key, index) {
+            self[key] = angular.isDefined($attrs[key]) ? ($scope.$parent.$eval($attrs[key])) : calendarConfig[key];
         });
 
         self.hourParts = 1;
@@ -384,6 +394,8 @@ angular.module('ui.rCalendar', [])
                 };
 
                 scope.noEventsLabel = ctrl.noEventsLabel;
+                scope.displayEventTemplateUrl = ctrl.monthviewDisplayEventTemplateUrl;
+                scope.eventDetailTemplateUrl = ctrl.monthviewEventDetailTemplateUrl;
 
                 function getDates(startDate, n) {
                     var dates = new Array(n), current = new Date(startDate), i = 0;
@@ -688,6 +700,8 @@ angular.module('ui.rCalendar', [])
 
                 scope.allDayLabel = ctrl.allDayLabel;
                 scope.hourParts = ctrl.hourParts;
+                scope.allDayEventTemplateUrl = ctrl.weekviewAllDayEventTemplateUrl;
+                scope.normalEventTemplateUrl = ctrl.weekviewNormalEventTemplateUrl;
 
                 function getDates(startTime, n) {
                     var dates = new Array(n),
@@ -980,6 +994,8 @@ angular.module('ui.rCalendar', [])
 
                 scope.allDayLabel = ctrl.allDayLabel;
                 scope.hourParts = ctrl.hourParts;
+                scope.allDayEventTemplateUrl = ctrl.dayviewAllDayEventTemplateUrl;
+                scope.normalEventTemplateUrl = ctrl.dayviewNormalEventTemplateUrl;
 
                 function createDateObjects(startTime) {
                     var rows = [],

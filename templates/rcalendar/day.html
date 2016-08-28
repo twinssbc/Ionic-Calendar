@@ -12,8 +12,8 @@
                                 ng-if="$index===currentViewIndex" ng-style="{height: 25*view.allDayEvents.length+'px'}">
                                 <div ng-repeat="displayEvent in view.allDayEvents" class="calendar-event"
                                      ng-click="eventSelected({event:displayEvent.event})"
-                                     ng-style="{top: 25*$index+'px',width: '100%',height:'25px'}">
-                                    <div class="calendar-event-inner">{{displayEvent.event.title}}</div>
+                                     ng-style="{top: 25*$index+'px',width: '100%',height:'25px'}"
+                                     ng-include="::allDayEventTemplateUrl">
                                 </div>
                             </td>
                             <td class="calendar-cell" ng-if="$index!==currentViewIndex">
@@ -35,8 +35,8 @@
                             <div ng-class="{'calendar-event-wrap': tm.events}" ng-if="tm.events">
                                 <div ng-repeat="displayEvent in tm.events" class="calendar-event"
                                      ng-click="eventSelected({event:displayEvent.event})"
-                                     ng-style="{top: (37*displayEvent.startOffset/hourParts)+'px', left: 100/displayEvent.overlapNumber*displayEvent.position+'%', width: 100/displayEvent.overlapNumber+'%', height: 37*(displayEvent.endIndex -displayEvent.startIndex - (displayEvent.endOffset + displayEvent.startOffset)/hourParts)+'px'}">
-                                    <div class="calendar-event-inner">{{displayEvent.event.title}}</div>
+                                     ng-style="{top: (37*displayEvent.startOffset/hourParts)+'px', left: 100/displayEvent.overlapNumber*displayEvent.position+'%', width: 100/displayEvent.overlapNumber+'%', height: 37*(displayEvent.endIndex -displayEvent.startIndex - (displayEvent.endOffset + displayEvent.startOffset)/hourParts)+'px'}"
+                                     ng-include="::normalEventTemplateUrl">
                                 </div>
                             </div>
                         </td>

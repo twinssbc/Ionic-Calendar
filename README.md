@@ -76,6 +76,66 @@ Users will need to implement their custom loading data logic in this function, a
 Default value: 'local'
 * step    
 It can be set to 15 or 30, so that the event can be displayed at more accurate position in weekview or dayview.
+
+# View Customization Options
+
+* monthviewDisplayEventTemplateUrl    
+The template url to provide customized view for event displayed in the monthview    
+Default value: 'templates/rcalendar/monthviewDisplayEvent.html'
+
+```
+        <calendar ... monthview-display-event-template-url="monthviewDisplayEventTemplateUrl"></calendar>
+        
+        $scope.monthviewDisplayEventTemplateUrl = 'myTemplate.html';
+```
+* monthviewEventDetailTemplateUrl    
+The template url to provide customized view for event detail section in the monthview    
+Default value: 'templates/rcalendar/monthviewEventDetail.html'
+
+```
+        <calendar ... monthview-event-detail-template-url="monthviewEventDetailTemplateUrl"></calendar>
+        
+        $scope.monthviewEventDetailTemplateUrl = 'myTemplate.html';
+```
+* weekviewAllDayEventTemplateUrl    
+The template url to provide customized view for all day event in the weekview   
+Default value: 'templates/rcalendar/displayEvent.html'
+
+```
+        <calendar ... weekview-all-day-event-template-url="weekviewAllDayEventTemplateUrl"></calendar>
+        
+        $scope.weekviewAllDayEventTemplateUrl = 'myTemplate.html';
+```
+* weekviewNormalEventTemplateUrl    
+The template url to provide customized view for normal event in the weekview    
+Default value: 'templates/rcalendar/displayEvent.html'
+
+```
+        <calendar ... weekview-normal-event-template-url="weekviewNormalEventTemplateUrl"></calendar>
+        
+        $scope.weekviewNormalEventTemplateUrl = 'myTemplate.html';
+```
+* dayviewAllDayEventTemplateUrl    
+The template url to provide customized view for all day event in the dayview    
+Default value: 'templates/rcalendar/displayEvent.html'
+
+```
+        <calendar ... dayview-all-day-event-template-url="dayviewAllDayEventTemplateUrl"></calendar>
+        
+        $scope.dayviewAllDayEventTemplateUrl = 'myTemplate.html';
+```
+* dayviewNormalEventTemplateUrl    
+The template url to provide customized view for normal event in the dayview    
+Default value: 'templates/rcalendar/displayEvent.html'
+
+```
+        <calendar ... dayview-normal-event-template-url="dayviewNormalEventTemplateUrl"></calendar>
+        
+        $scope.dayviewNormalEventTemplateUrl = 'myTemplate.html';
+```
+
+# Callback Options
+
 * rangeChanged    
 The callback function triggered when the range or mode is changed if the queryMode is set to 'remote'
 
@@ -88,8 +148,7 @@ The callback function triggered when the range or mode is changed if the queryMo
 * eventSelected    
 The callback function triggered when an event is clicked
 
-        <calendar ... event-selected="onEventSelected(event)"></calendar>
-    
+        <calendar ... event-selected="onEventSelected(event)"></calendar>    
     
         $scope.onEventSelected = function (event) {
             console.log(event.title);
