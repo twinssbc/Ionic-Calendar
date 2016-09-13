@@ -31,11 +31,11 @@ angular.module('ui.rCalendar', ['ui.rCalendar.tpls'])
 
         // Configuration attributes
         angular.forEach(['formatDay', 'formatDayHeader', 'formatDayTitle', 'formatWeekTitle', 'formatMonthTitle', 'formatWeekViewDayHeader', 'formatHourColumn',
-            'allDayLabel', 'noEventsLabel', 'showEventDetail'], function (key, index) {
+            'allDayLabel', 'noEventsLabel'], function (key, index) {
             self[key] = angular.isDefined($attrs[key]) ? $interpolate($attrs[key])($scope.$parent) : calendarConfig[key];
         });
 
-        angular.forEach(['monthviewDisplayEventTemplateUrl', 'monthviewEventDetailTemplateUrl', 'weekviewAllDayEventTemplateUrl', 'weekviewNormalEventTemplateUrl', 'dayviewAllDayEventTemplateUrl', 'dayviewNormalEventTemplateUrl', 'eventSource', 'queryMode', 'step', 'startingDayMonth', 'startingDayWeek'], function (key, index) {
+        angular.forEach(['showEventDetail', 'monthviewDisplayEventTemplateUrl', 'monthviewEventDetailTemplateUrl', 'weekviewAllDayEventTemplateUrl', 'weekviewNormalEventTemplateUrl', 'dayviewAllDayEventTemplateUrl', 'dayviewNormalEventTemplateUrl', 'eventSource', 'queryMode', 'step', 'startingDayMonth', 'startingDayWeek'], function (key, index) {
             self[key] = angular.isDefined($attrs[key]) ? ($scope.$parent.$eval($attrs[key])) : calendarConfig[key];
         });
 
