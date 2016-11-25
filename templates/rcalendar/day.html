@@ -2,7 +2,7 @@
     <ion-slide-box class="dayview-slide" on-slide-changed="slideChanged($index)" does-continue="true"
                    show-pager="false" delegate-handle="dayview-slide">
         <ion-slide ng-repeat="view in views track by $index">
-            <div class="dayview-allday-table">
+            <div class="dayview-allday-table" ng-hide="disableAllDay">
                 <div class="dayview-allday-label" ng-bind="::allDayLabel"></div>
                 <ion-content class="dayview-allday-content-wrapper" has-bouncing="false" overflow-scroll="false">
                     <table class="table table-bordered dayview-allday-content-table">
@@ -27,7 +27,7 @@
                 <table class="table table-bordered table-fixed dayview-normal-event-table"
                        ng-if="$index===currentViewIndex">
                     <tbody>
-                    <tr ng-repeat="tm in view.rows track by $index">
+						<tr ng-repeat="tm in view.rows track by $index" ng-hide="$index < dayStart || $index > dayEnd">
                         <td class="calendar-hour-column text-center">
                             {{::tm.time | date: formatHourColumn}}
                         </td>
