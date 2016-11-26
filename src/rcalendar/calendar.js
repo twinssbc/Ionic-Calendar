@@ -19,6 +19,7 @@ angular.module('ui.rCalendar', [])
 		disableAllDay: false,
 		dayStart: 0,
 		dayEnd: 24,
+		disableSwipe: false,
         monthviewDisplayEventTemplateUrl: 'templates/rcalendar/monthviewDisplayEvent.html',
         monthviewEventDetailTemplateUrl: 'templates/rcalendar/monthviewEventDetail.html',
         weekviewAllDayEventTemplateUrl: 'templates/rcalendar/displayEvent.html',
@@ -33,7 +34,7 @@ angular.module('ui.rCalendar', [])
 
         // Configuration attributes
         angular.forEach(['formatDay', 'formatDayHeader', 'formatDayTitle', 'formatWeekTitle', 'formatMonthTitle', 'formatWeekViewDayHeader', 'formatHourColumn',
-            'allDayLabel', 'noEventsLabel', 'disableAllDay', 'dayStart', 'dayEnd'], function (key, index) {
+            'allDayLabel', 'noEventsLabel', 'disableAllDay', 'dayStart', 'dayEnd', 'disableSwipe'], function (key, index) {
             self[key] = angular.isDefined($attrs[key]) ? $interpolate($attrs[key])($scope.$parent) : calendarConfig[key];
         });
 
@@ -44,6 +45,7 @@ angular.module('ui.rCalendar', [])
 		$scope.disableAllDay = calendarConfig.disableAllDay;
 		$scope.dayStart = calendarConfig.dayStart;
 		$scope.dayEnd = calendarConfig.dayEnd;
+		$scope.disableSwipe = calendarConfig.disableSwipe;
 
         self.hourParts = 1;
         if (self.step === 60 || self.step === 30 || self.step === 15) {
@@ -383,7 +385,7 @@ angular.module('ui.rCalendar', [])
             }
         };
     })
-    .directive('monthview', ['dateFilter', function (dateFilter) {
+    .directive('monthview', ['dateFilter', '$ionicSlideBoxDelegate', function (dateFilter, $ionicSlideBoxDelegate) {
         'use strict';
         return {
             restrict: 'EA',
@@ -396,6 +398,10 @@ angular.module('ui.rCalendar', [])
                 scope.showEventDetail = ctrl.showEventDetail;
                 scope.formatDayHeader = ctrl.formatDayHeader;
 
+				if (ctrl.disableSwipe) {
+					$ionicSlideBoxDelegate.enableSlide(false);
+				}
+				
                 ctrl.mode = {
                     step: {months: 1}
                 };
@@ -702,7 +708,7 @@ angular.module('ui.rCalendar', [])
             }
         };
     }])
-    .directive('weekview', ['dateFilter', function (dateFilter) {
+    .directive('weekview', ['dateFilter','$ionicSlideBoxDelegate', function (dateFilter, $ionicSlideBoxDelegate) {
         'use strict';
         return {
             restrict: 'EA',
@@ -710,6 +716,11 @@ angular.module('ui.rCalendar', [])
             templateUrl: 'templates/rcalendar/week.html',
             require: '^calendar',
             link: function (scope, element, attrs, ctrl) {
+
+				if (ctrl.disableSwipe) {
+					$ionicSlideBoxDelegate.enableSlide(false);
+				}
+
                 scope.formatWeekViewDayHeader = ctrl.formatWeekViewDayHeader;
                 scope.formatHourColumn = ctrl.formatHourColumn;
 
@@ -1004,7 +1015,7 @@ angular.module('ui.rCalendar', [])
             }
         };
     }])
-    .directive('dayview', ['dateFilter', function (dateFilter) {
+    .directive('dayview', ['dateFilter', '$ionicSlideBoxDelegate', function (dateFilter, $ionicSlideBoxDelegate) {
         'use strict';
         return {
             restrict: 'EA',
@@ -1012,6 +1023,11 @@ angular.module('ui.rCalendar', [])
             templateUrl: 'templates/rcalendar/day.html',
             require: '^calendar',
             link: function (scope, element, attrs, ctrl) {
+
+				if (ctrl.disableSwipe) {
+					$ionicSlideBoxDelegate.enableSlide(false);
+				}
+
                 scope.formatHourColumn = ctrl.formatHourColumn;
 
                 ctrl.mode = {
