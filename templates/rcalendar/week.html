@@ -13,7 +13,7 @@
                 </thead>
             </table>
             <div ng-if="$index===currentViewIndex">
-                <div class="weekview-allday-table">
+                <div class="weekview-allday-table" ng-hide="disableAllDay">
                     <div class="weekview-allday-label" ng-bind="::allDayLabel">
                     </div>
                     <ion-content class="weekview-allday-content-wrapper" has-bouncing="false" overflow-scroll="false">
