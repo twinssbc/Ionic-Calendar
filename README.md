@@ -157,10 +157,10 @@ The callback function triggered when an event is clicked
 * timeSelected    
 The callback function triggered when a date is selected in the monthview. If there's no event at the selected time, the events parameter will be either undefined or empty array
 
-        <calendar ... time-selected="onTimeSelected(selectedTime, events)"></calendar>
+        <calendar ... time-selected="onTimeSelected(selectedTime, events, disabled)”></calendar>
         
-        $scope.onTimeSelected = function (selectedTime, events) {
-            console.log('Selected time: ' + selectedTime + ', hasEvents: ' + (events !== undefined && events.length !== 0));
+        $scope.onTimeSelected = function (selectedTime, events, disabled) {
+            console.log('Selected time: ' + selectedTime + ', hasEvents: ' + (events !== undefined && events.length !== 0) + ‘, disabled: ’ + disabled);
         };
 
 * titleChanged    
@@ -170,6 +170,17 @@ The callback function triggered when the view title is changed
         
         $scope.onViewTitleChanged = function (title) {
             $scope.viewTitle = title;
+        };
+
+* isDateDisabled
+The callback function to determine if the date should be disabled
+
+        <calendar ... is-date-disabled="isDateDisabled(date)”></calendar>
+        
+        $scope.isDateDisabled = function (date) {
+            var currentDate = new Date();
+            currentDate.setHours(0,0,0);
+            return date <= currentDate;
         };
 
 # EventSource

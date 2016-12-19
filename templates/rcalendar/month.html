@@ -12,7 +12,7 @@
                 </thead>
                 <tbody>
                 <tr ng-repeat="row in [0,1,2,3,4,5]">
-                    <td ng-repeat="col in [0,1,2,3,4,5,6]" ng-click="select(view.dates[row*7+col].date, view.dates[row*7+col].events)"
+                    <td ng-repeat="col in [0,1,2,3,4,5,6]" ng-click="select(view.dates[row*7+col])"
                         ng-class="getHighlightClass(view.dates[row*7+col])" ng-include="::displayEventTemplateUrl">
                     </td>
                 </tr>

@@ -136,6 +136,11 @@
     color: white;
 }
 
+.monthview-datetable td.monthview-disabled {
+    color: lightgrey;
+    cursor: default;
+}
+
 .monthview-eventdetail-timecolumn {
     width: 110px;
     overflow: hidden;

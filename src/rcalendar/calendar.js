@@ -355,7 +355,8 @@ angular.module('ui.rCalendar', [])
                 rangeChanged: '&',
                 eventSelected: '&',
                 timeSelected: '&',
-                titleChanged: '&'
+                titleChanged: '&',
+                isDateDisabled: '&'
             },
             require: ['calendar', '?^ngModel'],
             controller: 'ui.rCalendar.CalendarController',
@@ -408,10 +409,16 @@ angular.module('ui.rCalendar', [])
                 }
 
                 function createDateObject(date, format) {
-                    return {
+                    var dateObject = {
                         date: date,
                         label: dateFilter(date, format)
                     };
+
+                    if (scope.isDateDisabled) {
+                        dateObject.disabled = scope.isDateDisabled({date: date});
+                    }
+
+                    return dateObject;
                 }
 
                 function updateCurrentView(currentViewStartDate, view) {
@@ -450,8 +457,10 @@ angular.module('ui.rCalendar', [])
                     }
                 }
 
-                scope.select = function (selectedDate, events) {
-                    var views = scope.views,
+                scope.select = function (viewDate) {
+                    var selectedDate = viewDate.date,
+                        events = viewDate.events,
+                        views = scope.views,
                         dates,
                         r;
                     if (views) {
@@ -493,7 +502,11 @@ angular.module('ui.rCalendar', [])
                         }
 
                         if (scope.timeSelected) {
-                            scope.timeSelected({selectedTime: selectedDate, events: events});
+                            scope.timeSelected({
+                                selectedTime: selectedDate,
+                                events: events,
+                                disabled: viewDate.disabled || false
+                            });
                         }
                     }
                 };
@@ -528,6 +541,13 @@ angular.module('ui.rCalendar', [])
                             className += ' ';
                         }
                         className += 'text-muted';
+                    }
+
+                    if (date.disabled) {
+                        if (className) {
+                            className += ' ';
+                        }
+                        className += 'monthview-disabled';
                     }
                     return className;
                 };
@@ -611,7 +631,7 @@ angular.module('ui.rCalendar', [])
                             timeDifferenceStart = 0;
                         } else {
                             timeDiff = eventStartTime - st;
-                            if(!event.allDay) {
+                            if (!event.allDay) {
                                 timeDiff = timeDiff - (eventStartTime.getTimezoneOffset() - st.getTimezoneOffset()) * 60000;
                             }
                             timeDifferenceStart = timeDiff / oneDay;
@@ -620,13 +640,13 @@ angular.module('ui.rCalendar', [])
                         var timeDifferenceEnd;
                         if (eventEndTime >= et) {
                             timeDiff = et - st;
-                            if(!event.allDay) {
+                            if (!event.allDay) {
                                 timeDiff = timeDiff - (et.getTimezoneOffset() - st.getTimezoneOffset()) * 60000;
                             }
                             timeDifferenceEnd = timeDiff / oneDay;
                         } else {
                             timeDiff = eventEndTime - st;
-                            if(!event.allDay) {
+                            if (!event.allDay) {
                                 timeDiff = timeDiff - (eventEndTime.getTimezoneOffset() - st.getTimezoneOffset()) * 60000;
                             }
                             timeDifferenceEnd = timeDiff / oneDay;
@@ -782,7 +802,11 @@ angular.module('ui.rCalendar', [])
 
                 scope.select = function (selectedTime, events) {
                     if (scope.timeSelected) {
-                        scope.timeSelected({selectedTime: selectedTime, events: events});
+                        var disabled;
+                        if (scope.isDateDisabled) {
+                            disabled = scope.isDateDisabled({date: selectedTime});
+                        }
+                        scope.timeSelected({selectedTime: selectedTime, events: events, disabled: disabled || false});
                     }
                 };
 
@@ -886,7 +910,6 @@ angular.module('ui.rCalendar', [])
                                 if (eventEndTime >= endTime) {
                                     timeDiff = endTime - startTime - (endTime.getTimezoneOffset() - startTime.getTimezoneOffset()) * 60000;
                                     timeDifferenceEnd = timeDiff / oneHour;
-
                                 } else {
                                     timeDiff = eventEndTime - startTime - (eventEndTime.getTimezoneOffset() - startTime.getTimezoneOffset()) * 60000;
                                     timeDifferenceEnd = timeDiff / oneHour;
@@ -1036,7 +1059,11 @@ angular.module('ui.rCalendar', [])
 
                 scope.select = function (selectedTime, events) {
                     if (scope.timeSelected) {
-                        scope.timeSelected({selectedTime: selectedTime, events: events});
+                        var disabled;
+                        if (scope.isDateDisabled) {
+                            disabled = scope.isDateDisabled({date: selectedTime});
+                        }
+                        scope.timeSelected({selectedTime: selectedTime, events: events, disabled: disabled || false});
                     }
                 };
 
