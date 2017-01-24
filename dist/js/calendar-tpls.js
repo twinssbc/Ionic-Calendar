@@ -46,9 +46,11 @@ angular.module('ui.rCalendar', ['ui.rCalendar.tpls'])
             throw new Error('Invalid step parameter: ' + self.step);
         }
 
-        $scope.$parent.$watch($attrs.eventSource, function (value) {
+        var unregisterFn = $scope.$parent.$watch($attrs.eventSource, function (value) {
             self.onEventSourceChanged(value);
         });
+
+        $scope.$on('$destroy', unregisterFn);
 
         $scope.calendarMode = $scope.calendarMode || calendarConfig.calendarMode;
         if (angular.isDefined($attrs.initDate)) {
