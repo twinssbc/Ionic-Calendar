@@ -24,6 +24,12 @@ Add the directive in the html page
 
     <calendar calendar-mode="mode" event-source="eventSource">
 
+
+To change calendar selected date, simply use ng-model
+
+    $scope.selectedDate = new Date();
+    <calendar calendar-mode="mode" event-source="eventSource" ng-model="selectedDate"></calendar>
+
 # Options
 
 * formatDay    
