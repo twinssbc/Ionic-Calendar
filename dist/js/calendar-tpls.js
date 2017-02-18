@@ -245,14 +245,13 @@ angular.module('ui.rCalendar', ['ui.rCalendar.tpls'])
 
         self.move = function (direction) {
             self.direction = direction;
-            if (self.moveOnSelected) {
-                self.moveOnSelected = false;
-            } else {
+            if (!self.moveOnSelected) {
                 self.currentCalendarDate = getAdjacentCalendarDate(self.currentCalendarDate, direction);
             }
             ngModelCtrl.$setViewValue(self.currentCalendarDate);
             self.refreshView();
             self.direction = 0;
+            self.moveOnSelected = false;
         };
 
         self.rangeChanged = function () {
@@ -438,7 +437,7 @@ angular.module('ui.rCalendar', ['ui.rCalendar.tpls'])
                         view.dates[r].selected = false;
                     }
 
-                    if (selectedDayDifference >= 0 && selectedDayDifference < 42 && scope.autoSelect) {
+                    if (selectedDayDifference >= 0 && selectedDayDifference < 42 && (scope.autoSelect || ctrl.moveOnSelected)) {
                         view.dates[selectedDayDifference].selected = true;
                         scope.selectedDate = view.dates[selectedDayDifference];
                     } else {
