@@ -17,6 +17,7 @@ angular.module('ui.rCalendar', ['ui.rCalendar.tpls'])
         eventSource: null,
         queryMode: 'local',
         step: 60,
+        autoSelect: true,
         monthviewDisplayEventTemplateUrl: 'templates/rcalendar/monthviewDisplayEvent.html',
         monthviewEventDetailTemplateUrl: 'templates/rcalendar/monthviewEventDetail.html',
         weekviewAllDayEventTemplateUrl: 'templates/rcalendar/displayEvent.html',
@@ -35,7 +36,7 @@ angular.module('ui.rCalendar', ['ui.rCalendar.tpls'])
             self[key] = angular.isDefined($attrs[key]) ? $interpolate($attrs[key])($scope.$parent) : calendarConfig[key];
         });
 
-        angular.forEach(['showEventDetail', 'monthviewDisplayEventTemplateUrl', 'monthviewEventDetailTemplateUrl', 'weekviewAllDayEventTemplateUrl', 'weekviewNormalEventTemplateUrl', 'dayviewAllDayEventTemplateUrl', 'dayviewNormalEventTemplateUrl', 'eventSource', 'queryMode', 'step', 'startingDayMonth', 'startingDayWeek'], function (key, index) {
+        angular.forEach(['showEventDetail', 'monthviewDisplayEventTemplateUrl', 'monthviewEventDetailTemplateUrl', 'weekviewAllDayEventTemplateUrl', 'weekviewNormalEventTemplateUrl', 'dayviewAllDayEventTemplateUrl', 'dayviewNormalEventTemplateUrl', 'eventSource', 'queryMode', 'step', 'startingDayMonth', 'startingDayWeek', 'autoSelect'], function (key, index) {
             self[key] = angular.isDefined($attrs[key]) ? ($scope.$parent.$eval($attrs[key])) : calendarConfig[key];
         });
 
@@ -392,6 +393,7 @@ angular.module('ui.rCalendar', ['ui.rCalendar.tpls'])
                     ngModelCtrl = ctrls[1];
                 scope.showEventDetail = ctrl.showEventDetail;
                 scope.formatDayHeader = ctrl.formatDayHeader;
+                scope.autoSelect = ctrl.autoSelect;
 
                 ctrl.mode = {
                     step: {months: 1}
@@ -436,7 +438,7 @@ angular.module('ui.rCalendar', ['ui.rCalendar.tpls'])
                         view.dates[r].selected = false;
                     }
 
-                    if (selectedDayDifference >= 0 && selectedDayDifference < 42) {
+                    if (selectedDayDifference >= 0 && selectedDayDifference < 42 && scope.autoSelect) {
                         view.dates[selectedDayDifference].selected = true;
                         scope.selectedDate = view.dates[selectedDayDifference];
                     } else {
@@ -484,7 +486,6 @@ angular.module('ui.rCalendar', ['ui.rCalendar.tpls'])
 
                         ctrl.currentCalendarDate = selectedDate;
                         if (direction === 0) {
-                            ctrl.currentCalendarDate = selectedDate;
                             if (ngModelCtrl) {
                                 ngModelCtrl.$setViewValue(selectedDate);
                             }
@@ -677,15 +678,17 @@ angular.module('ui.rCalendar', ['ui.rCalendar.tpls'])
                         }
                     }
 
-                    var findSelected = false;
-                    for (r = 0; r < 42; r += 1) {
-                        if (dates[r].selected) {
-                            scope.selectedDate = dates[r];
-                            findSelected = true;
-                            break;
-                        }
-                        if (findSelected) {
-                            break;
+                    if(scope.autoSelect) {
+                        var findSelected = false;
+                        for (r = 0; r < 42; r += 1) {
+                            if (dates[r].selected) {
+                                scope.selectedDate = dates[r];
+                                findSelected = true;
+                                break;
+                            }
+                            if (findSelected) {
+                                break;
+                            }
                         }
                     }
                 };

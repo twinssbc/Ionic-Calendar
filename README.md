@@ -82,6 +82,9 @@ Users will need to implement their custom loading data logic in this function, a
 Default value: 'local'
 * step    
 It can be set to 15 or 30, so that the event can be displayed at more accurate position in weekview or dayview.
+* autoSelect    
+If set to true, the current calendar date will be auto selected when calendar is loaded or swiped in the month view.    
+Default value: true
 
 # View Customization Options
 
