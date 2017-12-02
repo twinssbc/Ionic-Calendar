@@ -75,7 +75,7 @@ angular.module('ui.rCalendar', ['ui.rCalendar.tpls'])
             if (earlyEvent.endIndex <= lateEvent.startIndex) {
                 return false;
             } else {
-                return !(earlyEvent.endIndex - lateEvent.startIndex === 1 && earlyEvent.endOffset + lateEvent.startOffset > self.hourParts);
+                return !(earlyEvent.endIndex - lateEvent.startIndex === 1 && earlyEvent.endOffset + lateEvent.startOffset >= self.hourParts);
             }
         }
 
@@ -109,8 +109,9 @@ angular.module('ui.rCalendar', ['ui.rCalendar.tpls'])
             }
         }
 
-        function calculateWidth(orderedEvents) {
-            var cells = new Array(24),
+        function calculateWidth(orderedEvents, hourParts) {
+            var totalSize = 24 * hourParts,
+                cells = new Array(totalSize),
                 event,
                 index,
                 i,
@@ -123,7 +124,7 @@ angular.module('ui.rCalendar', ['ui.rCalendar.tpls'])
             orderedEvents.sort(function (eventA, eventB) {
                 return eventB.position - eventA.position;
             });
-            for (i = 0; i < 24; i += 1) {
+            for (i = 0; i < totalSize; i += 1) {
                 cells[i] = {
                     calculated: false,
                     events: []
@@ -132,8 +133,8 @@ angular.module('ui.rCalendar', ['ui.rCalendar.tpls'])
             len = orderedEvents.length;
             for (i = 0; i < len; i += 1) {
                 event = orderedEvents[i];
-                index = event.startIndex;
-                while (index < event.endIndex) {
+                index = event.startIndex * hourParts + event.startOffset;
+                while (index < event.endIndex * hourParts - event.endOffset) {
                     cells[index].events.push(event);
                     index += 1;
                 }
@@ -147,8 +148,8 @@ angular.module('ui.rCalendar', ['ui.rCalendar.tpls'])
                     event.overlapNumber = overlapNumber;
                     var eventQueue = [event];
                     while ((event = eventQueue.shift())) {
-                        index = event.startIndex;
-                        while (index < event.endIndex) {
+                        index = event.startIndex * hourParts + event.startOffset;
+                        while (index < event.endIndex * hourParts - event.endOffset) {
                             if (!cells[index].calculated) {
                                 cells[index].calculated = true;
                                 if (cells[index].events) {
@@ -328,7 +329,7 @@ angular.module('ui.rCalendar', ['ui.rCalendar.tpls'])
 
         self.placeEvents = function (orderedEvents) {
             calculatePosition(orderedEvents);
-            calculateWidth(orderedEvents);
+            calculateWidth(orderedEvents, self.hourParts);
         };
 
         self.placeAllDayEvents = function (orderedEvents) {
@@ -677,7 +678,7 @@ angular.module('ui.rCalendar', ['ui.rCalendar.tpls'])
                         }
                     }
 
-                    if(scope.autoSelect) {
+                    if (scope.autoSelect) {
                         var findSelected = false;
                         for (r = 0; r < 42; r += 1) {
                             if (dates[r].selected) {
@@ -782,12 +783,11 @@ angular.module('ui.rCalendar', ['ui.rCalendar.tpls'])
 
                 //This can be decomissioned when upgrade to Angular 1.3
                 function getISO8601WeekNumber(date) {
-                    var checkDate = new Date(date);
-                    checkDate.setDate(checkDate.getDate() + 4 - (checkDate.getDay() || 7)); // Thursday
-                    var time = checkDate.getTime();
-                    checkDate.setMonth(0); // Compare with Jan 1
-                    checkDate.setDate(1);
-                    return Math.floor(Math.round((time - checkDate) / 86400000) / 7) + 1;
+                    var dayOfWeekOnFirst = (new Date(date.getFullYear(), 0, 1)).getDay();
+                    var firstThurs = new Date(date.getFullYear(), 0, ((dayOfWeekOnFirst <= 4) ? 5 : 12) - dayOfWeekOnFirst);
+                    var thisThurs = new Date(date.getFullYear(), date.getMonth(), date.getDate() + (4 - date.getDay()));
+                    var diff = thisThurs - firstThurs;
+                    return (1 + Math.round(diff / 6.048e8)); // 6.048e8 ms per week
                 }
 
                 ctrl._getTitle = function () {
@@ -841,7 +841,7 @@ angular.module('ui.rCalendar', ['ui.rCalendar.tpls'])
                         dates = scope.views[currentViewIndex].dates,
                         oneHour = 3600000,
                         oneDay = 86400000,
-                    //add allday eps
+                        //add allday eps
                         eps = 0.016,
                         eventSet,
                         allDayEventInRange = false,
