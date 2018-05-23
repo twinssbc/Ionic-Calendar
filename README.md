@@ -2,6 +2,10 @@
 
 Ionic calendar directive
 
+This repository only supports Ionic v1.
+
+Please visit https://github.com/twinssbc/Ionic2-Calendar which supports higher version of Ionic.
+
 # Demo
 http://twinssbc.github.io/Ionic-Calendar/demo/
 
